@@ -15,4 +15,4 @@ jobs:
         username: datainsightia@datainsightia.in
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./
-        server-dir: ZigZagBackend/
+        server-dir: /home/dataioit/ZigZagBackend
