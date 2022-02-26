@@ -15,4 +15,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          ls
+          source /home/dataioit/virtualenv/ZigZagBackend/3.8/bin/activate && cd /home/dataioit/ZigZagBackend
+          pip3 install -r requirement.txt
+          python3 manage.py collectstatic --no-input
+          python3 manage.py makemigrations
+          python3 manage.py migrate
