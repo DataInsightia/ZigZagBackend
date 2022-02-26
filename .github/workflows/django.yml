@@ -22,4 +22,3 @@ jobs:
           python3 manage.py collectstatic --no-input
           python3 manage.py makemigrations
           python3 manage.py migrate --fake
-          python3 manage.py loaddata dumpdata.json
