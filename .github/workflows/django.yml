@@ -28,12 +28,12 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
-
+        
     - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
           server: ftp.datainsightia.in
           username: datainsightia@datainsightia.in
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
+          local-dir: build/
           server-dir: zigzagweb.datainsightia.in/
