@@ -1,1 +1,2015 @@
-[{"model": "admin.logentry", "pk": 1, "fields": {"action_time": "2022-02-26T02:08:16.480Z", "user": 1, "content_type": 16, "object_id": "ZW0001", "object_repr": "Shirt", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 2, "fields": {"action_time": "2022-02-26T02:08:37.310Z", "user": 1, "content_type": 8, "object_id": "ZM0001", "object_repr": "VelVet meter", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 3, "fields": {"action_time": "2022-02-26T05:58:51.381Z", "user": 1, "content_type": 9, "object_id": "ZA786", "object_repr": "ZA786 Angappan", "action_flag": 3, "change_message": ""}}, {"model": "admin.logentry", "pk": 4, "fields": {"action_time": "2022-02-26T06:09:00.959Z", "user": 1, "content_type": 9, "object_id": "ZA786", "object_repr": "ZA786 Angappan", "action_flag": 3, "change_message": ""}}, {"model": "auth.permission", "pk": 1, "fields": {"name": "Can add log entry", "content_type": 1, "codename": "add_logentry"}}, {"model": "auth.permission", "pk": 2, "fields": {"name": "Can change log entry", "content_type": 1, "codename": "change_logentry"}}, {"model": "auth.permission", "pk": 3, "fields": {"name": "Can delete log entry", "content_type": 1, "codename": "delete_logentry"}}, {"model": "auth.permission", "pk": 4, "fields": {"name": "Can view log entry", "content_type": 1, "codename": "view_logentry"}}, {"model": "auth.permission", "pk": 5, "fields": {"name": "Can add permission", "content_type": 2, "codename": "add_permission"}}, {"model": "auth.permission", "pk": 6, "fields": {"name": "Can change permission", "content_type": 2, "codename": "change_permission"}}, {"model": "auth.permission", "pk": 7, "fields": {"name": "Can delete permission", "content_type": 2, "codename": "delete_permission"}}, {"model": "auth.permission", "pk": 8, "fields": {"name": "Can view permission", "content_type": 2, "codename": "view_permission"}}, {"model": "auth.permission", "pk": 9, "fields": {"name": "Can add group", "content_type": 3, "codename": "add_group"}}, {"model": "auth.permission", "pk": 10, "fields": {"name": "Can change group", "content_type": 3, "codename": "change_group"}}, {"model": "auth.permission", "pk": 11, "fields": {"name": "Can delete group", "content_type": 3, "codename": "delete_group"}}, {"model": "auth.permission", "pk": 12, "fields": {"name": "Can view group", "content_type": 3, "codename": "view_group"}}, {"model": "auth.permission", "pk": 13, "fields": {"name": "Can add user", "content_type": 4, "codename": "add_user"}}, {"model": "auth.permission", "pk": 14, "fields": {"name": "Can change user", "content_type": 4, "codename": "change_user"}}, {"model": "auth.permission", "pk": 15, "fields": {"name": "Can delete user", "content_type": 4, "codename": "delete_user"}}, {"model": "auth.permission", "pk": 16, "fields": {"name": "Can view user", "content_type": 4, "codename": "view_user"}}, {"model": "auth.permission", "pk": 17, "fields": {"name": "Can add content type", "content_type": 5, "codename": "add_contenttype"}}, {"model": "auth.permission", "pk": 18, "fields": {"name": "Can change content type", "content_type": 5, "codename": "change_contenttype"}}, {"model": "auth.permission", "pk": 19, "fields": {"name": "Can delete content type", "content_type": 5, "codename": "delete_contenttype"}}, {"model": "auth.permission", "pk": 20, "fields": {"name": "Can view content type", "content_type": 5, "codename": "view_contenttype"}}, {"model": "auth.permission", "pk": 21, "fields": {"name": "Can add session", "content_type": 6, "codename": "add_session"}}, {"model": "auth.permission", "pk": 22, "fields": {"name": "Can change session", "content_type": 6, "codename": "change_session"}}, {"model": "auth.permission", "pk": 23, "fields": {"name": "Can delete session", "content_type": 6, "codename": "delete_session"}}, {"model": "auth.permission", "pk": 24, "fields": {"name": "Can view session", "content_type": 6, "codename": "view_session"}}, {"model": "auth.permission", "pk": 25, "fields": {"name": "Can add customer", "content_type": 7, "codename": "add_customer"}}, {"model": "auth.permission", "pk": 26, "fields": {"name": "Can change customer", "content_type": 7, "codename": "change_customer"}}, {"model": "auth.permission", "pk": 27, "fields": {"name": "Can delete customer", "content_type": 7, "codename": "delete_customer"}}, {"model": "auth.permission", "pk": 28, "fields": {"name": "Can view customer", "content_type": 7, "codename": "view_customer"}}, {"model": "auth.permission", "pk": 29, "fields": {"name": "Can add material", "content_type": 8, "codename": "add_material"}}, {"model": "auth.permission", "pk": 30, "fields": {"name": "Can change material", "content_type": 8, "codename": "change_material"}}, {"model": "auth.permission", "pk": 31, "fields": {"name": "Can delete material", "content_type": 8, "codename": "delete_material"}}, {"model": "auth.permission", "pk": 32, "fields": {"name": "Can view material", "content_type": 8, "codename": "view_material"}}, {"model": "auth.permission", "pk": 33, "fields": {"name": "Can add order", "content_type": 9, "codename": "add_order"}}, {"model": "auth.permission", "pk": 34, "fields": {"name": "Can change order", "content_type": 9, "codename": "change_order"}}, {"model": "auth.permission", "pk": 35, "fields": {"name": "Can delete order", "content_type": 9, "codename": "delete_order"}}, {"model": "auth.permission", "pk": 36, "fields": {"name": "Can view order", "content_type": 9, "codename": "view_order"}}, {"model": "auth.permission", "pk": 37, "fields": {"name": "Can add order work staff assign", "content_type": 10, "codename": "add_orderworkstaffassign"}}, {"model": "auth.permission", "pk": 38, "fields": {"name": "Can change order work staff assign", "content_type": 10, "codename": "change_orderworkstaffassign"}}, {"model": "auth.permission", "pk": 39, "fields": {"name": "Can delete order work staff assign", "content_type": 10, "codename": "delete_orderworkstaffassign"}}, {"model": "auth.permission", "pk": 40, "fields": {"name": "Can view order work staff assign", "content_type": 10, "codename": "view_orderworkstaffassign"}}, {"model": "auth.permission", "pk": 41, "fields": {"name": "Can add order work staff status completion", "content_type": 11, "codename": "add_orderworkstaffstatuscompletion"}}, {"model": "auth.permission", "pk": 42, "fields": {"name": "Can change order work staff status completion", "content_type": 11, "codename": "change_orderworkstaffstatuscompletion"}}, {"model": "auth.permission", "pk": 43, "fields": {"name": "Can delete order work staff status completion", "content_type": 11, "codename": "delete_orderworkstaffstatuscompletion"}}, {"model": "auth.permission", "pk": 44, "fields": {"name": "Can view order work staff status completion", "content_type": 11, "codename": "view_orderworkstaffstatuscompletion"}}, {"model": "auth.permission", "pk": 45, "fields": {"name": "Can add staff", "content_type": 12, "codename": "add_staff"}}, {"model": "auth.permission", "pk": 46, "fields": {"name": "Can change staff", "content_type": 12, "codename": "change_staff"}}, {"model": "auth.permission", "pk": 47, "fields": {"name": "Can delete staff", "content_type": 12, "codename": "delete_staff"}}, {"model": "auth.permission", "pk": 48, "fields": {"name": "Can view staff", "content_type": 12, "codename": "view_staff"}}, {"model": "auth.permission", "pk": 49, "fields": {"name": "Can add tmp material", "content_type": 13, "codename": "add_tmpmaterial"}}, {"model": "auth.permission", "pk": 50, "fields": {"name": "Can change tmp material", "content_type": 13, "codename": "change_tmpmaterial"}}, {"model": "auth.permission", "pk": 51, "fields": {"name": "Can delete tmp material", "content_type": 13, "codename": "delete_tmpmaterial"}}, {"model": "auth.permission", "pk": 52, "fields": {"name": "Can view tmp material", "content_type": 13, "codename": "view_tmpmaterial"}}, {"model": "auth.permission", "pk": 53, "fields": {"name": "Can add tmp work", "content_type": 14, "codename": "add_tmpwork"}}, {"model": "auth.permission", "pk": 54, "fields": {"name": "Can change tmp work", "content_type": 14, "codename": "change_tmpwork"}}, {"model": "auth.permission", "pk": 55, "fields": {"name": "Can delete tmp work", "content_type": 14, "codename": "delete_tmpwork"}}, {"model": "auth.permission", "pk": 56, "fields": {"name": "Can view tmp work", "content_type": 14, "codename": "view_tmpwork"}}, {"model": "auth.permission", "pk": 57, "fields": {"name": "Can add user", "content_type": 15, "codename": "add_user"}}, {"model": "auth.permission", "pk": 58, "fields": {"name": "Can change user", "content_type": 15, "codename": "change_user"}}, {"model": "auth.permission", "pk": 59, "fields": {"name": "Can delete user", "content_type": 15, "codename": "delete_user"}}, {"model": "auth.permission", "pk": 60, "fields": {"name": "Can view user", "content_type": 15, "codename": "view_user"}}, {"model": "auth.permission", "pk": 61, "fields": {"name": "Can add work", "content_type": 16, "codename": "add_work"}}, {"model": "auth.permission", "pk": 62, "fields": {"name": "Can change work", "content_type": 16, "codename": "change_work"}}, {"model": "auth.permission", "pk": 63, "fields": {"name": "Can delete work", "content_type": 16, "codename": "delete_work"}}, {"model": "auth.permission", "pk": 64, "fields": {"name": "Can view work", "content_type": 16, "codename": "view_work"}}, {"model": "auth.permission", "pk": 65, "fields": {"name": "Can add staff work wage", "content_type": 17, "codename": "add_staffworkwage"}}, {"model": "auth.permission", "pk": 66, "fields": {"name": "Can change staff work wage", "content_type": 17, "codename": "change_staffworkwage"}}, {"model": "auth.permission", "pk": 67, "fields": {"name": "Can delete staff work wage", "content_type": 17, "codename": "delete_staffworkwage"}}, {"model": "auth.permission", "pk": 68, "fields": {"name": "Can view staff work wage", "content_type": 17, "codename": "view_staffworkwage"}}, {"model": "auth.permission", "pk": 69, "fields": {"name": "Can add staff wage given status", "content_type": 18, "codename": "add_staffwagegivenstatus"}}, {"model": "auth.permission", "pk": 70, "fields": {"name": "Can change staff wage given status", "content_type": 18, "codename": "change_staffwagegivenstatus"}}, {"model": "auth.permission", "pk": 71, "fields": {"name": "Can delete staff wage given status", "content_type": 18, "codename": "delete_staffwagegivenstatus"}}, {"model": "auth.permission", "pk": 72, "fields": {"name": "Can view staff wage given status", "content_type": 18, "codename": "view_staffwagegivenstatus"}}, {"model": "auth.permission", "pk": 73, "fields": {"name": "Can add order work staff taken", "content_type": 19, "codename": "add_orderworkstafftaken"}}, {"model": "auth.permission", "pk": 74, "fields": {"name": "Can change order work staff taken", "content_type": 19, "codename": "change_orderworkstafftaken"}}, {"model": "auth.permission", "pk": 75, "fields": {"name": "Can delete order work staff taken", "content_type": 19, "codename": "delete_orderworkstafftaken"}}, {"model": "auth.permission", "pk": 76, "fields": {"name": "Can view order work staff taken", "content_type": 19, "codename": "view_orderworkstafftaken"}}, {"model": "auth.permission", "pk": 77, "fields": {"name": "Can add order work", "content_type": 20, "codename": "add_orderwork"}}, {"model": "auth.permission", "pk": 78, "fields": {"name": "Can change order work", "content_type": 20, "codename": "change_orderwork"}}, {"model": "auth.permission", "pk": 79, "fields": {"name": "Can delete order work", "content_type": 20, "codename": "delete_orderwork"}}, {"model": "auth.permission", "pk": 80, "fields": {"name": "Can view order work", "content_type": 20, "codename": "view_orderwork"}}, {"model": "auth.permission", "pk": 81, "fields": {"name": "Can add order pickup other", "content_type": 21, "codename": "add_orderpickupother"}}, {"model": "auth.permission", "pk": 82, "fields": {"name": "Can change order pickup other", "content_type": 21, "codename": "change_orderpickupother"}}, {"model": "auth.permission", "pk": 83, "fields": {"name": "Can delete order pickup other", "content_type": 21, "codename": "delete_orderpickupother"}}, {"model": "auth.permission", "pk": 84, "fields": {"name": "Can view order pickup other", "content_type": 21, "codename": "view_orderpickupother"}}, {"model": "auth.permission", "pk": 85, "fields": {"name": "Can add order pickup courier", "content_type": 22, "codename": "add_orderpickupcourier"}}, {"model": "auth.permission", "pk": 86, "fields": {"name": "Can change order pickup courier", "content_type": 22, "codename": "change_orderpickupcourier"}}, {"model": "auth.permission", "pk": 87, "fields": {"name": "Can delete order pickup courier", "content_type": 22, "codename": "delete_orderpickupcourier"}}, {"model": "auth.permission", "pk": 88, "fields": {"name": "Can view order pickup courier", "content_type": 22, "codename": "view_orderpickupcourier"}}, {"model": "auth.permission", "pk": 89, "fields": {"name": "Can add order payment", "content_type": 23, "codename": "add_orderpayment"}}, {"model": "auth.permission", "pk": 90, "fields": {"name": "Can change order payment", "content_type": 23, "codename": "change_orderpayment"}}, {"model": "auth.permission", "pk": 91, "fields": {"name": "Can delete order payment", "content_type": 23, "codename": "delete_orderpayment"}}, {"model": "auth.permission", "pk": 92, "fields": {"name": "Can view order payment", "content_type": 23, "codename": "view_orderpayment"}}, {"model": "auth.permission", "pk": 93, "fields": {"name": "Can add order material location", "content_type": 24, "codename": "add_ordermateriallocation"}}, {"model": "auth.permission", "pk": 94, "fields": {"name": "Can change order material location", "content_type": 24, "codename": "change_ordermateriallocation"}}, {"model": "auth.permission", "pk": 95, "fields": {"name": "Can delete order material location", "content_type": 24, "codename": "delete_ordermateriallocation"}}, {"model": "auth.permission", "pk": 96, "fields": {"name": "Can view order material location", "content_type": 24, "codename": "view_ordermateriallocation"}}, {"model": "auth.permission", "pk": 97, "fields": {"name": "Can add order material", "content_type": 25, "codename": "add_ordermaterial"}}, {"model": "auth.permission", "pk": 98, "fields": {"name": "Can change order material", "content_type": 25, "codename": "change_ordermaterial"}}, {"model": "auth.permission", "pk": 99, "fields": {"name": "Can delete order material", "content_type": 25, "codename": "delete_ordermaterial"}}, {"model": "auth.permission", "pk": 100, "fields": {"name": "Can view order material", "content_type": 25, "codename": "view_ordermaterial"}}, {"model": "auth.permission", "pk": 101, "fields": {"name": "Can add order alter", "content_type": 26, "codename": "add_orderalter"}}, {"model": "auth.permission", "pk": 102, "fields": {"name": "Can change order alter", "content_type": 26, "codename": "change_orderalter"}}, {"model": "auth.permission", "pk": 103, "fields": {"name": "Can delete order alter", "content_type": 26, "codename": "delete_orderalter"}}, {"model": "auth.permission", "pk": 104, "fields": {"name": "Can view order alter", "content_type": 26, "codename": "view_orderalter"}}, {"model": "auth.permission", "pk": 105, "fields": {"name": "Can add delivery", "content_type": 27, "codename": "add_delivery"}}, {"model": "auth.permission", "pk": 106, "fields": {"name": "Can change delivery", "content_type": 27, "codename": "change_delivery"}}, {"model": "auth.permission", "pk": 107, "fields": {"name": "Can delete delivery", "content_type": 27, "codename": "delete_delivery"}}, {"model": "auth.permission", "pk": 108, "fields": {"name": "Can view delivery", "content_type": 27, "codename": "view_delivery"}}, {"model": "auth.user", "pk": 1, "fields": {"password": "pbkdf2_sha256$320000$NaerKfsJmPbXdbKi8WuTEa$LtM1k7JE+cRqOUDVXnjS0166NNrtm1Bp4NnmxztMUvI=", "last_login": "2022-02-26T01:47:11.874Z", "is_superuser": true, "username": "angappanmuthu", "first_name": "", "last_name": "", "email": "", "is_staff": true, "is_active": true, "date_joined": "2022-02-26T01:46:57.125Z", "groups": [], "user_permissions": []}}, {"model": "contenttypes.contenttype", "pk": 1, "fields": {"app_label": "admin", "model": "logentry"}}, {"model": "contenttypes.contenttype", "pk": 2, "fields": {"app_label": "auth", "model": "permission"}}, {"model": "contenttypes.contenttype", "pk": 3, "fields": {"app_label": "auth", "model": "group"}}, {"model": "contenttypes.contenttype", "pk": 4, "fields": {"app_label": "auth", "model": "user"}}, {"model": "contenttypes.contenttype", "pk": 5, "fields": {"app_label": "contenttypes", "model": "contenttype"}}, {"model": "contenttypes.contenttype", "pk": 6, "fields": {"app_label": "sessions", "model": "session"}}, {"model": "contenttypes.contenttype", "pk": 7, "fields": {"app_label": "api", "model": "customer"}}, {"model": "contenttypes.contenttype", "pk": 8, "fields": {"app_label": "api", "model": "material"}}, {"model": "contenttypes.contenttype", "pk": 9, "fields": {"app_label": "api", "model": "order"}}, {"model": "contenttypes.contenttype", "pk": 10, "fields": {"app_label": "api", "model": "orderworkstaffassign"}}, {"model": "contenttypes.contenttype", "pk": 11, "fields": {"app_label": "api", "model": "orderworkstaffstatuscompletion"}}, {"model": "contenttypes.contenttype", "pk": 12, "fields": {"app_label": "api", "model": "staff"}}, {"model": "contenttypes.contenttype", "pk": 13, "fields": {"app_label": "api", "model": "tmpmaterial"}}, {"model": "contenttypes.contenttype", "pk": 14, "fields": {"app_label": "api", "model": "tmpwork"}}, {"model": "contenttypes.contenttype", "pk": 15, "fields": {"app_label": "api", "model": "user"}}, {"model": "contenttypes.contenttype", "pk": 16, "fields": {"app_label": "api", "model": "work"}}, {"model": "contenttypes.contenttype", "pk": 17, "fields": {"app_label": "api", "model": "staffworkwage"}}, {"model": "contenttypes.contenttype", "pk": 18, "fields": {"app_label": "api", "model": "staffwagegivenstatus"}}, {"model": "contenttypes.contenttype", "pk": 19, "fields": {"app_label": "api", "model": "orderworkstafftaken"}}, {"model": "contenttypes.contenttype", "pk": 20, "fields": {"app_label": "api", "model": "orderwork"}}, {"model": "contenttypes.contenttype", "pk": 21, "fields": {"app_label": "api", "model": "orderpickupother"}}, {"model": "contenttypes.contenttype", "pk": 22, "fields": {"app_label": "api", "model": "orderpickupcourier"}}, {"model": "contenttypes.contenttype", "pk": 23, "fields": {"app_label": "api", "model": "orderpayment"}}, {"model": "contenttypes.contenttype", "pk": 24, "fields": {"app_label": "api", "model": "ordermateriallocation"}}, {"model": "contenttypes.contenttype", "pk": 25, "fields": {"app_label": "api", "model": "ordermaterial"}}, {"model": "contenttypes.contenttype", "pk": 26, "fields": {"app_label": "api", "model": "orderalter"}}, {"model": "contenttypes.contenttype", "pk": 27, "fields": {"app_label": "api", "model": "delivery"}}, {"model": "sessions.session", "pk": "99ivxlu1k2o5qdtyf8ct3j0lvzta8frm", "fields": {"session_data": ".eJxVjEEOwiAQRe_C2hBgKB1duu8ZCMOAVA0kpV0Z765NutDtf-_9l_BhW4vfelr8zOIitDj9bhTiI9Ud8D3UW5Ox1XWZSe6KPGiXU-P0vB7u30EJvXxr5GwzZ9Bsrc6KDDgFCAMxAYRxYMuAmpwLY47oEEwkYIXOnq1Go8X7A-LYNz4:1nNmAx:qC1uV5EBTB7TUvPJ1SbsvDWBj58w0FHKFqQtpUAqoPc", "expire_date": "2022-03-12T01:47:11.875Z"}}, {"model": "api.customer", "pk": "ZC83498", "fields": {"cust_name": "Angappan", "mobile": "8825942331", "email": "sdf@a.cm", "password": "1234", "address": "asdf", "city": "sdad", "pincode": "809798"}}, {"model": "api.work", "pk": "ZW0001", "fields": {"work_name": "Shirt", "wage_type": "full", "amount": 100}}, {"model": "api.order", "pk": "ZA786", "fields": {"customer": "ZC83498", "booking_date_time": "2022-02-26T06:09:57.276Z", "due_date": "2022-02-28", "order_image": "", "material_image": "", "order_voice_inst": "", "pickup_type": "", "total_amount": 900, "advance_amount": 0, "balance_amount": 900}}, {"model": "api.orderwork", "pk": 1, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 2, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 3, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 4, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 5, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 6, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 7, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 8, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 9, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 10, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 11, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 12, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 13, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 14, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 15, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 16, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 17, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 18, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 19, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 20, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 21, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 22, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 23, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 24, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 25, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 26, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 27, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 28, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 29, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 30, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 31, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 32, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 33, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 34, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 35, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 36, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 37, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 38, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 39, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 40, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 41, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 42, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 43, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 44, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.orderwork", "pk": 45, "fields": {"order_id": "ZA786", "work_id": "ZW0001", "quantity": "1", "amount": 100}}, {"model": "api.ordermaterial", "pk": 1, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 2, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 3, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 4, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 5, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 6, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 7, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 8, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 9, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 10, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 11, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 12, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 13, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 14, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 15, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 16, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 17, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 18, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 19, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 20, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 21, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 22, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 23, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 24, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 25, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.ordermaterial", "pk": 26, "fields": {"order_id": "ZA786", "material_id": "ZM0001", "quantity": "1", "amount": 300}}, {"model": "api.material", "pk": "ZM0001", "fields": {"material_name": "VelVet", "measurement": "meter", "amount": 300}}, {"model": "api.user", "pk": 1, "fields": {"login_id": "ZC83498", "password": "1234", "mobile": "8825942331", "role": "customer"}}, {"model": "api.tmpwork", "pk": 11, "fields": {"order_id": "ZA786", "cust_id": "ZC83498", "work_id": "ZW0001", "work_name": "Shirt", "quantity": "1", "amount": 100, "total": 100}}, {"model": "api.tmpwork", "pk": 12, "fields": {"order_id": "ZA786", "cust_id": "ZC83498", "work_id": "ZW0001", "work_name": "Shirt", "quantity": "1", "amount": 100, "total": 100}}, {"model": "api.tmpwork", "pk": 13, "fields": {"order_id": "ZA786", "cust_id": "ZC83498", "work_id": "ZW0001", "work_name": "Shirt", "quantity": "1", "amount": 100, "total": 100}}, {"model": "api.tmpmaterial", "pk": 4, "fields": {"order_id": "ZA786", "cust_id": "ZC83498", "material_id": "ZM0001", "material_name": "VelVet", "quantity": "1", "amount": 300, "total": 300}}, {"model": "api.tmpmaterial", "pk": 5, "fields": {"order_id": "ZA786", "cust_id": "ZC83498", "material_id": "ZM0001", "material_name": "VelVet", "quantity": "1", "amount": 300, "total": 300}}]
+[
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2022-02-26T02:08:16.480Z",
+      "user": 1,
+      "content_type": 16,
+      "object_id": "ZW0001",
+      "object_repr": "Shirt",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2022-02-26T02:08:37.310Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "ZM0001",
+      "object_repr": "VelVet meter",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2022-02-26T05:58:51.381Z",
+      "user": 1,
+      "content_type": 9,
+      "object_id": "ZA786",
+      "object_repr": "ZA786 Angappan",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2022-02-26T06:09:00.959Z",
+      "user": 1,
+      "content_type": 9,
+      "object_id": "ZA786",
+      "object_repr": "ZA786 Angappan",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+      "name": "Can add log entry",
+      "content_type": 1,
+      "codename": "add_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+      "name": "Can change log entry",
+      "content_type": 1,
+      "codename": "change_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+      "name": "Can delete log entry",
+      "content_type": 1,
+      "codename": "delete_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+      "name": "Can view log entry",
+      "content_type": 1,
+      "codename": "view_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+      "name": "Can add permission",
+      "content_type": 2,
+      "codename": "add_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+      "name": "Can change permission",
+      "content_type": 2,
+      "codename": "change_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+      "name": "Can delete permission",
+      "content_type": 2,
+      "codename": "delete_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+      "name": "Can view permission",
+      "content_type": 2,
+      "codename": "view_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+      "name": "Can add group",
+      "content_type": 3,
+      "codename": "add_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+      "name": "Can change group",
+      "content_type": 3,
+      "codename": "change_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+      "name": "Can delete group",
+      "content_type": 3,
+      "codename": "delete_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+      "name": "Can view group",
+      "content_type": 3,
+      "codename": "view_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 4,
+      "codename": "add_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 4,
+      "codename": "change_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 4,
+      "codename": "delete_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 4,
+      "codename": "view_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+      "name": "Can add content type",
+      "content_type": 5,
+      "codename": "add_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+      "name": "Can change content type",
+      "content_type": 5,
+      "codename": "change_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+      "name": "Can delete content type",
+      "content_type": 5,
+      "codename": "delete_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+      "name": "Can view content type",
+      "content_type": 5,
+      "codename": "view_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+      "name": "Can add session",
+      "content_type": 6,
+      "codename": "add_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+      "name": "Can change session",
+      "content_type": 6,
+      "codename": "change_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+      "name": "Can delete session",
+      "content_type": 6,
+      "codename": "delete_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+      "name": "Can view session",
+      "content_type": 6,
+      "codename": "view_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+      "name": "Can add customer",
+      "content_type": 7,
+      "codename": "add_customer"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+      "name": "Can change customer",
+      "content_type": 7,
+      "codename": "change_customer"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+      "name": "Can delete customer",
+      "content_type": 7,
+      "codename": "delete_customer"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+      "name": "Can view customer",
+      "content_type": 7,
+      "codename": "view_customer"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+      "name": "Can add material",
+      "content_type": 8,
+      "codename": "add_material"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+      "name": "Can change material",
+      "content_type": 8,
+      "codename": "change_material"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+      "name": "Can delete material",
+      "content_type": 8,
+      "codename": "delete_material"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+      "name": "Can view material",
+      "content_type": 8,
+      "codename": "view_material"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+      "name": "Can add order",
+      "content_type": 9,
+      "codename": "add_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+      "name": "Can change order",
+      "content_type": 9,
+      "codename": "change_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+      "name": "Can delete order",
+      "content_type": 9,
+      "codename": "delete_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+      "name": "Can view order",
+      "content_type": 9,
+      "codename": "view_order"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+      "name": "Can add order work staff assign",
+      "content_type": 10,
+      "codename": "add_orderworkstaffassign"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+      "name": "Can change order work staff assign",
+      "content_type": 10,
+      "codename": "change_orderworkstaffassign"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+      "name": "Can delete order work staff assign",
+      "content_type": 10,
+      "codename": "delete_orderworkstaffassign"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+      "name": "Can view order work staff assign",
+      "content_type": 10,
+      "codename": "view_orderworkstaffassign"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+      "name": "Can add order work staff status completion",
+      "content_type": 11,
+      "codename": "add_orderworkstaffstatuscompletion"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+      "name": "Can change order work staff status completion",
+      "content_type": 11,
+      "codename": "change_orderworkstaffstatuscompletion"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+      "name": "Can delete order work staff status completion",
+      "content_type": 11,
+      "codename": "delete_orderworkstaffstatuscompletion"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+      "name": "Can view order work staff status completion",
+      "content_type": 11,
+      "codename": "view_orderworkstaffstatuscompletion"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": {
+      "name": "Can add staff",
+      "content_type": 12,
+      "codename": "add_staff"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": {
+      "name": "Can change staff",
+      "content_type": 12,
+      "codename": "change_staff"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": {
+      "name": "Can delete staff",
+      "content_type": 12,
+      "codename": "delete_staff"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": {
+      "name": "Can view staff",
+      "content_type": 12,
+      "codename": "view_staff"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 49,
+    "fields": {
+      "name": "Can add tmp material",
+      "content_type": 13,
+      "codename": "add_tmpmaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 50,
+    "fields": {
+      "name": "Can change tmp material",
+      "content_type": 13,
+      "codename": "change_tmpmaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 51,
+    "fields": {
+      "name": "Can delete tmp material",
+      "content_type": 13,
+      "codename": "delete_tmpmaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 52,
+    "fields": {
+      "name": "Can view tmp material",
+      "content_type": 13,
+      "codename": "view_tmpmaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 53,
+    "fields": {
+      "name": "Can add tmp work",
+      "content_type": 14,
+      "codename": "add_tmpwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 54,
+    "fields": {
+      "name": "Can change tmp work",
+      "content_type": 14,
+      "codename": "change_tmpwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 55,
+    "fields": {
+      "name": "Can delete tmp work",
+      "content_type": 14,
+      "codename": "delete_tmpwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 56,
+    "fields": {
+      "name": "Can view tmp work",
+      "content_type": 14,
+      "codename": "view_tmpwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 57,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 15,
+      "codename": "add_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 58,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 15,
+      "codename": "change_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 59,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 15,
+      "codename": "delete_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 60,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 15,
+      "codename": "view_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 61,
+    "fields": {
+      "name": "Can add work",
+      "content_type": 16,
+      "codename": "add_work"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 62,
+    "fields": {
+      "name": "Can change work",
+      "content_type": 16,
+      "codename": "change_work"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 63,
+    "fields": {
+      "name": "Can delete work",
+      "content_type": 16,
+      "codename": "delete_work"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 64,
+    "fields": {
+      "name": "Can view work",
+      "content_type": 16,
+      "codename": "view_work"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 65,
+    "fields": {
+      "name": "Can add staff work wage",
+      "content_type": 17,
+      "codename": "add_staffworkwage"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 66,
+    "fields": {
+      "name": "Can change staff work wage",
+      "content_type": 17,
+      "codename": "change_staffworkwage"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 67,
+    "fields": {
+      "name": "Can delete staff work wage",
+      "content_type": 17,
+      "codename": "delete_staffworkwage"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 68,
+    "fields": {
+      "name": "Can view staff work wage",
+      "content_type": 17,
+      "codename": "view_staffworkwage"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 69,
+    "fields": {
+      "name": "Can add staff wage given status",
+      "content_type": 18,
+      "codename": "add_staffwagegivenstatus"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 70,
+    "fields": {
+      "name": "Can change staff wage given status",
+      "content_type": 18,
+      "codename": "change_staffwagegivenstatus"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 71,
+    "fields": {
+      "name": "Can delete staff wage given status",
+      "content_type": 18,
+      "codename": "delete_staffwagegivenstatus"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 72,
+    "fields": {
+      "name": "Can view staff wage given status",
+      "content_type": 18,
+      "codename": "view_staffwagegivenstatus"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 73,
+    "fields": {
+      "name": "Can add order work staff taken",
+      "content_type": 19,
+      "codename": "add_orderworkstafftaken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 74,
+    "fields": {
+      "name": "Can change order work staff taken",
+      "content_type": 19,
+      "codename": "change_orderworkstafftaken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 75,
+    "fields": {
+      "name": "Can delete order work staff taken",
+      "content_type": 19,
+      "codename": "delete_orderworkstafftaken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 76,
+    "fields": {
+      "name": "Can view order work staff taken",
+      "content_type": 19,
+      "codename": "view_orderworkstafftaken"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 77,
+    "fields": {
+      "name": "Can add order work",
+      "content_type": 20,
+      "codename": "add_orderwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 78,
+    "fields": {
+      "name": "Can change order work",
+      "content_type": 20,
+      "codename": "change_orderwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 79,
+    "fields": {
+      "name": "Can delete order work",
+      "content_type": 20,
+      "codename": "delete_orderwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 80,
+    "fields": {
+      "name": "Can view order work",
+      "content_type": 20,
+      "codename": "view_orderwork"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 81,
+    "fields": {
+      "name": "Can add order pickup other",
+      "content_type": 21,
+      "codename": "add_orderpickupother"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 82,
+    "fields": {
+      "name": "Can change order pickup other",
+      "content_type": 21,
+      "codename": "change_orderpickupother"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 83,
+    "fields": {
+      "name": "Can delete order pickup other",
+      "content_type": 21,
+      "codename": "delete_orderpickupother"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 84,
+    "fields": {
+      "name": "Can view order pickup other",
+      "content_type": 21,
+      "codename": "view_orderpickupother"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 85,
+    "fields": {
+      "name": "Can add order pickup courier",
+      "content_type": 22,
+      "codename": "add_orderpickupcourier"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 86,
+    "fields": {
+      "name": "Can change order pickup courier",
+      "content_type": 22,
+      "codename": "change_orderpickupcourier"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 87,
+    "fields": {
+      "name": "Can delete order pickup courier",
+      "content_type": 22,
+      "codename": "delete_orderpickupcourier"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 88,
+    "fields": {
+      "name": "Can view order pickup courier",
+      "content_type": 22,
+      "codename": "view_orderpickupcourier"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 89,
+    "fields": {
+      "name": "Can add order payment",
+      "content_type": 23,
+      "codename": "add_orderpayment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 90,
+    "fields": {
+      "name": "Can change order payment",
+      "content_type": 23,
+      "codename": "change_orderpayment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 91,
+    "fields": {
+      "name": "Can delete order payment",
+      "content_type": 23,
+      "codename": "delete_orderpayment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 92,
+    "fields": {
+      "name": "Can view order payment",
+      "content_type": 23,
+      "codename": "view_orderpayment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 93,
+    "fields": {
+      "name": "Can add order material location",
+      "content_type": 24,
+      "codename": "add_ordermateriallocation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 94,
+    "fields": {
+      "name": "Can change order material location",
+      "content_type": 24,
+      "codename": "change_ordermateriallocation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 95,
+    "fields": {
+      "name": "Can delete order material location",
+      "content_type": 24,
+      "codename": "delete_ordermateriallocation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 96,
+    "fields": {
+      "name": "Can view order material location",
+      "content_type": 24,
+      "codename": "view_ordermateriallocation"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 97,
+    "fields": {
+      "name": "Can add order material",
+      "content_type": 25,
+      "codename": "add_ordermaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 98,
+    "fields": {
+      "name": "Can change order material",
+      "content_type": 25,
+      "codename": "change_ordermaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 99,
+    "fields": {
+      "name": "Can delete order material",
+      "content_type": 25,
+      "codename": "delete_ordermaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 100,
+    "fields": {
+      "name": "Can view order material",
+      "content_type": 25,
+      "codename": "view_ordermaterial"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 101,
+    "fields": {
+      "name": "Can add order alter",
+      "content_type": 26,
+      "codename": "add_orderalter"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 102,
+    "fields": {
+      "name": "Can change order alter",
+      "content_type": 26,
+      "codename": "change_orderalter"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 103,
+    "fields": {
+      "name": "Can delete order alter",
+      "content_type": 26,
+      "codename": "delete_orderalter"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 104,
+    "fields": {
+      "name": "Can view order alter",
+      "content_type": 26,
+      "codename": "view_orderalter"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 105,
+    "fields": {
+      "name": "Can add delivery",
+      "content_type": 27,
+      "codename": "add_delivery"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 106,
+    "fields": {
+      "name": "Can change delivery",
+      "content_type": 27,
+      "codename": "change_delivery"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 107,
+    "fields": {
+      "name": "Can delete delivery",
+      "content_type": 27,
+      "codename": "delete_delivery"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 108,
+    "fields": {
+      "name": "Can view delivery",
+      "content_type": 27,
+      "codename": "view_delivery"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$NaerKfsJmPbXdbKi8WuTEa$LtM1k7JE+cRqOUDVXnjS0166NNrtm1Bp4NnmxztMUvI=",
+      "last_login": "2022-02-26T01:47:11.874Z",
+      "is_superuser": true,
+      "username": "angappanmuthu",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-02-26T01:46:57.125Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": { "app_label": "admin", "model": "logentry" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": { "app_label": "auth", "model": "permission" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": { "app_label": "auth", "model": "group" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": { "app_label": "auth", "model": "user" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": { "app_label": "contenttypes", "model": "contenttype" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": { "app_label": "sessions", "model": "session" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": { "app_label": "api", "model": "customer" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": { "app_label": "api", "model": "material" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": { "app_label": "api", "model": "order" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": { "app_label": "api", "model": "orderworkstaffassign" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": { "app_label": "api", "model": "orderworkstaffstatuscompletion" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": { "app_label": "api", "model": "staff" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 13,
+    "fields": { "app_label": "api", "model": "tmpmaterial" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 14,
+    "fields": { "app_label": "api", "model": "tmpwork" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 15,
+    "fields": { "app_label": "api", "model": "user" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 16,
+    "fields": { "app_label": "api", "model": "work" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 17,
+    "fields": { "app_label": "api", "model": "staffworkwage" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 18,
+    "fields": { "app_label": "api", "model": "staffwagegivenstatus" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 19,
+    "fields": { "app_label": "api", "model": "orderworkstafftaken" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 20,
+    "fields": { "app_label": "api", "model": "orderwork" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 21,
+    "fields": { "app_label": "api", "model": "orderpickupother" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 22,
+    "fields": { "app_label": "api", "model": "orderpickupcourier" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 23,
+    "fields": { "app_label": "api", "model": "orderpayment" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 24,
+    "fields": { "app_label": "api", "model": "ordermateriallocation" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 25,
+    "fields": { "app_label": "api", "model": "ordermaterial" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 26,
+    "fields": { "app_label": "api", "model": "orderalter" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 27,
+    "fields": { "app_label": "api", "model": "delivery" }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "99ivxlu1k2o5qdtyf8ct3j0lvzta8frm",
+    "fields": {
+      "session_data": ".eJxVjEEOwiAQRe_C2hBgKB1duu8ZCMOAVA0kpV0Z765NutDtf-_9l_BhW4vfelr8zOIitDj9bhTiI9Ud8D3UW5Ox1XWZSe6KPGiXU-P0vB7u30EJvXxr5GwzZ9Bsrc6KDDgFCAMxAYRxYMuAmpwLY47oEEwkYIXOnq1Go8X7A-LYNz4:1nNmAx:qC1uV5EBTB7TUvPJ1SbsvDWBj58w0FHKFqQtpUAqoPc",
+      "expire_date": "2022-03-12T01:47:11.875Z"
+    }
+  },
+  {
+    "model": "api.customer",
+    "pk": "ZC83498",
+    "fields": {
+      "cust_name": "Angappan",
+      "mobile": "8825942331",
+      "email": "sdf@a.cm",
+      "password": "1234",
+      "address": "asdf",
+      "city": "sdad",
+      "pincode": "809798"
+    }
+  },
+  {
+    "model": "api.work",
+    "pk": "ZW0001",
+    "fields": { "work_name": "Shirt", "wage_type": "full", "amount": 100 }
+  },
+  {
+    "model": "api.order",
+    "pk": "ZA786",
+    "fields": {
+      "customer": "ZC83498",
+      "booking_date_time": "2022-02-26T06:09:57.276Z",
+      "due_date": "2022-02-28",
+      "order_image": "",
+      "material_image": "",
+      "order_voice_inst": "",
+      "pickup_type": "",
+      "total_amount": 900,
+      "advance_amount": 0,
+      "balance_amount": 900
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 1,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 2,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 3,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 4,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 5,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 6,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 7,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 8,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 9,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 10,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 11,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 12,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 13,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 14,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 15,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 16,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 17,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 18,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 19,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 20,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 21,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 22,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 23,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 24,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 25,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 26,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 27,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 28,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 29,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 30,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 31,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 32,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 33,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 34,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 35,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 36,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 37,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 38,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 39,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 40,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 41,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 42,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 43,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 44,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.orderwork",
+    "pk": 45,
+    "fields": {
+      "order_id": "ZA786",
+      "work_id": "ZW0001",
+      "quantity": "1",
+      "amount": 100
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 1,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 2,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 3,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 4,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 5,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 6,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 7,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 8,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 9,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 10,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 11,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 12,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 13,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 14,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 15,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 16,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 17,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 18,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 19,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 20,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 21,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 22,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 23,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 24,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 25,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.ordermaterial",
+    "pk": 26,
+    "fields": {
+      "order_id": "ZA786",
+      "material_id": "ZM0001",
+      "quantity": "1",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.material",
+    "pk": "ZM0001",
+    "fields": {
+      "material_name": "VelVet",
+      "measurement": "meter",
+      "amount": 300
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 1,
+    "fields": {
+      "login_id": "ZC83498",
+      "password": "1234",
+      "mobile": "8825942331",
+      "role": "customer"
+    }
+  },
+  {
+    "model": "api.tmpwork",
+    "pk": 11,
+    "fields": {
+      "order_id": "ZA786",
+      "cust_id": "ZC83498",
+      "work_id": "ZW0001",
+      "work_name": "Shirt",
+      "quantity": "1",
+      "amount": 100,
+      "total": 100
+    }
+  },
+  {
+    "model": "api.tmpwork",
+    "pk": 12,
+    "fields": {
+      "order_id": "ZA786",
+      "cust_id": "ZC83498",
+      "work_id": "ZW0001",
+      "work_name": "Shirt",
+      "quantity": "1",
+      "amount": 100,
+      "total": 100
+    }
+  },
+  {
+    "model": "api.tmpwork",
+    "pk": 13,
+    "fields": {
+      "order_id": "ZA786",
+      "cust_id": "ZC83498",
+      "work_id": "ZW0001",
+      "work_name": "Shirt",
+      "quantity": "1",
+      "amount": 100,
+      "total": 100
+    }
+  },
+  {
+    "model": "api.tmpmaterial",
+    "pk": 4,
+    "fields": {
+      "order_id": "ZA786",
+      "cust_id": "ZC83498",
+      "material_id": "ZM0001",
+      "material_name": "VelVet",
+      "quantity": "1",
+      "amount": 300,
+      "total": 300
+    }
+  },
+  {
+    "model": "api.tmpmaterial",
+    "pk": 5,
+    "fields": {
+      "order_id": "ZA786",
+      "cust_id": "ZC83498",
+      "material_id": "ZM0001",
+      "material_name": "VelVet",
+      "quantity": "1",
+      "amount": 300,
+      "total": 300
+    }
+  }
+]
