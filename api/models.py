@@ -261,9 +261,9 @@ class TmpWork(models.Model):
     def __str__(self):
         return f'{self.order_id}'
 
-    cust_id = models.CharField(max_length=10)
 class TmpMaterial(models.Model):
     order_id = models.CharField(max_length=10)
+    cust_id = models.CharField(max_length=10)
     material_id = models.CharField(max_length=10)
     material_name = models.CharField(max_length=50,default='')
     quantity = models.CharField(max_length=5,default="")
