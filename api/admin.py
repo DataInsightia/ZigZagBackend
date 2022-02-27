@@ -1,3 +1,4 @@
+from csv import list_dialects
 from django.contrib import admin
 from api.models import *
 
@@ -18,6 +19,10 @@ admin.site.register(
     ]
 )
 
+@admin.register(OrderWorkStaffAssign)
+class OrderWorkStaffAssing(admin.ModelAdmin):
+    list_display = ('order_id','work_id','staff_id','staff_id','assign_stage','assign_date_time')
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_id','booking_date_time','due_date','total_amount','advance_amount','balance_amount')
@@ -37,10 +42,6 @@ class StaffAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('login_id','password','mobile','role')
-
-@admin.register(OrderWorkStaffAssign)
-class OrderWorkStaffAssignAdmin(admin.ModelAdmin):
-    list_display = ('order','work','assign_stage','assign_date_time')
 
 @admin.register(OrderWorkStaffTaken)
 class OrderWorkStaffTakenAdmin(admin.ModelAdmin):

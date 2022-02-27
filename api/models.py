@@ -50,6 +50,7 @@ class Staff(models.Model):
     bank = models.CharField(max_length=300)
     ifsc = models.CharField(max_length=20)
     work_type = models.CharField(max_length=20,choices=work_options)
+    photot = models.ImageField()
 
     def __str__(self):
         return f'{self.staff_name}'
@@ -114,9 +115,10 @@ class OrderWorkStaffAssign(models.Model):
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
     work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
     assign_stage = models.CharField(max_length=50,choices=stage_options)
-    assign_date_time = models.DateTimeField(auto_now=True)
+    assign_date_time = models.DateTimeField(default='')
+
     def __str__(self):
         return f'{self.order} {self.work} {self.staff} {self.assign_stage}'
 
