@@ -255,18 +255,18 @@ class TmpWork(models.Model):
     cust_id = models.CharField(max_length=10)
     work_id = models.CharField(max_length=10)
     work_name = models.CharField(max_length=50,default='')
-    quantity = models.CharField(max_length=5)
+    quantity = models.CharField(max_length=5,default='')
     amount = models.IntegerField()
     total = models.IntegerField()
     def __str__(self):
         return f'{self.order_id}'
 
+    cust_id = models.CharField(max_length=10)
 class TmpMaterial(models.Model):
     order_id = models.CharField(max_length=10)
-    cust_id = models.CharField(max_length=10)
     material_id = models.CharField(max_length=10)
     material_name = models.CharField(max_length=50,default='')
-    quantity = models.CharField(max_length=5)
+    quantity = models.CharField(max_length=5,default="")
     amount = models.IntegerField()
     total = models.IntegerField()
     def __str__(self):
