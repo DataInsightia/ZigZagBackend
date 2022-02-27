@@ -21,7 +21,7 @@ admin.site.register(
 
 @admin.register(OrderWorkStaffAssign)
 class OrderWorkStaffAssing(admin.ModelAdmin):
-    list_display = ('order_id','work_id','staff_id','staff_id','assign_stage','assign_date_time')
+    list_display = ('order','work','staff','assign_stage','assign_date_time')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

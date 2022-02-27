@@ -61,7 +61,7 @@ class Order(models.Model):
         ('courier','COURIER'),
         ('others','OTHERS')
     )
-    order_id = models.CharField(max_length=10,primary_key=True,default='ZA786')
+    order_id = models.CharField(max_length=10,primary_key=True,default='')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, default='')
     booking_date_time = models.DateTimeField(auto_now=True)
     due_date = models.DateField()
@@ -113,11 +113,11 @@ class OrderWorkStaffAssign(models.Model):
         ('hook','HOOK'),
         ('overlock','OVERLOCK')
     )
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
-    assign_stage = models.CharField(max_length=50,choices=stage_options)
-    assign_date_time = models.DateTimeField(default='')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',related_name="order_assigned",db_constraint=False)
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',related_name='work_assigned',db_constraint=False)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',related_name='staff_assigned',null=True,blank=True,db_constraint=False)
+    assign_stage = models.CharField(max_length=50,choices=stage_options,default='',null=True,blank=True)
+    assign_date_time = models.DateTimeField(null=True,blank=True)
 
     def __str__(self):
         return f'{self.order} {self.work} {self.staff} {self.assign_stage}'
@@ -272,7 +272,7 @@ class TmpMaterial(models.Model):
     amount = models.IntegerField()
     total = models.IntegerField()
     def __str__(self):
-        return f'{0}'
+        return f'{self.material_name}'
 
 # class ModelName(models.Model):
 #     pass
