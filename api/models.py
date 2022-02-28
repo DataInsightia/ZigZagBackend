@@ -76,6 +76,13 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.order_id} {self.customer}'
 
+class GenCols(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
+    class Meta:
+        abstract = True
+
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default='')
     work_id = models.CharField(max_length=20, default='')
@@ -117,7 +124,7 @@ class OrderWorkStaffAssign(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
     assign_stage = models.CharField(max_length=50,choices=stage_options)
-    assign_date_time = models.DateTimeField(default='')
+    assign_date_time = models.DateTimeField(default='',null=True,blank=True)
 
     def __str__(self):
         return f'{self.order} {self.work} {self.staff} {self.assign_stage}'
@@ -157,20 +164,14 @@ class OrderWorkStaffStatusCompletion(models.Model):
     def __str__(self):
         return f'{self.order}'
 
-class StaffWorkWage(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    orderworkstatuscompletion = models.ForeignKey(OrderWorkStaffStatusCompletion, on_delete=models.CASCADE, default='')
+class StaffWorkWage(GenCols):
     completion_date_time = models.DateTimeField(auto_now=True)
     wage = models.IntegerField(blank=True,null = True)
     wage_given = models.IntegerField()
     def __str__(self):
-        return f'{self.staff} {self.orderworkstatuscompletion} {self.wage}'
+        return f'{self.staff} {self.wage}'
 
-class StaffWageGivenStatus(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    staffworkwage = models.ForeignKey(StaffWorkWage, on_delete=models.CASCADE, default='')
+class StaffWageGivenStatus(GenCols):
     wage_from_date = models.DateField()
     wage_to_date = models.DateField()
     wage_given_date = models.DateField()
