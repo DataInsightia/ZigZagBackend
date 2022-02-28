@@ -890,3 +890,17 @@ class OrderWorkStaffAssignView(APIView):
                 return Response({"status": True,"message" : "Updated"},status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+class StaffWorkWage(APIView):
+    def post(self,request):
+        data = request.data
+        if 'staff_id' in data:
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            try:
+                owssc = OrderWorkStaffStatusCompletion(staff=staff)
+                StaffWorkWage.objects.create(OrderWorkStaffStatusCompletion = owssc)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+            
