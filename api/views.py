@@ -5,10 +5,9 @@ from django.db.models import Q, Sum
 from api.models import *
 from api.serializers import *
 from random import randint
-from api.utils import get_ifsc
+from api.utils import *
 import json
-from django.views.decorators.csrf import csrf_exempt
-
+import datetime
 
 @api_view(['GET', 'POST'])
 def test(request):
@@ -177,7 +176,6 @@ def customer_register(request):
     return Response({'GET': 'Not Allowed'})
 
 
-
 @api_view(['GET','POST'])
 def tmp_work(request):
     if request.method == 'POST':
@@ -213,7 +211,6 @@ def tmp_work(request):
 def staff_register(request):
     if request.method == "POST":
         data = request.data
-        print(data)
         staff_id = "ZS" + str(randint(9999,100000))
         keys = ('staff_name','password','mobile','address','city','salary_type','salary','worktype','acc_no','ifsc')
         if (i in data for i in keys):
@@ -486,51 +483,53 @@ def order_status(request):
 def staff_work_assign(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','order_id','work_id','assign_stage')
+        keys = ('staff_id','order_id','work_id','assign_stage','id')
         if (i in data for i in keys):
             staff_id = data['staff_id']
             order_id = data['order_id']
             work_id = data['work_id']
             assign_stage = data['assign_stage']
+            id = data['id']
             try:
-                try:
-                    order = Order.objects.get(order_id = order_id)
-                except Order.DoesNotExist:
-                    return Response({'Error':'order id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    work = Work.objects.get(work_id = work_id)
-                except Work.DoesNotExist:
-                    return Response({'Error':'work id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
+                
+                order = fetchOrder(order_id)
+                work = fetchWork(work_id)
+                staff = fetchStaff(staff_id)
 
-                if OrderWorkStaffAssign.objects.filter(
-                    order = order,
-                    work = work,
-                    staff = staff,
-                    assign_stage = assign_stage
-                ).exists():
-                    return Response({'status' : True, 'message': 'Success','details':'Already Order assigned to staff'}) 
+                if OrderWorkStaffAssign.objects.filter(order = order,work = work).exists():
+                    OrderWorkStaffAssign.objects.filter(id = id,order = order,work = work).update(staff=staff,assign_stage = assign_stage,assign_date_time = datetime.datetime.now())
+                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(id = id,order = order,work = work)
+                    print(orderworkstaffassign)
+                    OrderWorkStaffTaken.objects.create(orderworkstaffassign = orderworkstaffassign,taken_stage = assign_stage)
+                    resp = SuccessContext(True,'Success','Order assigned to staff')
+                    return Response(resp) 
                 else:
-                    OrderWorkStaffAssign.objects.create(
-                        order = order,
-                        work = work,
-                        staff = staff,
-                        assign_stage = assign_stage
-                    )
-                    return Response({'status' : True, 'message': 'Success','details':'Order assigned to staff'}) 
+                    resp = SuccessContext(True,'Success','Order already assigned')
+                    return Response(resp) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
-        orders = OrderWorkStaffAssign.objects.all()
-        serializers = OrderWorkStaffAssignSerializers(orders,many=True)
-        return Response(serializers.data)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+        if OrderWorkStaffAssign.objects.filter(staff=None) or OrderWorkStaffAssign.objects.filter(staff=''):
+            orders = OrderWorkStaffAssign.objects.filter(staff=None)
+            li = []
+            for i in OrderWorkStaffAssign.objects.filter(staff=None):
+                order = OrderWorkStaffAssignSerializers(i)
+                nextstage = getNextStage(i.order.order_id)
+                data = {
+                    "nextstage":nextstage,
+                    "data":order.data
+                }
+                li.append(data)
+            return Response({"data":li,"status":True,"message":"Success"},status.HTTP_200_OK) 
+        else:
+            resp = ErrorContext(False,'Failed','not found')
+            return Response(resp)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def staff_work_assigned(request):
@@ -540,128 +539,276 @@ def staff_work_assigned(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
+                
+                staff = fetchStaff(staff_id)
+                if OrderWorkStaffTaken.objects.filter(taken_date_time__isnull = True).exists() and OrderWorkStaffAssign.objects.filter(staff = staff,assign_date_time__isnull = False).exists():
+                    ordertaken = OrderWorkStaffTaken.objects.filter(taken_date_time__isnull = True)
+                    serializer = OrderWorkStaffTakenSerializers(ordertaken,many=True)
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
 
-                orderworkstaffassign = OrderWorkStaffAssign.objects.filter(
-                    staff = staff,
-                )
-                serializers = OrderWorkStaffAssignSerializers(orderworkstaffassign,many=True)
-                return Response(serializers.data) 
+                else:
+                    return Response({"status":False,"message":"Failure"},status.HTTP_200_OK) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
         orders = OrderWorkStaffAssign.objects.all()
-        serializers = OrderWorkStaffAssignSerializers(orders,many=True)
-        return Response(serializers.data)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderWorkStaffAssignSerializers(orders,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def staff_work_taken(request):
+    if request.method == "POST":     
+        data = request.data
+        keys = ('staff_id')
+        if (i in data for i in keys):
+            staff_id = data['staff_id']
+            try:
+                staff = fetchStaff(staff_id)
+
+                if OrderWorkStaffTaken.objects.filter(orderworkstaffassign__staff_id = staff.staff_id).exists():
+                   
+                    
+                    ordertaken = OrderWorkStaffTaken.objects.exclude(orderworkstaffassign__staff_id = staff.staff_id,taken_date_time__isnull=True)
+                    serializer = OrderWorkStaffTakenSerializers(ordertaken,many=True)
+                    # for i in ordertaken:
+                    #     OrderWorkStaffAssign.objects.filter()
+ 
+                    print(ordertaken)
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK)  
+                else:
+                    return Response({"status":False,"message":"Failed"},status.HTTP_200_OK) 
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
+
+    elif request.method == 'GET':
+        
+        orders = OrderWorkStaffAssign.objects.all()
+        serializer = OrderWorkStaffAssignSerializers(orders,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','POST'])
-def staff_work_taken(request):
+def staff_work_take(request):
     if request.method == "POST":
         data = request.data
        
-        keys = ('staff_id','order_id','work_id','assigned_work')
+        keys = ('staff_id','order_id','work_id','assigned_stage')
         if (i in data for i in keys):
             staff_id = data['staff_id']
             order_id = data['order_id']
             work_id = data['work_id']
-            assigned_work = data['assigned_work']
+            assigned_stage = data['assigned_stage']
             try:
-                try:
-                    order = Order.objects.get(order_id = order_id)
-                except Order.DoesNotExist:
-                    return Response({'Error':'order id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    work = Work.objects.get(work_id = work_id)
-                except Work.DoesNotExist:
-                    return Response({'Error':'work id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(assign_stage = assigned_work)
-                except OrderWorkStaffAssign.DoesNotExist:
-                    return Response({'Error':'orderworkstaffassign not found'},status=status.HTTP_400_BAD_REQUEST)
-
-                if  OrderWorkStaffTaken.objects.filter(order = order,staff = staff,orderworkstaffassign = orderworkstaffassign).exists():
-                    return Response({'status' : True, 'message': 'Success','details':'order work already staff taken'})
+                order = fetchOrder(order_id)
+                work = fetchWork(work_id)
+                staff = fetchStaff(staff_id)
+                
+                if  OrderWorkStaffAssign.objects.filter(order = order).exists():
+                    ordw = OrderWorkStaffAssign.objects.filter(order = order).last()
+                    OrderWorkStaffTaken.objects.filter(orderworkstaffassign = ordw).update(taken_date_time = datetime.datetime.now())
+                    
+                    if OrderWorkStaffStatusCompletion.objects.filter(order = order,staff = staff ,orderworkstaffassign = ordw).exists():
+                        return Response({'status' : True, 'message': 'Success','details':'Order already taken'})  
+                    else:
+                        OrderWorkStaffStatusCompletion.objects.create(order = order,staff = staff ,orderworkstaffassign = ordw,work_staff_completion_stage = assigned_stage)
+                        return Response({'status' : True, 'message': 'Success','details':'Order taken'})
                 else:
-                    OrderWorkStaffTaken.objects.create(
-                            order = order,
-                            staff = staff,
-                            orderworkstaffassign = orderworkstaffassign
-                        )
-                    return Response({'status' : True, 'message': 'Success','details':'order work staff taken'})  
+                    return Response({'status' : True, 'message': 'Success','details':'order work already staff taken'})  
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
+        
         orders = OrderWorkStaffAssign.objects.all()
-        serializers = OrderWorkStaffAssignSerializers(orders,many=True)
-        return Response(serializers.data)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderWorkStaffAssignSerializers(orders,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def staff_work_assign_completion(request):
     if request.method == "POST":
         data = request.data
-        print(data)
-        keys = ('staff_id','order_id','work_id','assign_stage')
+        keys = ('staff')
         if (i in data for i in keys):
             try:
-                staff_id = request.data['staff_id']
-                order_id = request.data['order_id']
-                work_id = request.data['work_id']
-                assign_stage = request.data['assign_stage']
-                print(assign_stage)
+                staff_id = data['staff']
+                staff = fetchStaff(staff_id)
 
-                try:
-                    order = Order.objects.get(
-                        order_id = order_id
-                    )
-                except Order.DoesNotExist:
-                    return Response({'Error':'order id not found'},status=status.HTTP_400_BAD_REQUEST)
-                try:
-                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(order = order)
-                except OrderWorkStaffAssign.DoesNotExist:
-                    return Response({'Error':'assigned order not found'},status=status.HTTP_400_BAD_REQUEST)        
-
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'work id not found'},status=status.HTTP_400_BAD_REQUEST)
-
-                if OrderWorkStaffStatusCompletion.objects.filter(
-                    order = order,
-                    staff = staff,
-                    orderworkstaffassign = orderworkstaffassign,
-                    work_staff_completion_stage = assign_stage
-                ).exists():
-                    return Response({'status' : True, 'message': 'Success','details':'already order completion updated successfully'})
+                if OrderWorkStaffStatusCompletion.objects.exclude(work_completed_date_time__isnull=False).filter(staff=staff).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.exclude(work_completed_date_time__isnull=False).filter(staff=staff)
+                    serializer = OrderWorkStaffAssignCompletionSerializers(ordc,many=True)
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
                 else:
-                    OrderWorkStaffStatusCompletion.objects.create(
-                        order = order,
-                        staff = staff,
-                        orderworkstaffassign = orderworkstaffassign,
-                        work_staff_completion_stage = assign_stage
-                    )
-                    return Response({'status' : True, 'message': 'Success','details':'Order completion update successfully'})
+                    return Response({'status' : False, 'message': 'not found'})
 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
             return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'}) 
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def staff_work_completion_review(request):
+    if request.method == "POST":
+        data = request.data
+        keys = ('staff')
+        if (i in data for i in keys):
+            try:
+                staff_id = data['staff']
+                staff = fetchStaff(staff_id)
+
+                if OrderWorkStaffStatusCompletion.objects.exclude(work_completed_date_time__isnull=True).exclude(work_staff_completion_approved = True).filter(staff=staff).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.exclude(work_completed_date_time__isnull=True).exclude(work_staff_completion_approved = True)
+                    serializer = OrderWorkStaffAssignCompletionSerializers(ordc,many=True)
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+                else:
+                    return Response({'status' : False, 'message': 'not found'})
+
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'}) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def staff_stage_completion(request):
+    if request.method == "POST":
+        data = request.data
+        print(data)
+        keys = ('staff_id','order_id','work_id','stage')
+        if (i in data for i in keys):
+            try:
+                staff_id = data['staff_id']
+                order_id = data['order_id']
+                work_id = data['work_id']
+                stage = data['stage']
+
+                order = fetchOrder(order_id)
+                staff = fetchStaff(staff_id)
+                    
+                if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_completed_date_time = datetime.datetime.now())
+                    return Response({'status' : True, 'message': 'Success'})
+                else:
+                    return Response({'status' : False, 'message': 'not found'})
+
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','POST'])
+def staff_work_assign_completion_app(request):
+    if request.method == "POST":
+        data = request.data
+        print(data)
+        keys = ('staff_id','order_id','work_id','stage','state')
+        if (i in data for i in keys):
+            try:
+                staff_id = data['staff_id']
+                order_id = data['order_id']
+                work_id = data['work_id']
+                stage = data['stage']
+                state = data['state']
+
+                order = fetchOrder(order_id)
+                work = fetchWork(work_id)
+                staff = fetchStaff(staff_id)
+
+                if state == "approve":
+                    if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
+                        ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_staff_comp_app_date_time = datetime.datetime.now(),work_staff_completion_approved = True)
+                        resp = SuccessContext(True,'Success','Updated')
+                        return Response(resp)
+                    else:
+                        resp = SuccessContext(True,'Success','Already Updated')
+                        return Response(resp)
+                elif state == "reassign":
+                    OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).delete()
+                    OrderWorkStaffTaken.objects.filter(staff = staff,order = order).delete()
+                    OrderWorkStaffAssign.objects.filter(order = order,work = work).update(staff = None,assign_stage = None,assign_date_time = None)
+                    resp = SuccessContext(True,'Success','deleted')
+                    return Response(resp)
+
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
+    else:
+        if OrderWorkStaffStatusCompletion.objects.filter(work_staff_completion_approved = False,work_completed_date_time__isnull=False).exists():
+            ordc = OrderWorkStaffStatusCompletion.objects.filter(work_staff_completion_approved = False,work_completed_date_time__isnull=False)
+            serializer = OrderWorkStaffAssignCompletionSerializers(ordc,many=True)
+            return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+        else:
+            return Response({"status":False,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+def work_finalize(request):
+    if request.method == "POST":
+        data = request.data
+        keys = ('staff_id','order_id','work_id','stage','date')
+        if (i in data for i in keys):
+            try:
+                staff_id = data['staff_id']
+                order_id = data['order_id']
+                work_id = data['work_id']
+                stage = data['stage']
+                date = data['date']
+
+                order = fetchOrder(order_id)
+                work = fetchWork(work_id)
+                staff = fetchStaff(staff_id)
+
+                if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,work_staff_completion_approved = True).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,work_staff_completion_approved = True).update(order_next_stage_assign = True)
+                    d = OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
+                    print('d')
+                    resp = SuccessContext(True,'Success','Work finished')
+                    return Response(resp)
+                else:
+                    resp = SuccessContext(True,'Failure','not allowed')
+                    return Response(resp)
+
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
+    elif request.method == "GET":
+        if OrderWorkStaffStatusCompletion.objects.filter(work_staff_completion_approved = True,order_next_stage_assign = False).exists():
+            ordc = OrderWorkStaffStatusCompletion.objects.filter(work_staff_completion_approved = True,order_next_stage_assign = False)
+            serializer = OrderWorkStaffAssignCompletionSerializers(ordc,many=True)
+            return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+        else:
+            return Response({"status":False,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def staff_work_assign_completion_approval(request):
@@ -677,18 +824,9 @@ def staff_work_assign_completion_approval(request):
                 staff_id = data['staff_id']
                 order_id = data['order_id']
 
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
-
-                try:
-                    order = Order.objects.get(
-                        order_id = order_id
-                    )
-                except Order.DoesNotExist:
-                    return Response({'Error':'order id not found'},status=status.HTTP_400_BAD_REQUEST)
-
+                staff = fetchStaff(staff_id)
+                order = fetchOrder(order_id)
+                
                 if OrderWorkStaffStatusCompletion.objects.filter(id = ids,work_staff_completion_approved = True).exists():
                     return Response({'status' : True, 'message': 'Success','details':'Order already approved'}) 
                 else:
@@ -701,11 +839,12 @@ def staff_work_assign_completion_approval(request):
 
                     return Response({'status' : True, 'message': 'Success','details':'Order approved'}) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'}) 
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET','POST'])
 def staff_wage_calculation(request):
@@ -715,10 +854,9 @@ def staff_wage_calculation(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
+ 
+                staff = fetchStaff(staff_id)
+          
 
                 if staff.salary_type == "monthly":
                     pass
@@ -742,18 +880,20 @@ def staff_wage_calculation(request):
                 else:
                     return Response({'status' : False,'message' : 'Failed','error' : "please fill staff details"},status=status.HTTP_400_BAD_REQUEST)
                 staffwages = StaffWorkWage.objects.filter(staff = staff)
-                serializers = StaffWorkWageSerializers(staffwages,many=True)
-                return Response(serializers.data) 
+                serializer = StaffWorkWageSerializers(staffwages,many=True)
+                return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
         staffwages = StaffWorkWage.objects.all()
-        serializers = StaffWorkWageSerializers(staffwages,many=True)
-        return Response(serializers.data)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer = StaffWorkWageSerializers(staffwages,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','POST'])
 def staff_wage_manager(request):
@@ -763,24 +903,24 @@ def staff_wage_manager(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
+               
+                staff = fetchStaff(staff_id)
+
                 staffwages = StaffWorkWage.objects.filter(staff = staff)
-                serializers = StaffWorkWageSerializers(staffwages,many=True)
-                return Response(serializers.data) 
+                serializer = StaffWorkWageSerializers(staffwages,many=True)
+                return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
         staffwages = StaffWorkWage.objects.all()
-        serializers = StaffWorkWageSerializers(staffwages,many=True)
-        return Response(serializers.data)
+        serializer = StaffWorkWageSerializers(staffwages,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
     return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET','POST'])
 def staff_payment_update(request):
@@ -791,23 +931,20 @@ def staff_payment_update(request):
             staff_id = data['staff_id']
             updated_amount = data['updated_amount']
             try:
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
-                # staffwages = StaffWorkWage.objects.filter(staff = staff)
-                # serializers = StaffWorkWageSerializers(staffwages,many=True)
-                # return Response(serializers.data) 
+                
+                staff = fetchStaff(staff_id)
+                 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
         staffwages = StaffWorkWage.objects.all()
-        serializers = StaffWorkWageSerializers(staffwages,many=True)
-        return Response(serializers.data)
-
+        serializer = StaffWorkWageSerializers(staffwages,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
 
 @api_view(['GET','POST'])
 def manager_dashboard(request):
@@ -817,20 +954,38 @@ def manager_dashboard(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
-                try:
-                    staff = Staff.objects.get(staff_id = staff_id)
-                except Staff.DoesNotExist:
-                    return Response({'Error':'staff id not found'},status=status.HTTP_400_BAD_REQUEST)
+                
+                staff = fetchStaff(staff_id)
                 # staffwages = StaffWorkWage.objects.filter(staff = staff)
                 # serializers = StaffWorkWageSerializers(staffwages,many=True)
                 # return Response(serializers.data) 
             except Exception as e:
-                return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
         else:
-            return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
 
     elif request.method == 'GET':
         staffwages = StaffWorkWage.objects.all()
-        serializers = StaffWorkWageSerializers(staffwages,many=True)
-        return Response(serializers.data)
+        serializer = StaffWorkWageSerializers(staffwages,many=True)
+        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
 
+
+@api_view(['POST'])
+def stage_filter(request):
+    if request.method == "POST":
+        order_id = request.data['order_id']
+        order = fetchOrder(order_id)
+        s =  OrderWorkStaffAssign.objects.filter(order = order)
+        exclude_list = ['cutting','stitching','hook','overlock']
+        for i in s:
+            if i.assign_stage in exclude_list: 
+                exclude_list.remove(i.assign_stage)
+            else:
+                pass
+        if exclude_list != [] :
+            return Response(exclude_list[0])
+        else:
+            return Response("")
+    return Response(status=status.HTTP_400_BAD_REQUEST)

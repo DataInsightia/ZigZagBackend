@@ -44,7 +44,7 @@ class OrderWorkStaffAssignAdmin(admin.ModelAdmin):
 
 @admin.register(OrderWorkStaffTaken)
 class OrderWorkStaffTakenAdmin(admin.ModelAdmin):
-    list_display = ('order','staff','orderworkstaffassign','taken_date_time')
+    list_display = ('orderworkstaffassign','taken_date_time')
 
 @admin.register(OrderWorkStaffStatusCompletion)
 class OrderWorkStaffStatusCompletionAdmin(admin.ModelAdmin):

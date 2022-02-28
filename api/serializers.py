@@ -46,6 +46,20 @@ class OrderWorkStaffAssignSerializers(ModelSerializer):
         model = OrderWorkStaffAssign
         fields = "__all__"
 
+class OrderWorkStaffTakenSerializers(ModelSerializer):
+    orderworkstaffassign = OrderWorkStaffAssignSerializers()
+    class Meta:
+        model = OrderWorkStaffTaken
+        fields = "__all__"
+
+class OrderWorkStaffAssignCompletionSerializers(ModelSerializer):
+    order = OrderSerializers()
+    staff = StaffSerializers()
+    orderworkstaffassign = OrderWorkStaffAssignSerializers()
+    class Meta:
+        model = OrderWorkStaffStatusCompletion
+        fields = "__all__"
+
 class OrderStatusSerializers(ModelSerializer):
     order = OrderSerializers()
     staff = StaffSerializers()

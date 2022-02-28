@@ -23,7 +23,7 @@ class Work(models.Model):
     work_id = models.CharField(max_length=10,primary_key=True)
     work_name = models.CharField(max_length=50)
     wage_type = models.CharField(choices=options,max_length=10)
-    amount = models.IntegerField(default=0)
+    amount = models.IntegerField(null = True,blank = True)
 
     def __str__(self):
         return f'{self.work_name}'
@@ -45,7 +45,7 @@ class Staff(models.Model):
     address = models.TextField(max_length=250)
     city = models.CharField(max_length=50)
     salary_type = models.CharField(max_length=20,choices=salary_options)
-    salary = models.IntegerField()
+    salary = models.IntegerField(null=True,blank=True)
     acc_no = models.CharField(max_length=16)
     bank = models.CharField(max_length=300)
     ifsc = models.CharField(max_length=20)
@@ -79,7 +79,7 @@ class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default='')
     work_id = models.CharField(max_length=20, default='')
     quantity = models.CharField(max_length=20, default='')
-    amount = models.IntegerField(default=0)
+    amount = models.IntegerField(null = True,blank = True)
 
     def __str__(self):
         return f'{self.order} {self.work}'
@@ -88,7 +88,7 @@ class OrderMaterial(models.Model):
     order_id = models.CharField(max_length=20,default='')
     material_id = models.CharField(max_length=20,default='')
     quantity = models.CharField(max_length=20,default='')
-    amount = models.IntegerField(default=0)
+    amount = models.IntegerField(null = True,blank = True)
     def __str__(self):
         return f'{self.order} {self.material}'
 
@@ -101,7 +101,7 @@ class Material(models.Model):
     material_id = models.CharField(max_length=10,primary_key=True)
     material_name = models.CharField(max_length=100)
     measurement = models.CharField(max_length=20,choices=measurement_options)
-    amount = models.IntegerField(default=0)
+    amount = models.IntegerField(null = True,blank = True)
     def __str__(self):
         return f'{self.material_name} {self.measurement}'
 
@@ -112,13 +112,13 @@ class OrderWorkStaffAssign(models.Model):
         ('hook','HOOK'),
         ('overlock','OVERLOCK')
     )
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    assign_stage = models.CharField(max_length=50,choices=stage_options)
-    assign_date_time = models.DateTimeField(auto_now=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',db_constraint = False)
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',db_constraint = False)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',blank=True,null=True,db_constraint = False)
+    assign_stage = models.CharField(max_length=50,choices=stage_options,blank=True,null=True)
+    assign_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)
     def __str__(self):
-        return f'{self.order} {self.work} {self.staff} {self.assign_stage}'
+        return f'{self.order} {self.work}'
 
 class OrderMaterialLocation(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
@@ -129,12 +129,20 @@ class OrderMaterialLocation(models.Model):
         return f'{self.order} {self.material_location}'
 
 class OrderWorkStaffTaken(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    orderworkstaffassign = models.ForeignKey(OrderWorkStaffAssign, on_delete=models.CASCADE, default='')
-    taken_date_time = models.DateTimeField(auto_now=True)
+    stage_options = (
+        ('cutting', 'CUTTING'),
+        ('stitching', 'STITCHING'),
+        ('hook', 'HOOK'),
+        ('overlock', 'OVERLOCK')
+    )
+    # order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
+    # staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
+    # work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',blank=True,null=True)
+    orderworkstaffassign = models.ForeignKey(OrderWorkStaffAssign, on_delete=models.CASCADE, default='',blank=True,null=True)
+    taken_stage = models.CharField(max_length=50,choices=stage_options,blank=True,null=True)
+    taken_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)
     def __str__(self):
-        return f'{self.order} ({self.taken_date_time})'
+        return f'({self.taken_date_time})'
 
 class OrderWorkStaffStatusCompletion(models.Model):
     stage_options = (
@@ -146,9 +154,9 @@ class OrderWorkStaffStatusCompletion(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
     orderworkstaffassign = models.ForeignKey(OrderWorkStaffAssign, on_delete=models.CASCADE, default='')
-    work_staff_completion_stage = models.CharField(max_length=50,choices=stage_options)
-    work_completed_date_time = models.DateTimeField(auto_now=True)
-    work_staff_comp_app_date_time = models.DateTimeField(auto_now=True,blank=True)
+    work_staff_completion_stage = models.CharField(max_length=50,choices=stage_options,blank=True,null=True)
+    work_completed_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)
+    work_staff_comp_app_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)
     work_staff_completion_approved = models.BooleanField(default=False)
     order_next_stage_assign = models.BooleanField(default=False)
 
@@ -256,7 +264,7 @@ class TmpWork(models.Model):
     work_id = models.CharField(max_length=10)
     work_name = models.CharField(max_length=50,default='')
     quantity = models.CharField(max_length=5)
-    amount = models.IntegerField()
+    amount = models.IntegerField(null = True,blank = True)
     total = models.IntegerField()
     def __str__(self):
         return f'{self.order_id}'
@@ -267,8 +275,8 @@ class TmpMaterial(models.Model):
     material_id = models.CharField(max_length=10)
     material_name = models.CharField(max_length=50,default='')
     quantity = models.CharField(max_length=5)
-    amount = models.IntegerField()
-    total = models.IntegerField()
+    amount = models.IntegerField(null = True,blank = True)
+    total = models.IntegerField(null = True,blank = True)
     def __str__(self):
         return f'{0}'
 
