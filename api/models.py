@@ -125,6 +125,7 @@ class OrderWorkStaffAssign(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',db_constraint = False)
     work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',db_constraint = False)
+    order_work_lable = models.CharField(max_length=15,default='')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',blank=True,null=True,db_constraint = False)
     assign_stage = models.CharField(max_length=50,choices=stage_options,blank=True,null=True)
     assign_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)

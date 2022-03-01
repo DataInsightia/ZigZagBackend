@@ -506,7 +506,7 @@ def staff_work_assign(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             order_id = data['order_id']
-            work_id = data['work_id']
+            work_id = data['work_id']  
             assign_stage = data['assign_stage']
             id = data['id']
             try:
@@ -740,7 +740,7 @@ def staff_stage_completion(request):
 def staff_work_assign_completion_app(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','order_id','work_id','stage','state')
+        keys = ('staff_id','order_id','work_id','stage','state','order_work_lable')
         if (i in data for i in keys):
             try:
                 staff_id = data['staff_id']
@@ -748,7 +748,7 @@ def staff_work_assign_completion_app(request):
                 work_id = data['work_id']
                 stage = data['stage']
                 state = data['state']
-
+                order_work_lable = data['order_work_lable']
                 order = fetchOrder(order_id)
                 work = fetchWork(work_id)
                 staff = fetchStaff(staff_id)
@@ -756,7 +756,7 @@ def staff_work_assign_completion_app(request):
                 if state == "approve":
                     if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
                         ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_staff_comp_app_date_time = datetime.datetime.now(),work_staff_completion_approved = True)
-                        OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
+                        OrderWorkStaffAssign.objects.create(order = order,work = work,order_work_lable=order_work_lable,staff=None)
                         resp = SuccessContext(True,'Success','Updated')
                         return Response(resp)
                     else:
