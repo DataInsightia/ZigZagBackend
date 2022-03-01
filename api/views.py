@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Q, Sum
 from api.models import *
@@ -968,3 +969,129 @@ def manager_dashboard(request):
         staffwages = StaffWorkWage.objects.all()
         serializer = StaffWorkWageSerializers(staffwages,many=True)
         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+
+class OrderWorkStaffAssignView(APIView):
+    def get(self,request):
+        model = OrderWorkStaffAssign.objects.all()
+        serializer = OrderWorkStaffAssignSerializer(model,many=True)
+        return Response(serializer.data)
+
+    def get(self,order_id):
+        model = OrderWorkStaffAssign.objects.filter(order_id=order_id)
+        serializer = OrderWorkStaffAssignSerializer(model,many=True)
+        return Response(serializer.data)
+
+    def post(self,request):
+        data = request.data
+        keys = ("order_id","work_id")
+        if all(i in data for i in keys):
+            
+            try:
+                order = Order.objects.get(order_id=data['order_id'])
+                work = Work.objects.get(work_id=data['work_id'])
+                OrderWorkStaffAssign.objects.create(
+                    order = order,
+                    work = work,
+                    staff = None
+                ).save()
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'order_id' in data:
+            order = Order.objects.get(order_id=data['order_id'])
+            try:
+                OrderWorkStaffAssign.objects.get(order=order).delete()
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self,request):
+        data = request.data
+        keys = ("order_id","work_id","staff_id","assign_stage","assign_date_time")
+        if all(i in data for i in keys):
+            order = Order.objects.get(order_id=data['order_id'])
+            work = Work.objects.get(work_id=data['work_id'])
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            try:
+                OrderWorkStaffAssign.objects.get(order=order,assign_stage="").update(
+                    order = order,
+                    work = work,
+                    staff = staff,
+                    assign_stage = data['assign_stage'],
+                    assign_date_time = data['assign_date_time']
+                )
+                return Response({"status": True,"message" : "Updated"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+class StaffWorkWageView(APIView):
+    def post(self,request):
+        data = request.data
+        keys = ("order_id","staff_id","work_id")
+        if all(i in data for i in keys):
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            order = Order.objects.get(order_id = data['order_id'])
+            work = Work.objects.get(work=data['work'])
+            try:
+                StaffWorkWage.objects.create(
+                    staff=staff,
+                    order=order,
+                    work=work,
+                    work_staff_approval_date_time = None,
+                    completion_date_time = None,
+                    wage=None,
+                    wage_given=None
+                    ).save()
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'id' in data:
+            id = data['id']
+            try:
+                StaffWorkWage.objects.get(id=id).delete()
+                return Response({"status": True,"message" : "Deleted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+class StaffWageGivenStatusView(APIView):
+    def post(self,request):
+        data = request.data
+        keys = ("order_id","staff_id","work_id")
+        if all(i in data for i in keys):
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            order = Order.objects.get(order_id = data['order_id'])
+            work = Work.objects.get(work=data['work'])
+            try:
+                StaffWageGivenStatus.objects.create(
+                    staff=staff,
+                    order=order,
+                    work=work,
+                    wage_from_date = None,
+                    wage_to_date = None,
+                    wage_given_date = None,
+                    total_wage_given = None,
+                    wage_payment_reference_no = None,
+                    wage_payment_reference_image = None
+                    ).save()
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'id' in data:
+            id = data['id']
+            try:
+                StaffWageGivenStatus.objects.get(id=id).delete()
+                return Response({"status": True,"message" : "Deleted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+        

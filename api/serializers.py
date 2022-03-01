@@ -1,3 +1,5 @@
+from ast import Mod
+from dataclasses import field
 from rest_framework.serializers import ModelSerializer
 from api.models import *
 
@@ -80,3 +82,21 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         exclude = ('password',)
+
+class OrderSerializer(ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+class StaffSerializer(ModelSerializer):
+    class Meta:
+        model = Staff
+        fields = '__all__'
+
+class OrderWorkStaffAssignSerializer(ModelSerializer):
+    order = OrderSerializer()
+    work = WorkSerializer()
+    staff = StaffSerializer()
+    class Meta:
+        model = OrderWorkStaffAssign
+        fields = '__all__'

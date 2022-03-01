@@ -37,4 +37,6 @@ urlpatterns = [
     path('staff/',views.staff),
     path('staff_wage_calculation/',views.staff_wage_calculation),
     path('staff_wage_manager/',views.staff_wage_manager),
+    path('order_work_staff_assign/',views.OrderWorkStaffAssignView.as_view()),
+    path('order_work_staff_assign/<int:order_id>',views.OrderWorkStaffAssignView.as_view()),
 ]

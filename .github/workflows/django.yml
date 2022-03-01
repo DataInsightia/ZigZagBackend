@@ -1,18 +1,27 @@
-on: push
-name: 🚀 Deploy website on push
+name: remote ssh command
+on: [push]
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v2
-    
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
       with:
-        server: ftp.datainsightia.in
-        username: datainsightia@datainsightia.in
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: /home/dataioit/ZigZagBackend/
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        passphrase: ${{ secrets.SSH_PASSWORD }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          source /home/dataioit/virtualenv/ZigZagBackend/3.8/bin/activate && cd /home/dataioit/ZigZagBackend
+          rm -rf * .??*
+          rm -rf api/migrations/*
+          touch api/migrations/__init__.py
+          git clone https://angappanmuthu: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@github.com/DataInsightia/ZigZagBackend.git .
+          pip3 install -r requirements.txt
+          python3 manage.py collectstatic --no-input
+          python3 manage.py makemigrations
+          python3 manage.py migrate
+          python3 manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('zigzag', 'datainsightia@gmail.com', '@zigzag123')"

@@ -137,3 +137,8 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+api/migrations/0*.py
+api/migrations/__pycache__/
+api/__pycache__/
+ZigZagBackend/__pycache__/
