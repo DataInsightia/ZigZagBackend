@@ -50,8 +50,36 @@ def getNextStage(order_id):
             exclude_list.remove(i.assign_stage)
         else:
             pass
-    if exclude_list != [] :
-        return exclude_list[0]
+    include_list = ['cutting','stitching','hook','overlock']
+    finish_list = []
+    for i in s:
+        if i.assign_stage in include_list: 
+            finish_list.append(i.assign_stage)
+        else:
+            pass
+
+    
+    k = ['stage']
+    n = len(finish_list)
+    include_res = []
+    if finish_list != []: 
+        for idx in range(0, n, 1):
+            include_res.append({k[0]: finish_list[idx]})
+
+    k = ['stage']
+    n = len(exclude_list)
+    exclude_res = []
+    if exclude_list != []:
+        for idx in range(0, n, 1):
+            exclude_res.append({k[0]: exclude_list[idx]})
+
+
+    if exclude_list != []:
+        data = {
+            "nextassign":exclude_res,
+            "finishedassign":include_res
+        }
+        return data
     else:
         return "Completed"
 

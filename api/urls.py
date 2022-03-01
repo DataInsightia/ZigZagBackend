@@ -24,7 +24,6 @@ urlpatterns = [
     path('staff_register/',views.staff_register),
     path('staff_login/',views.staff_login),
     path('order_status/',views.order_status),
-    path('stage_filter/',views.stage_filter),
     path('staff_work_assign/',views.staff_work_assign),
     path('staff_work_assigned/',views.staff_work_assigned),
     path('staff_work_taken/',views.staff_work_taken),

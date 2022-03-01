@@ -499,7 +499,11 @@ def staff_work_assign(request):
                 if OrderWorkStaffAssign.objects.filter(order = order,work = work).exists():
                     OrderWorkStaffAssign.objects.filter(id = id,order = order,work = work).update(staff=staff,assign_stage = assign_stage,assign_date_time = datetime.datetime.now())
                     orderworkstaffassign = OrderWorkStaffAssign.objects.get(id = id,order = order,work = work)
-                    print(orderworkstaffassign)
+                    try:
+                        s = OrderWorkStaffStatusCompletion.objects.filter(order = order).last()
+                        OrderWorkStaffStatusCompletion.objects.filter(id = s.id).update(order_next_stage_assign = True)
+                    except:
+                        pass
                     OrderWorkStaffTaken.objects.create(orderworkstaffassign = orderworkstaffassign,taken_stage = assign_stage)
                     resp = SuccessContext(True,'Success','Order assigned to staff')
                     return Response(resp) 
@@ -514,11 +518,11 @@ def staff_work_assign(request):
             return Response(resp)
 
     elif request.method == 'GET':
-        if OrderWorkStaffAssign.objects.filter(staff=None) or OrderWorkStaffAssign.objects.filter(staff=''):
-            orders = OrderWorkStaffAssign.objects.filter(staff=None)
+        if True:
             li = []
-            for i in OrderWorkStaffAssign.objects.filter(staff=None):
+            for i in OrderWorkStaffAssign.objects.filter(staff__isnull=True):
                 order = OrderWorkStaffAssignSerializers(i)
+                print(i)
                 nextstage = getNextStage(i.order.order_id)
                 data = {
                     "nextstage":nextstage,
@@ -574,13 +578,9 @@ def staff_work_taken(request):
 
                 if OrderWorkStaffTaken.objects.filter(orderworkstaffassign__staff_id = staff.staff_id).exists():
                    
-                    
                     ordertaken = OrderWorkStaffTaken.objects.exclude(orderworkstaffassign__staff_id = staff.staff_id,taken_date_time__isnull=True)
                     serializer = OrderWorkStaffTakenSerializers(ordertaken,many=True)
-                    # for i in ordertaken:
-                    #     OrderWorkStaffAssign.objects.filter()
- 
-                    print(ordertaken)
+        
                     return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK)  
                 else:
                     return Response({"status":False,"message":"Failed"},status.HTTP_200_OK) 
@@ -692,7 +692,6 @@ def staff_work_completion_review(request):
 def staff_stage_completion(request):
     if request.method == "POST":
         data = request.data
-        print(data)
         keys = ('staff_id','order_id','work_id','stage')
         if (i in data for i in keys):
             try:
@@ -722,7 +721,6 @@ def staff_stage_completion(request):
 def staff_work_assign_completion_app(request):
     if request.method == "POST":
         data = request.data
-        print(data)
         keys = ('staff_id','order_id','work_id','stage','state')
         if (i in data for i in keys):
             try:
@@ -739,6 +737,7 @@ def staff_work_assign_completion_app(request):
                 if state == "approve":
                     if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
                         ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_staff_comp_app_date_time = datetime.datetime.now(),work_staff_completion_approved = True)
+                        OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
                         resp = SuccessContext(True,'Success','Updated')
                         return Response(resp)
                     else:
@@ -786,8 +785,7 @@ def work_finalize(request):
 
                 if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,work_staff_completion_approved = True).exists():
                     ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,work_staff_completion_approved = True).update(order_next_stage_assign = True)
-                    d = OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
-                    print('d')
+                    OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
                     resp = SuccessContext(True,'Success','Work finished')
                     return Response(resp)
                 else:
@@ -970,22 +968,3 @@ def manager_dashboard(request):
         staffwages = StaffWorkWage.objects.all()
         serializer = StaffWorkWageSerializers(staffwages,many=True)
         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
-
-
-@api_view(['POST'])
-def stage_filter(request):
-    if request.method == "POST":
-        order_id = request.data['order_id']
-        order = fetchOrder(order_id)
-        s =  OrderWorkStaffAssign.objects.filter(order = order)
-        exclude_list = ['cutting','stitching','hook','overlock']
-        for i in s:
-            if i.assign_stage in exclude_list: 
-                exclude_list.remove(i.assign_stage)
-            else:
-                pass
-        if exclude_list != [] :
-            return Response(exclude_list[0])
-        else:
-            return Response("")
-    return Response(status=status.HTTP_400_BAD_REQUEST)
