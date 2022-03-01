@@ -141,9 +141,9 @@ MEDIA_URL = '/media/'
 
 TIME_ZONE = 'Asia/Kolkata'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.ftp.FTPStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.ftp.FTPStorage'
 
-FTP_STORAGE_LOCATION = 'ftp://datainsightia:DiT2021!@datainsightia.in:21'
+# FTP_STORAGE_LOCATION = 'ftp://datainsightia:DiT2021!@datainsightia.in:21'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
