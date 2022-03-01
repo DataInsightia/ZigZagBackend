@@ -118,7 +118,8 @@ class OrderWorkStaffAssign(models.Model):
         ('cutting','CUTTING'),
         ('stitching','STITCHING'),
         ('hook','HOOK'),
-        ('overlock','OVERLOCK')
+        ('overlock','OVERLOCK'),
+        ('complete_final_stage','COMPLETE FINAL STAGE')
     )
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',db_constraint = False)
@@ -143,7 +144,8 @@ class OrderWorkStaffTaken(models.Model):
         ('cutting', 'CUTTING'),
         ('stitching', 'STITCHING'),
         ('hook', 'HOOK'),
-        ('overlock', 'OVERLOCK')
+        ('overlock', 'OVERLOCK'),
+        ('complete_final_stage','COMPLETE FINAL STAGE')
     )
     # order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
     # staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
@@ -159,7 +161,8 @@ class OrderWorkStaffStatusCompletion(models.Model):
         ('cutting', 'CUTTING'),
         ('stitching', 'STITCHING'),
         ('hook', 'HOOK'),
-        ('overlock', 'OVERLOCK')
+        ('overlock', 'OVERLOCK'),
+        ('complete_final_stage','COMPLETE FINAL STAGE')
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')

@@ -129,9 +129,22 @@ def customer_login(request):
 
             try:
                 if User.objects.filter(Q(login_id=cust_id,password=password) | Q(mobile=cust_id,password=password)).exists():
-                    filtered_data = User.objects.filter(Q(login_id=cust_id,password=password) | Q(mobile=cust_id,password=password))
-                    serializer = UserSerializer(filtered_data,many=True)
-                    return Response({'status' : True,"data" : serializer.data, 'message': 'Success'})
+                    auth = User.objects.filter(Q(login_id=cust_id,password=password) | Q(mobile=cust_id,password=password)).last()
+                    user = UserSerializer(auth)
+                    if auth.role == "staff":
+                        staff = Staff.objects.get(staff_id = auth.login_id)
+                        serializer = StaffSerializer(staff)
+                        return Response({'status' : True, 'message': 'Success','data':serializer.data,'user':user.data})
+                    elif auth.role == "customer":
+                        customer = Customer.objects.get(cust_id = auth.login_id)
+                        serializer = CustomerSerializer(customer)
+                        return Response({'status' : True, 'message': 'Success','data':serializer.data,'user':user.data})
+                    elif auth.role == "admin":
+                        admin = User.objects.get(login_id = auth.login_id)
+                        serializer = UserSerializer(admin)
+                        return Response({'status' : True, 'message': 'Success','data':serializer.data})
+                    else:
+                        return Response({'status' : False, 'message': 'Failed'})
             except Exception as e:
                 return Response({'status' : False,'message' : 'Failed','error' : str(e)})
         else:
