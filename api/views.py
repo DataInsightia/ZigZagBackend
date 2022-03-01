@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Q, Sum
+from api import serializers
 from api.models import *
 from api.serializers import *
 from random import randint
@@ -128,7 +129,9 @@ def customer_login(request):
 
             try:
                 if User.objects.filter(Q(login_id=cust_id,password=password) | Q(mobile=cust_id,password=password)).exists():
-                    return Response({'status' : True, 'message': 'Success'})
+                    filtered_data = User.objects.filter(Q(login_id=cust_id,password=password) | Q(mobile=cust_id,password=password))
+                    serializer = UserSerializer(filtered_data,many=True)
+                    return Response({'status' : True,"data" : serializer.data, 'message': 'Success'})
             except Exception as e:
                 return Response({'status' : False,'message' : 'Failed','error' : str(e)})
         else:
