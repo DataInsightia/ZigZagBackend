@@ -165,9 +165,10 @@ class OrderWorkStaffStatusCompletion(models.Model):
         return f'{self.order}'
 
 class StaffWorkWage(GenCols):
-    completion_date_time = models.DateTimeField(auto_now=True)
-    wage = models.IntegerField(blank=True,null = True)
-    wage_given = models.IntegerField()
+    work_staff_approval_date_time = models.DateTimeField(null=True,blank=True)
+    completion_date_time = models.DateTimeField(null=True,blank=True)
+    wage = models.IntegerField(default=0,blank=True,null = True)
+    wage_given = models.BooleanField(default=False,blank=True,null=True)
     def __str__(self):
         return f'{self.staff} {self.wage}'
 

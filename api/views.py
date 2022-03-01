@@ -892,14 +892,70 @@ class OrderWorkStaffAssignView(APIView):
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
 
 
-class StaffWorkWage(APIView):
+class StaffWorkWageView(APIView):
     def post(self,request):
         data = request.data
-        if 'staff_id' in data:
+        keys = ("order_id","staff_id","work_id")
+        if all(i in data for i in keys):
             staff = Staff.objects.get(staff_id = data['staff_id'])
+            order = Order.objects.get(order_id = data['order_id'])
+            work = Work.objects.get(work=data['work'])
             try:
-                owssc = OrderWorkStaffStatusCompletion(staff=staff)
-                StaffWorkWage.objects.create(OrderWorkStaffStatusCompletion = owssc)
+                StaffWorkWage.objects.create(
+                    staff=staff,
+                    order=order,
+                    work=work,
+                    work_staff_approval_date_time = None,
+                    completion_date_time = None,
+                    wage=None,
+                    wage_given=None
+                    ).save()
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'id' in data:
+            id = data['id']
+            try:
+                StaffWorkWage.objects.get(id=id).delete()
+                return Response({"status": True,"message" : "Deleted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+class StaffWageGivenStatusView(APIView):
+    def post(self,request):
+        data = request.data
+        keys = ("order_id","staff_id","work_id")
+        if all(i in data for i in keys):
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            order = Order.objects.get(order_id = data['order_id'])
+            work = Work.objects.get(work=data['work'])
+            try:
+                StaffWageGivenStatus.objects.create(
+                    staff=staff,
+                    order=order,
+                    work=work,
+                    wage_from_date = None,
+                    wage_to_date = None,
+                    wage_given_date = None,
+                    total_wage_given = None,
+                    wage_payment_reference_no = None,
+                    wage_payment_reference_image = None
+                    ).save()
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'id' in data:
+            id = data['id']
+            try:
+                StaffWageGivenStatus.objects.get(id=id).delete()
+                return Response({"status": True,"message" : "Deleted"},status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
 
