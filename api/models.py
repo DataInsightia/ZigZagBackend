@@ -86,6 +86,7 @@ class GenCols(models.Model):
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default='')
     work_id = models.CharField(max_length=20, default='')
+    order_work_item = models.CharField(max_length=20, default='')
     quantity = models.CharField(max_length=20, default='')
     amount = models.IntegerField(null = True,blank = True)
 
