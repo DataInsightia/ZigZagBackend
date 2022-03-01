@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('material_id', models.CharField(max_length=10, primary_key=True, serialize=False)),
                 ('material_name', models.CharField(max_length=100)),
                 ('measurement', models.CharField(choices=[('number', 'NUMBER'), ('inch', 'INCH'), ('meter', 'METER')], max_length=20)),
-                ('amount', models.IntegerField(default=0)),
+                ('amount', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('order_id', models.CharField(default='', max_length=20)),
                 ('material_id', models.CharField(default='', max_length=20)),
                 ('quantity', models.CharField(default='', max_length=20)),
-                ('amount', models.IntegerField(default=0)),
+                ('amount', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -67,15 +67,27 @@ class Migration(migrations.Migration):
                 ('order_id', models.CharField(default='', max_length=20)),
                 ('work_id', models.CharField(default='', max_length=20)),
                 ('quantity', models.CharField(default='', max_length=20)),
-                ('amount', models.IntegerField(default=0)),
+                ('amount', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
             name='OrderWorkStaffAssign',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('assign_stage', models.CharField(choices=[('cutting', 'CUTTING'), ('stitching', 'STITCHING'), ('hook', 'HOOK'), ('overlock', 'OVERLOCK')], max_length=50)),
-                ('assign_date_time', models.DateTimeField(blank=True, default='', null=True)),
+                ('assign_stage', models.CharField(blank=True, choices=[('cutting', 'CUTTING'), ('stitching', 'STITCHING'), ('hook', 'HOOK'), ('overlock', 'OVERLOCK')], max_length=50, null=True)),
+                ('assign_date_time', models.DateTimeField(blank=True, null=True)),
+                ('order', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='api.order')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='OrderWork',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('work_staff_completion_stage', models.CharField(blank=True, choices=[('cutting', 'CUTTING'), ('stitching', 'STITCHING'), ('hook', 'HOOK'), ('overlock', 'OVERLOCK')], max_length=50, null=True)),
+                ('work_completed_date_time', models.DateTimeField(blank=True, null=True)),
+                ('work_staff_comp_app_date_time', models.DateTimeField(blank=True, null=True)),
+                ('work_staff_completion_approved', models.BooleanField(default=False)),
+                ('order_next_stage_assign', models.BooleanField(default=False)),
                 ('order', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='api.order')),
             ],
         ),
@@ -104,9 +116,9 @@ class Migration(migrations.Migration):
                 ('cust_id', models.CharField(max_length=10)),
                 ('material_id', models.CharField(max_length=10)),
                 ('material_name', models.CharField(default='', max_length=50)),
-                ('quantity', models.CharField(default='', max_length=5)),
-                ('amount', models.IntegerField()),
-                ('total', models.IntegerField()),
+                ('quantity', models.CharField(max_length=5)),
+                ('amount', models.IntegerField(blank=True, null=True)),
+                ('total', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -117,8 +129,9 @@ class Migration(migrations.Migration):
                 ('cust_id', models.CharField(max_length=10)),
                 ('work_id', models.CharField(max_length=10)),
                 ('work_name', models.CharField(default='', max_length=50)),
-                ('quantity', models.CharField(default='', max_length=5)),
-                ('amount', models.IntegerField()),
+
+                ('quantity', models.CharField(max_length=5)),
+                ('amount', models.IntegerField(blank=True, null=True)),
                 ('total', models.IntegerField()),
             ],
         ),
@@ -138,7 +151,7 @@ class Migration(migrations.Migration):
                 ('work_id', models.CharField(max_length=10, primary_key=True, serialize=False)),
                 ('work_name', models.CharField(max_length=50)),
                 ('wage_type', models.CharField(choices=[('full', 'FULL'), ('half', 'HALF'), ('10half', '10HALF')], max_length=10)),
-                ('amount', models.IntegerField(default=0)),
+                ('amount', models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -178,9 +191,9 @@ class Migration(migrations.Migration):
             name='OrderWorkStaffTaken',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('taken_date_time', models.DateTimeField(auto_now=True)),
+                ('taken_date_time', models.DateTimeField(blank=True, null=True)),
                 ('order', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='api.order')),
-                ('orderworkstaffassign', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='api.orderworkstaffassign')),
+                ('orderworkstaffassign', models.ForeignKey(blank=True, default='', null=True, on_delete=django.db.models.deletion.CASCADE, to='api.orderworkstaffassign')),
                 ('staff', models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='api.staff')),
             ],
         ),
@@ -201,7 +214,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='orderworkstaffassign',
             name='staff',
-            field=models.ForeignKey(default='', null=True, on_delete=django.db.models.deletion.CASCADE, to='api.staff'),
+            field=models.ForeignKey(blank=True, default='', null=True, on_delete=django.db.models.deletion.CASCADE, to='api.staff'),
         ),
         migrations.AddField(
             model_name='orderworkstaffassign',
