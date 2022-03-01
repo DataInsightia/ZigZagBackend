@@ -61,7 +61,7 @@ class Order(models.Model):
         ('courier','COURIER'),
         ('others','OTHERS')
     )
-    order_id = models.CharField(max_length=10,primary_key=True,default='ZA786')
+    order_id = models.CharField(max_length=10,primary_key=True,default='')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, default='')
     booking_date_time = models.DateTimeField(auto_now=True)
     due_date = models.DateField()
@@ -174,9 +174,10 @@ class OrderWorkStaffStatusCompletion(models.Model):
         return f'{self.order}'
 
 class StaffWorkWage(GenCols):
-    completion_date_time = models.DateTimeField(auto_now=True)
-    wage = models.IntegerField(blank=True,null = True)
-    wage_given = models.IntegerField()
+    work_staff_approval_date_time = models.DateTimeField(null=True,blank=True)
+    completion_date_time = models.DateTimeField(null=True,blank=True)
+    wage = models.IntegerField(default=0,blank=True,null = True)
+    wage_given = models.BooleanField(default=False,blank=True,null=True)
     def __str__(self):
         return f'{self.staff} {self.wage}'
 
@@ -284,7 +285,7 @@ class TmpMaterial(models.Model):
     total = models.IntegerField(null = True,blank = True)
 
     def __str__(self):
-        return f'{0}'
+        return f'{self.material_name}'
 
 # class ModelName(models.Model):
 #     pass
