@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Q, Sum
 from api.models import *
@@ -968,3 +969,68 @@ def manager_dashboard(request):
         staffwages = StaffWorkWage.objects.all()
         serializer = StaffWorkWageSerializers(staffwages,many=True)
         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+
+class OrderWorkStaffAssignView(APIView):
+    def get(self,request):
+        model = OrderWorkStaffAssign.objects.all()
+        serializer = OrderWorkStaffAssignSerializer(model,many=True)
+        return Response(serializer.data)
+
+    def post(self,request):
+        data = request.data
+        keys = ("order_id","work_id")
+        if all(i in data for i in keys):
+            order = TmpWork.objects.get(order_id=data['order_id'])
+            work = Work.objects.get(work_id=data['work_id'])
+            try:
+                OrderWorkStaffAssign.objects.create(
+                    order = order,
+                    work = work,
+                    assign_stage = "",
+                    assign_date_time = ""
+                )
+                return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        data = request.data
+        if 'order_id' in data:
+            order = Order.objects.get(order_id=data['order_id'])
+            try:
+                OrderWorkStaffAssign.objects.get(order=order).delete()
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self,request):
+        data = request.data
+        keys = ("order_id","work_id","staff_id","assign_stage","assign_date_time")
+        if all(i in data for i in keys):
+            order = Order.objects.get(order_id=data['order_id'])
+            work = Work.objects.get(work_id=data['work_id'])
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            try:
+                OrderWorkStaffAssign.objects.get(order=order,assign_stage="").update(
+                    order = order,
+                    work = work,
+                    staff = staff,
+                    assign_stage = data['assign_stage'],
+                    assign_date_time = data['assign_date_time']
+                )
+                return Response({"status": True,"message" : "Updated"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+class StaffWorkWage(APIView):
+    def post(self,request):
+        data = request.data
+        if 'staff_id' in data:
+            staff = Staff.objects.get(staff_id = data['staff_id'])
+            try:
+                owssc = OrderWorkStaffStatusCompletion(staff=staff)
+                StaffWorkWage.objects.create(OrderWorkStaffStatusCompletion = owssc)
+            except Exception as e:
+                return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+        

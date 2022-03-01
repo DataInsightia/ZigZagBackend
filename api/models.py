@@ -50,6 +50,7 @@ class Staff(models.Model):
     bank = models.CharField(max_length=300)
     ifsc = models.CharField(max_length=20)
     work_type = models.CharField(max_length=20,choices=work_options)
+    photot = models.ImageField()
 
     def __str__(self):
         return f'{self.staff_name}'
@@ -74,6 +75,13 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.order_id} {self.customer}'
+
+class GenCols(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
+    class Meta:
+        abstract = True
 
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default='')
@@ -112,11 +120,13 @@ class OrderWorkStaffAssign(models.Model):
         ('hook','HOOK'),
         ('overlock','OVERLOCK')
     )
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',db_constraint = False)
     work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',db_constraint = False)
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',blank=True,null=True,db_constraint = False)
     assign_stage = models.CharField(max_length=50,choices=stage_options,blank=True,null=True)
     assign_date_time = models.DateTimeField(auto_now=False,blank=True,null=True)
+
     def __str__(self):
         return f'{self.order} {self.work}'
 
@@ -163,20 +173,14 @@ class OrderWorkStaffStatusCompletion(models.Model):
     def __str__(self):
         return f'{self.order}'
 
-class StaffWorkWage(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    orderworkstatuscompletion = models.ForeignKey(OrderWorkStaffStatusCompletion, on_delete=models.CASCADE, default='')
+class StaffWorkWage(GenCols):
     completion_date_time = models.DateTimeField(auto_now=True)
     wage = models.IntegerField(blank=True,null = True)
     wage_given = models.IntegerField()
     def __str__(self):
-        return f'{self.staff} {self.orderworkstatuscompletion} {self.wage}'
+        return f'{self.staff} {self.wage}'
 
-class StaffWageGivenStatus(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
-    staffworkwage = models.ForeignKey(StaffWorkWage, on_delete=models.CASCADE, default='')
+class StaffWageGivenStatus(GenCols):
     wage_from_date = models.DateField()
     wage_to_date = models.DateField()
     wage_given_date = models.DateField()
@@ -265,6 +269,7 @@ class TmpWork(models.Model):
     work_name = models.CharField(max_length=50,default='')
     quantity = models.CharField(max_length=5)
     amount = models.IntegerField(null = True,blank = True)
+
     total = models.IntegerField()
     def __str__(self):
         return f'{self.order_id}'
@@ -277,6 +282,7 @@ class TmpMaterial(models.Model):
     quantity = models.CharField(max_length=5)
     amount = models.IntegerField(null = True,blank = True)
     total = models.IntegerField(null = True,blank = True)
+
     def __str__(self):
         return f'{0}'
 

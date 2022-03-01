@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework.serializers import ModelSerializer
 from api.models import *
 
@@ -5,6 +6,14 @@ class CustomerSerializer(ModelSerializer):
     class Meta:
         model = Customer
         exclude = ('password',)
+
+class OrderWorkStaffAssignSerializer(ModelSerializer):
+    order = Order()
+    work = Work()
+    staff = Staff()
+    class Meta:
+        model = OrderWorkStaffAssign
+        fields = '__all__'
 
 class WorkSerializer(ModelSerializer):
     class Meta:
