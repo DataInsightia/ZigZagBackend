@@ -142,7 +142,7 @@ def customer_login(request):
                     elif auth.role == "admin":
                         admin = User.objects.get(login_id = auth.login_id)
                         serializer = UserSerializer(admin)
-                        return Response({'status' : True, 'message': 'Success','data':serializer.data})
+                        return Response({'status' : True, 'message': 'Success','user':serializer.data})
                     else:
                         return Response({'status' : False, 'message': 'Failed'})
             except Exception as e:
