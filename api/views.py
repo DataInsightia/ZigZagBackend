@@ -118,7 +118,7 @@ def customer_details(request):
         else:
             return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'},status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def customer_login(request):
     if request.method == 'POST':
         data = request.data
@@ -1144,7 +1144,6 @@ def get_details(request):
                     return Response({'status' : True, 'message': 'Success','user':user.data})
                 else:
                     return Response({'status' : False, 'message': 'Failed'})
-            staff = fetchStaff(staff_id)
                 
         except Exception as e:
             resp = KeyErrorContext(False,'Failed',str(e))
@@ -1164,3 +1163,28 @@ def upload_file(request):
         return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+def work_completed(request):
+    if request.method == "POST":
+        data = request.data
+        keys = ('staff_id',)
+        if all(i in data for i in keys):
+            staff_id = data['staff_id']
+            try:
+                staff = fetchStaff(staff_id) 
+                if OrderWorkStaffStatusCompletion.objects.filter(staff = staff ,work_staff_completion_approved = True).exists():
+                    ordersc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff ,work_staff_completion_approved = True)
+                    serializer = OrderWorkStaffAssignCompletionSerializers(ordersc,many = True)
+                    return Response({'status' : True, 'message': 'Success','data':serializer.data}) 
+                else:
+                    return Response({'status' : False, 'message': 'Failure','details':'Not found'}) 
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
