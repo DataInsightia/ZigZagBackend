@@ -1002,15 +1002,17 @@ class OrderWorkStaffAssignView(APIView):
 
     def post(self,request):
         data = request.data
-        keys = ("order_id","work_id")
+        keys = ("order_id","work_id","order_work_label")
         if all(i in data for i in keys):
             
             try:
                 order = Order.objects.get(order_id=data['order_id'])
                 work = Work.objects.get(work_id=data['work_id'])
+                order_work_label = data['order_work_label']
                 OrderWorkStaffAssign.objects.create(
                     order = order,
                     work = work,
+                    order_work_label = order_work_label,
                     staff = None
                 ).save()
                 return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
@@ -1113,8 +1115,6 @@ class StaffWageGivenStatusView(APIView):
             except Exception as e:
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
 
-        
-
 @api_view(['POST'])
 def get_details(request):
     if request.method == "POST":
@@ -1143,3 +1143,16 @@ def get_details(request):
             return Response(resp)
 
     return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','POST'])
+def upload_file(request):
+
+    name = request.POST['name']
+    file = request.FILES['file']
+    print(file)
+
+    try:
+        UploadFile.objects.create(name=name,file=file)
+        return Response({"status": True,"message" : "Inserted"},status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)

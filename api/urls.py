@@ -39,5 +39,6 @@ urlpatterns = [
     path('order_work_staff_assign/',views.OrderWorkStaffAssignView.as_view()),
     path('order_work_staff_assign/<int:order_id>',views.OrderWorkStaffAssignView.as_view()),
     path('get_details/',views.get_details),
+    path('file_upload',views.upload_file),
 
 ]
