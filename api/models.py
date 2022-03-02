@@ -295,7 +295,7 @@ class TmpMaterial(models.Model):
 
 class UploadFile(models.Model):
     name = models.CharField(max_length=100)
-    file = models.FileField(upload_to='test')
+    file = models.FileField()
 
 # class ModelName(models.Model):
 #     pass
