@@ -50,7 +50,7 @@ class Staff(models.Model):
     bank = models.CharField(max_length=300)
     ifsc = models.CharField(max_length=20)
     work_type = models.CharField(max_length=20,choices=work_options)
-    photo = models.ImageField(blank=True,null=True)
+    photo = models.ImageField(default='',blank=True,null=True)
 
     def __str__(self):
         return f'{self.staff_name}'
@@ -86,6 +86,7 @@ class GenCols(models.Model):
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default='')
     work_id = models.CharField(max_length=20, default='')
+    order_work_item = models.CharField(max_length=20, default='')
     quantity = models.CharField(max_length=20, default='')
     amount = models.IntegerField(null = True,blank = True)
 
