@@ -292,6 +292,11 @@ class TmpMaterial(models.Model):
     def __str__(self):
         return f'{self.material_name}'
 
+
+class UploadFile(models.Model):
+    name = models.CharField(max_length=100)
+    file = models.FileField(upload_to='test')
+
 # class ModelName(models.Model):
 #     pass
 #     def __str__(self):

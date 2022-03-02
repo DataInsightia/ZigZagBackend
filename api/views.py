@@ -1114,4 +1114,14 @@ class StaffWageGivenStatusView(APIView):
             except Exception as e:
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
 
-        
+
+def upload_file(request):
+
+    name = request['name']
+    file = request.FILES['file']
+
+    try:
+        UploadFile.objects.create(name=name,file=file)
+        return Response({"status": True,"message" : "Deleted"},status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
