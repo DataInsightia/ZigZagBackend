@@ -44,13 +44,13 @@ def fetchOrder(order_id):
 def getNextStage(order_id):
     order = fetchOrder(order_id)
     s =  OrderWorkStaffAssign.objects.filter(order = order)
-    exclude_list = ['cutting','stitching','hook','overlock']
+    exclude_list = ['cutting','stitching','hook','overlock','Completed']
     for i in s:
         if i.assign_stage in exclude_list: 
             exclude_list.remove(i.assign_stage)
         else:
             pass
-    include_list = ['cutting','stitching','hook','overlock']
+    include_list = ['cutting','stitching','hook','overlock','Completed']
     finish_list = []
     for i in s:
         if i.assign_stage in include_list: 
@@ -81,7 +81,11 @@ def getNextStage(order_id):
         }
         return data
     else:
-        return "Completed"
+        data = {
+            "nextassign":exclude_res,
+            "finishedassign":include_res
+        }
+        return data
 
 def SuccessContext(status,message,details):
     data = {

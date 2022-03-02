@@ -141,7 +141,7 @@ def customer_login(request):
                     elif auth.role == "admin":
                         admin = User.objects.get(login_id = auth.login_id)
                         serializer = UserSerializer(admin)
-                        return Response({'status' : True, 'message': 'Success','data':serializer.data})
+                        return Response({'status' : True, 'message': 'Success','user':serializer.data})
                     else:
                         return Response({'status' : False, 'message': 'Failed'})
             except Exception as e:
@@ -470,26 +470,15 @@ def staff_login(request):
 def order_status(request):
     if request.method == 'POST':
         data = request.data
-        keys = ('cust_id','order_stage')
+        keys = ('order_id')
         if (i in data for i in keys):
-            cust_id = data['cust_id']
-            order_stage = data['order_stage']
+            # cust_id = data['cust_id']
+            order_id = data['order_id']
+            order = fetchOrder(order_id)
             try:
-                try:
-                    customer = Customer.objects.get(cust_id = cust_id)
-                except Customer.DoesNotExist:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-                all_orders = []
-                orders = Order.objects.filter(customer = customer)
-                for order in orders:
-                    if OrderWorkStaffStatusCompletion.objects.filter(order = order).exists():
-                        add_order = OrderWorkStaffStatusCompletion.objects.filter(order = order,work_staff_completion_stage = order_stage)
-                        serializer = OrderStatusSerializers(add_order,many=True)
-                        all_orders.append(serializer.data)
-                    else:
-                        return Response([])
-                return Response(all_orders)
-
+                ords = OrderWorkStaffStatusCompletion.objects.filter(order = order,order_next_stage_assign = True).values_list('work_staff_completion_stage')
+                resp = SuccessContext(True,'Success',ords)
+                return Response(resp) 
             except Exception as e:
                 return Response({'status' : False,'message' : 'Failed','error' : str(e)})
         else:
@@ -522,9 +511,20 @@ def staff_work_assign(request):
                         OrderWorkStaffStatusCompletion.objects.filter(id = s.id).update(order_next_stage_assign = True)
                     except:
                         pass
-                    OrderWorkStaffTaken.objects.create(orderworkstaffassign = orderworkstaffassign,taken_stage = assign_stage)
-                    resp = SuccessContext(True,'Success','Order assigned to staff')
-                    return Response(resp) 
+                    if assign_stage == "Completed":
+                        orderworkstaffassign.assign_stage = "complete_final_stage"
+                        orderworkstaffassign.save()
+                        StaffWorkWage.objects.create(
+                            staff = staff,
+                            work = work,
+                            order = order
+                        )
+                        resp = SuccessContext(True,'Success','Order Completed successfully')
+                        return Response(resp) 
+                    else:
+                        OrderWorkStaffTaken.objects.create(orderworkstaffassign = orderworkstaffassign,taken_stage = assign_stage)
+                        resp = SuccessContext(True,'Success','Order assigned to staff')
+                        return Response(resp) 
                 else:
                     resp = SuccessContext(True,'Success','Order already assigned')
                     return Response(resp) 
@@ -540,7 +540,6 @@ def staff_work_assign(request):
             li = []
             for i in OrderWorkStaffAssign.objects.filter(staff__isnull=True):
                 order = OrderWorkStaffAssignSerializers(i)
-                print(i)
                 nextstage = getNextStage(i.order.order_id)
                 data = {
                     "nextstage":nextstage,
@@ -763,8 +762,10 @@ def staff_work_assign_completion_app(request):
                         return Response(resp)
                 elif state == "reassign":
                     OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).delete()
-                    OrderWorkStaffTaken.objects.filter(staff = staff,order = order).delete()
+                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(order = order,work = work,assign_stage = stage)
+                    OrderWorkStaffTaken.objects.filter(orderworkstaffassign = orderworkstaffassign,taken_stage = stage).delete()
                     OrderWorkStaffAssign.objects.filter(order = order,work = work).update(staff = None,assign_stage = None,assign_date_time = None)
+                    OrderWorkStaffAssign.objects.filter(order = order,work = work,assign_stage = stage).update(staff = None,assign_stage = None,assign_date_time = None)
                     resp = SuccessContext(True,'Success','deleted')
                     return Response(resp)
 
@@ -1112,3 +1113,32 @@ class StaffWageGivenStatusView(APIView):
                 return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)
 
         
+
+@api_view(['POST'])
+def get_details(request):
+    if request.method == "POST":
+        data = request.data
+        try:
+            login_id = data['login_id']
+            if User.objects.filter(login_id=login_id).exists():
+                auth = User.objects.filter(login_id=login_id).last()
+                user = UserSerializer(auth)
+                if auth.role == "staff":
+                    staff = Staff.objects.get(staff_id = auth.login_id)
+                    serializer = StaffSerializer(staff)
+                    return Response({'status' : True, 'message': 'Success','data':serializer.data,'user':user.data})
+                elif auth.role == "customer":
+                    customer = Customer.objects.get(cust_id = auth.login_id)
+                    serializer = CustomerSerializer(customer)
+                    return Response({'status' : True, 'message': 'Success','data':serializer.data,'user':user.data})
+                elif auth.role == "admin":
+                    return Response({'status' : True, 'message': 'Success','user':user.data})
+                else:
+                    return Response({'status' : False, 'message': 'Failed'})
+            staff = fetchStaff(staff_id)
+                
+        except Exception as e:
+            resp = KeyErrorContext(False,'Failed',str(e))
+            return Response(resp)
+
+    return Response({"status": False,"message" : str(e)},status=status.HTTP_400_BAD_REQUEST)

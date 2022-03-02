@@ -33,11 +33,11 @@ urlpatterns = [
     path('staff_work_assign_completion/',views.staff_work_assign_completion),
     path('staff_work_assign_completion_app/',views.staff_work_assign_completion_app),
     path('staff_work_assign_completion_approval/',views.staff_work_assign_completion_approval),
-    path('work_finalize/',views.work_finalize),
     path('staff/',views.staff),
     path('staff_wage_calculation/',views.staff_wage_calculation),
     path('staff_wage_manager/',views.staff_wage_manager),
     path('order_work_staff_assign/',views.OrderWorkStaffAssignView.as_view()),
     path('order_work_staff_assign/<int:order_id>',views.OrderWorkStaffAssignView.as_view()),
+    path('get_details/',views.get_details),
 
 ]
