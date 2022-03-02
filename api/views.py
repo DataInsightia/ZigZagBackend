@@ -227,8 +227,8 @@ def tmp_work(request):
 @api_view(['POST'])
 def staff_register(request):
     if request.method == "POST":
-        data = request.data
-        print(data)
+        data = json.loads(request.POST['data'])
+        print(request.FILES.get('file'))
         staff_id = "ZS" + str(randint(9999,100000))
         keys = ('staff_name','password','mobile','address','city','salary_type','salary','worktype','acc_no','ifsc')
         if (i in data for i in keys):
@@ -251,7 +251,7 @@ def staff_register(request):
                         bank = ifscdata['BANK'],
                         ifsc = ifscdata['IFSC'],
                         work_type = data['worktype'],
-                        
+                        photo = request.FILES.get('file')
                     )
                     user = User.objects.create(
                         login_id = staff_id,
