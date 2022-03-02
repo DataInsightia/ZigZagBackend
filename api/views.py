@@ -498,15 +498,16 @@ def staff_work_assign(request):
             work_id = data['work_id']
             assign_stage = data['assign_stage']
             id = data['id']
+            order_work_label = data['order_work_label']
             try:
                 
                 order = fetchOrder(order_id)
                 work = fetchWork(work_id)
                 staff = fetchStaff(staff_id)
 
-                if OrderWorkStaffAssign.objects.filter(order = order,work = work).exists():
-                    OrderWorkStaffAssign.objects.filter(id = id,order = order,work = work).update(staff=staff,assign_stage = assign_stage,assign_date_time = datetime.datetime.now())
-                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(id = id,order = order,work = work)
+                if OrderWorkStaffAssign.objects.filter(order = order,work = work,order_work_label = order_work_label).exists():
+                    OrderWorkStaffAssign.objects.filter(id = id,order = order,work = work,order_work_label = order_work_label).update(staff=staff,assign_stage = assign_stage,assign_date_time = datetime.datetime.now())
+                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(id = id,order = order,work = work,order_work_label = order_work_label)
                     try:
                         s = OrderWorkStaffStatusCompletion.objects.filter(order = order).last()
                         OrderWorkStaffStatusCompletion.objects.filter(id = s.id).update(order_next_stage_assign = True)
@@ -621,19 +622,20 @@ def staff_work_take(request):
     if request.method == "POST":
         data = request.data
        
-        keys = ('staff_id','order_id','work_id','assigned_stage')
+        keys = ('staff_id','order_id','work_id','assigned_stage','order_work_label')
         if (i in data for i in keys):
             staff_id = data['staff_id']
             order_id = data['order_id']
             work_id = data['work_id']
             assigned_stage = data['assigned_stage']
+            order_work_label = data['order_work_label']
             try:
                 order = fetchOrder(order_id)
                 work = fetchWork(work_id)
                 staff = fetchStaff(staff_id)
                 
-                if  OrderWorkStaffAssign.objects.filter(order = order).exists():
-                    ordw = OrderWorkStaffAssign.objects.filter(order = order).last()
+                if  OrderWorkStaffAssign.objects.filter(order = order,order_work_label = order_work_label).exists():
+                    ordw = OrderWorkStaffAssign.objects.filter(order = order,order_work_label = order_work_label).last()
                     OrderWorkStaffTaken.objects.filter(orderworkstaffassign = ordw).update(taken_date_time = datetime.datetime.now())
                     
                     if OrderWorkStaffStatusCompletion.objects.filter(order = order,staff = staff ,orderworkstaffassign = ordw).exists():
@@ -710,19 +712,22 @@ def staff_work_completion_review(request):
 def staff_stage_completion(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','order_id','work_id','stage')
+        keys = ('staff_id','order_id','work_id','stage','order_work_label')
         if (i in data for i in keys):
             try:
                 staff_id = data['staff_id']
                 order_id = data['order_id']
                 work_id = data['work_id']
                 stage = data['stage']
+                order_work_label = data['order_work_label']
 
                 order = fetchOrder(order_id)
                 staff = fetchStaff(staff_id)
+
+                orderwa = OrderWorkStaffAssign.objects.get(order_work_label = order_work_label)
                     
-                if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
-                    ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_completed_date_time = datetime.datetime.now())
+                if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,orderworkstaffassign = orderwa).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,orderworkstaffassign = orderwa).update(work_completed_date_time = datetime.datetime.now())
                     return Response({'status' : True, 'message': 'Success'})
                 else:
                     return Response({'status' : False, 'message': 'not found'})
@@ -739,7 +744,7 @@ def staff_stage_completion(request):
 def staff_work_assign_completion_app(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','order_id','work_id','stage','state')
+        keys = ('staff_id','order_id','work_id','stage','state','order_work_label')
         if (i in data for i in keys):
             try:
                 staff_id = data['staff_id']
@@ -747,15 +752,18 @@ def staff_work_assign_completion_app(request):
                 work_id = data['work_id']
                 stage = data['stage']
                 state = data['state']
+                order_work_label = data['order_work_label']
 
                 order = fetchOrder(order_id)
                 work = fetchWork(work_id)
                 staff = fetchStaff(staff_id)
 
+                orderwa = OrderWorkStaffAssign.objects.get(order_work_label = order_work_label)
+
                 if state == "approve":
-                    if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).exists():
-                        ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).update(work_staff_comp_app_date_time = datetime.datetime.now(),work_staff_completion_approved = True)
-                        OrderWorkStaffAssign.objects.create(order = order,work = work,staff=None)
+                    if OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,orderworkstaffassign = orderwa).exists():
+                        ordc = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order,orderworkstaffassign = orderwa).update(work_staff_comp_app_date_time = datetime.datetime.now(),work_staff_completion_approved = True)
+                        OrderWorkStaffAssign.objects.create(order = order,work = work,order_work_label = orderwa.order_work_label,staff=None)
                         resp = SuccessContext(True,'Success','Updated')
                         return Response(resp)
                     else:
@@ -763,10 +771,10 @@ def staff_work_assign_completion_app(request):
                         return Response(resp)
                 elif state == "reassign":
                     OrderWorkStaffStatusCompletion.objects.filter(staff = staff,order = order).delete()
-                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(order = order,work = work,assign_stage = stage)
+                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(order = order,work = work,assign_stage = stage,order_work_label = orderwa.order_work_label)
                     OrderWorkStaffTaken.objects.filter(orderworkstaffassign = orderworkstaffassign,taken_stage = stage).delete()
-                    OrderWorkStaffAssign.objects.filter(order = order,work = work).update(staff = None,assign_stage = None,assign_date_time = None)
-                    OrderWorkStaffAssign.objects.filter(order = order,work = work,assign_stage = stage).update(staff = None,assign_stage = None,assign_date_time = None)
+                    OrderWorkStaffAssign.objects.filter(order = order,work = work,order_work_label = orderwa.order_work_label).update(staff = None,assign_stage = None,assign_date_time = None)
+                    OrderWorkStaffAssign.objects.filter(order = order,work = work,assign_stage = stage,order_work_label = orderwa.order_work_label).update(staff = None,assign_stage = None,assign_date_time = None)
                     resp = SuccessContext(True,'Success','deleted')
                     return Response(resp)
 
