@@ -104,10 +104,12 @@ def materials(request):
 def customer_details(request):
     if request.method == 'POST':
         data = request.data
-        if 'cust_id' in data:
+        keys = ('cust_id','role')
+        if (i in data for i in keys):
             cust_id = data['cust_id']
+            role = data['role']
             try:
-                if User.objects.filter(Q(mobile=cust_id) | Q(login_id=cust_id)).exists():
+                if User.objects.filter(Q(mobile=cust_id,role=role) | Q(login_id=cust_id,role=role)).exists():
                     customer = Customer.objects.filter(mobile=cust_id)
                     serializer = CustomerSerializer(customer,many=True)
                     return Response(serializer.data)
