@@ -1247,7 +1247,7 @@ def staff_wage_calculation(request):
                                 StaffWorkWage.objects.filter(
                                     staff=staff,
                                     wage_given=False,
-                                    orderworkstatuscompletion=work,
+                                    work=work.orderworkstaffassign.work,
                                 ).update(wage=amount)
                             elif work.orderworkstaffassign.work.wage_type == "10half":
                                 amount = (
@@ -1256,7 +1256,7 @@ def staff_wage_calculation(request):
                                 StaffWorkWage.objects.filter(
                                     staff=staff,
                                     wage_given=False,
-                                    orderworkstatuscompletion=work,
+                                    work=work.orderworkstaffassign.work,
                                 ).update(wage=amount)
                             else:
                                 pass
