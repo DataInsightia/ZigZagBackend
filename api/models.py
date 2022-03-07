@@ -56,6 +56,35 @@ class Staff(models.Model):
     def __str__(self):
         return f"{self.staff_name}"
 
+    def save(self, *args, **kwargs):
+        # Opening the uploaded image
+        im = Image.open(self.photo)
+
+        output = BytesIO()
+
+        x, y = im.size
+        x2, y2 = math.floor(x - 50), math.floor(y - 20)
+        im = im.resize((x2, y2), Image.ANTIALIAS)
+
+        # Resize/modify the image
+        # im = im.resize((300, 300), Image.ANTIALIAS)
+
+        # after modifications, save it to the output
+        im.save(output, format="JPEG", quality=30)
+        output.seek(0)
+
+        # change the imagefield value to be the newley modifed image value
+        self.photo = InMemoryUploadedFile(
+            output,
+            "ImageField",
+            "%s.jpg" % self.photo.name.split(".")[0],
+            "image/jpeg",
+            sys.getsizeof(output),
+            None,
+        )
+
+        super(Staff, self).save(*args, **kwargs)
+
 
 class Order(models.Model):
     pickup_options = (("self", "SELF"), ("courier", "COURIER"), ("others", "OTHERS"))

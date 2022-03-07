@@ -590,7 +590,7 @@ def order_status(request):
             order = fetchOrder(order_id)
             try:
                 ords = OrderWorkStaffStatusCompletion.objects.filter(
-                    order=order, order_next_stage_assign=True
+                    order=order, work_staff_completion_approved=True
                 ).values_list("work_staff_completion_stage")
                 resp = SuccessContext(True, "Success", ords)
                 return Response(resp)
