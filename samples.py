@@ -1,4 +1,4 @@
-from models import User,Staff,Customer
+from api.models import User,Staff,Customer
 
 User.objects.create(login_id='ZC001',password='customer')
 User.objects.create(login_id='ZA001',password='admin')

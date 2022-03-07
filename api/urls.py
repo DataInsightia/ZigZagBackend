@@ -41,5 +41,8 @@ urlpatterns = [
     path('get_details/',views.get_details),
     path('file_upload',views.upload_file),
     path('work_completed/',views.work_completed),
+    path('get_wagetotal/',views.getWageTotal),
+    path('createnew/',views.createnew),
+    path('pending_wage/',views.pending_wage),
 
 ]

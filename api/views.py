@@ -477,8 +477,26 @@ def order_status(request):
             order_id = data['order_id']
             order = fetchOrder(order_id)
             try:
-                ords = OrderWorkStaffStatusCompletion.objects.filter(order = order,order_next_stage_assign = True).values_list('work_staff_completion_stage')
-                resp = SuccessContext(True,'Success',ords)
+                ords = OrderWorkStaffStatusCompletion.objects.filter(order = order,work_staff_completion_approved = True)
+                
+                include_res = []
+                for i in ords:
+                    exclude_list = ['cutting','stitching','hook','overlock','Completed']
+                
+
+                    if i.work_staff_completion_stage in exclude_list:
+                        exclude_list.remove(i.work_staff_completion_stage)
+                        include_res.append({"stage": i.work_staff_completion_stage,"status":True})
+                    else:
+                        pass
+
+                    try:
+                        for e in exclude_list:
+                            include_res.append({"stage": e,"status":False})
+                    except:
+                        pass
+          
+                resp = SuccessContext(True,'Success',include_res)
                 return Response(resp) 
             except Exception as e:
                 return Response({'status' : False,'message' : 'Failed','error' : str(e)})
@@ -516,10 +534,12 @@ def staff_work_assign(request):
                     if assign_stage == "Completed":
                         orderworkstaffassign.assign_stage = "complete_final_stage"
                         orderworkstaffassign.save()
+                        
                         StaffWorkWage.objects.create(
                             staff = staff,
                             work = work,
-                            order = order
+                            order = order,
+                            work_staff_approval_date_time = s.work_staff_comp_app_date_time
                         )
                         resp = SuccessContext(True,'Success','Order Completed successfully')
                         return Response(resp) 
@@ -542,7 +562,7 @@ def staff_work_assign(request):
             li = []
             for i in OrderWorkStaffAssign.objects.filter(staff__isnull=True):
                 order = OrderWorkStaffAssignSerializers(i)
-                nextstage = getNextStage(i.order.order_id)
+                nextstage = getNextStage(i.order.order_id,i.order_work_label)
                 data = {
                     "nextstage":nextstage,
                     "data":order.data
@@ -880,10 +900,7 @@ def staff_wage_calculation(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
- 
                 staff = fetchStaff(staff_id)
-          
-
                 if staff.salary_type == "monthly":
                     pass
                 elif staff.salary_type == "wage":
@@ -892,7 +909,7 @@ def staff_wage_calculation(request):
                         for work in works:
                             if work.orderworkstaffassign.work.wage_type == "full":
                                 amount = work.orderworkstaffassign.work.amount 
-                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,work = work.orderworkstaffassign.work).update(wage = amount)
                             elif work.orderworkstaffassign.work.wage_type == "half":
                                 amount = work.orderworkstaffassign.work.amount/2
                                 StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
@@ -914,11 +931,26 @@ def staff_wage_calculation(request):
         else:
             resp = KeyErrorContext(False,'Failed','key missmatch')
             return Response(resp)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'GET':
-        staffwages = StaffWorkWage.objects.all()
-        serializer = StaffWorkWageSerializers(staffwages,many=True)
-        return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+@api_view(['POST'])
+def pending_wage(request):
+    if request.method == "POST":
+        data = request.data
+        keys = ('staff_id')
+        if (i in data for i in keys):
+            staff_id = data['staff_id']
+            try:
+                staff = fetchStaff(staff_id)
+                staffwages = StaffWorkWage.objects.filter(staff = staff,wage_given = False)
+                serializer = StaffWorkWageSerializers(staffwages,many=True)
+                return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+            except Exception as e:
+                resp = KeyErrorContext(False,'Failed',str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False,'Failed','key missmatch')
+            return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','POST'])
@@ -929,9 +961,7 @@ def staff_wage_manager(request):
         if (i in data for i in keys):
             staff_id = data['staff_id']
             try:
-               
                 staff = fetchStaff(staff_id)
-
                 staffwages = StaffWorkWage.objects.filter(staff = staff)
                 serializer = StaffWorkWageSerializers(staffwages,many=True)
                 return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
@@ -952,7 +982,7 @@ def staff_wage_manager(request):
 def staff_payment_update(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','updated_amount')
+        keys = ('staff_id','amount',)
         if (i in data for i in keys):
             staff_id = data['staff_id']
             updated_amount = data['updated_amount']
@@ -972,19 +1002,47 @@ def staff_payment_update(request):
         serializer = StaffWorkWageSerializers(staffwages,many=True)
         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
 
-@api_view(['GET','POST'])
-def manager_dashboard(request):
+@api_view(['POST'])
+def getWageTotal(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id')
-        if (i in data for i in keys):
+        print(data)
+        keys = ('from_date','to_date','staff_id')
+        if all(i in data for i in keys):
             staff_id = data['staff_id']
+            from_date = data['from_date']
+            to_date = data['to_date']
             try:
                 
                 staff = fetchStaff(staff_id)
-                # staffwages = StaffWorkWage.objects.filter(staff = staff)
-                # serializers = StaffWorkWageSerializers(staffwages,many=True)
-                # return Response(serializers.data) 
+                if staff.salary_type == "monthly":
+                    pass
+                elif staff.salary_type == "wage":
+                    if StaffWorkWage.objects.filter(staff = staff,wage_given = False).exists():
+                        works = OrderWorkStaffStatusCompletion.objects.filter(staff = staff,work_staff_completion_approved = True)
+                        for work in works:
+                            if work.orderworkstaffassign.work.wage_type == "full":
+                                amount = work.orderworkstaffassign.work.amount 
+                                print(amount)
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                            elif work.orderworkstaffassign.work.wage_type == "half":
+                                amount = work.orderworkstaffassign.work.amount/2
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                            elif work.orderworkstaffassign.work.wage_type == "10half":
+                                amount = (work.orderworkstaffassign.work.amount-10)/2
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                            else:
+                                pass
+                    else:
+                        pass 
+
+                staffwages = StaffWorkWage.objects.filter(staff = staff,work_staff_approval_date_time__range = [from_date,to_date])
+                print(staffwages)
+                if staffwages:
+                    totalamount = 200
+                    return Response({"total":totalamount}) 
+                else:
+                    return Response({"total":0}) 
             except Exception as e:
                 resp = KeyErrorContext(False,'Failed',str(e))
                 return Response(resp)
@@ -1188,3 +1246,15 @@ def work_completed(request):
             resp = KeyErrorContext(False,'Failed','key missmatch')
             return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+from django.shortcuts import HttpResponse
+def createnew(request):
+    if User.objects.filter(login_id = "ZC001").exists() or User.objects.filter(login_id = "ZS001").exists or User.objects.filter(login_id = "ZA001").exists():
+        User.objects.create(login_id = "ZC001",password="1234")
+        User.objects.create(login_id = "ZS001",password="1234")
+        User.objects.create(login_id = "ZA001",password="admin")
+        Staff.objects.create(staff_id = "ZS001",staff_name = "staff",mobile = "9998887778",salary_type = 'monthly',salary = 8000,worktype ="aari")
+        Customer.objects.create(cust_id = "ZC001")
+        return HttpResponse("data created")
+    else:
+        return HttpResponse("data exists")

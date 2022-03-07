@@ -198,6 +198,7 @@ class StaffWageGivenStatus(GenCols):
 
 class OrderPickupCourier(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
+    address = models.TextField(blank = True,null = True)
     courier_request_date = models.DateField()
     courier_amount = models.IntegerField()
     eligible_for_courier = models.BooleanField()
