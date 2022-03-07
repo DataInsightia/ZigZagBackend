@@ -71,9 +71,6 @@ class OrderStatusSerializers(ModelSerializer):
         fields = "__all__"
 
 class StaffWorkWageSerializers(ModelSerializer):
-    order = OrderSerializers()
-    staff = StaffSerializers()
-    orderworkstatuscompletion = OrderStatusSerializers()
     class Meta:
         model = StaffWorkWage
         fields = "__all__"

@@ -41,9 +41,9 @@ def fetchOrder(order_id):
         resp = NotfoundContext('order id not found')
         return Response(resp,status=status.HTTP_404_NOT_FOUND)
 
-def getNextStage(order_id):
+def getNextStage(order_id,order_work_label):
     order = fetchOrder(order_id)
-    s =  OrderWorkStaffAssign.objects.filter(order = order)
+    s =  OrderWorkStaffAssign.objects.filter(order = order,order_work_label = order_work_label)
     exclude_list = ['cutting','stitching','hook','overlock','Completed']
     for i in s:
         if i.assign_stage in exclude_list: 
