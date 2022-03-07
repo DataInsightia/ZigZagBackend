@@ -914,10 +914,10 @@ def staff_wage_calculation(request):
                                 StaffWorkWage.objects.filter(staff = staff,wage_given = False,work = work.orderworkstaffassign.work).update(wage = amount)
                             elif work.orderworkstaffassign.work.wage_type == "half":
                                 amount = work.orderworkstaffassign.work.amount/2
-                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,work = work.orderworkstaffassign.work).update(wage = amount)
                             elif work.orderworkstaffassign.work.wage_type == "10half":
                                 amount = (work.orderworkstaffassign.work.amount-10)/2
-                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,orderworkstatuscompletion = work).update(wage = amount)
+                                StaffWorkWage.objects.filter(staff = staff,wage_given = False,work = work.orderworkstaffassign.work).update(wage = amount)
                             else:
                                 pass
                     else:
