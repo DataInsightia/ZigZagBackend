@@ -54,4 +54,5 @@ urlpatterns = [
     path("pending_wage/", views.pending_wage),
     path("order_status_oa/", views.order_status_from_order_assign),
     path("order_status_oa_admin/", views.order_status_from_order_assign_admin),
+    path("admin_orders/", views.AdminOrder.as_view()),
 ]

@@ -1855,3 +1855,10 @@ def order_status_from_order_assign_admin(request):
             return Response(serializer.data)
         else:
             return Response()
+
+
+class AdminOrder(APIView):
+    def get(self, request):
+        model = OrderWorkStaffAssign.objects.filter(assign_stage__isnull = False)
+        serializer = OrderWorkStaffAssignSerializer(model, many=True)
+        return Response(serializer.data)
