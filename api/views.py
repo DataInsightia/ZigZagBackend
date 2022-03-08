@@ -590,8 +590,9 @@ def order_status(request):
             order = fetchOrder(order_id)
             try:
                 ords = OrderWorkStaffStatusCompletion.objects.filter(
-                    order=order, work_staff_completion_approved=True
-                )
+                    order=order,
+                    work_staff_completion_approved=True,
+                ).order_by("-work_staff_comp_app_date_time")
 
                 include_res = []
                 for i in ords:
@@ -1740,3 +1741,117 @@ def createnew(request):
         return HttpResponse("data created")
     else:
         return HttpResponse("data exists")
+
+
+class MaterialLocationView(APIView):
+    def get(self, request):
+        model = Material.objects.all()
+        serializer = MaterialSerializer(model, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        keys = ("order_id", "staff_id", "material_location")
+        if all(i in data for i in keys):
+            order_id = data["order_id"]
+            staff_id = data["staff_id"]
+            material_location = data["material_location"]
+
+            try:
+                OrderMaterialLocation.objects.create(
+                    order_id=order_id,
+                    staff_id=staff_id,
+                    material_location=material_location,
+                )
+                return Response({"status": True, "message": "Inserted"})
+            except Exception as e:
+                return Response({"status": False, "message": str(e)})
+        else:
+            return Response({"status": False, "message": "Key Missmatch"})
+
+
+@api_view(["POST"])
+def order_status_from_order_assign(request):
+    if request.method == "POST":
+        data = request.data
+        if "order_id" in data:
+            order_id = data["order_id"]
+            osa = OrderWorkStaffStatusCompletion.objects.filter(
+                order_id=order_id,
+                order_next_stage_assign=False,
+            ).order_by("-work_staff_comp_app_date_time")
+            serializer = OrderWorkStaffAssignCompletionSerializers(osa, many=True)
+            return Response(serializer.data)
+        else:
+            return Response()
+
+
+@api_view(["GET", "POST"])
+def order_status_admin(request):
+    if request.method == "POST":
+        data = request.data
+        keys = "order_id"
+        if (i in data for i in keys):
+            # cust_id = data['cust_id']
+            order_id = data["order_id"]
+            order = fetchOrder(order_id)
+            try:
+                ords = OrderWorkStaffStatusCompletion.objects.filter(
+                    order=order,
+                    work_staff_completion_approved=True,
+                ).order_by("-work_staff_comp_app_date_time")
+
+                include_res = []
+                for i in ords:
+                    exclude_list = [
+                        "cutting",
+                        "stitching",
+                        "hook",
+                        "overlock",
+                        "Completed",
+                    ]
+
+                    if i.work_staff_completion_stage in exclude_list:
+                        exclude_list.remove(i.work_staff_completion_stage)
+                        include_res.append(
+                            {
+                                "stage": i.work_staff_completion_stage,
+                                "staff_name": i.staff.staff_name,
+                                "completion_date_time": i.work_completed_date_time,
+                                "status": True,
+                            }
+                        )
+                    else:
+                        pass
+
+                    try:
+                        for e in exclude_list:
+                            include_res.append({"stage": e, "status": False})
+                    except:
+                        pass
+
+                resp = SuccessContext(True, "Success", include_res)
+                return Response(resp)
+            except Exception as e:
+                return Response({"status": False, "message": "Failed", "error": str(e)})
+        else:
+            return Response(
+                {"status": False, "message": "Failed", "error": "key missmatch"}
+            )
+    return Response({"GET": "Not Allowed"})
+
+
+@api_view(["POST"])
+def order_status_from_order_assign_admin(request):
+    if request.method == "POST":
+        data = request.data
+        if "order_id" in data:
+            order_id = data["order_id"]
+            osa = OrderWorkStaffStatusCompletion.objects.filter(
+                order_id=order_id,
+                order_next_stage_assign=False,
+            ).order_by("-work_staff_comp_app_date_time")
+            serializer = OrderWorkStaffAssignCompletionSerializers(osa, many=True)
+            return Response(serializer.data)
+        else:
+            return Response()

@@ -24,6 +24,7 @@ urlpatterns = [
     path("staff_register/", views.staff_register),
     path("staff_login/", views.staff_login),
     path("order_status/", views.order_status),
+    path("order_status_admin/", views.order_status_admin),
     path("staff_work_assign/", views.staff_work_assign),
     path("staff_work_assigned/", views.staff_work_assigned),
     path("staff_work_taken/", views.staff_work_taken),
@@ -51,4 +52,6 @@ urlpatterns = [
     path("get_wagetotal/", views.getWageTotal),
     path("createnew/", views.createnew),
     path("pending_wage/", views.pending_wage),
+    path("order_status_oa/", views.order_status_from_order_assign),
+    path("order_status_oa_admin/", views.order_status_from_order_assign_admin),
 ]

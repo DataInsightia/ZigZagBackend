@@ -198,7 +198,11 @@ class OrderWorkStaffTaken(models.Model):
         ("overlock", "OVERLOCK"),
         ("complete_final_stage", "COMPLETE FINAL STAGE"),
     )
-    # order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
+    # order = models.ForeignKey(
+    #     Order,
+    #     on_delete=models.CASCADE,
+    #     default="",
+    # )
     # staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='')
     # work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',blank=True,null=True)
     orderworkstaffassign = models.ForeignKey(
