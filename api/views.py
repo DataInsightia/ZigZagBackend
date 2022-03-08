@@ -1781,17 +1781,20 @@ def order_status_from_order_assign(request):
                 order_next_stage_assign=False,
             ).order_by("-work_staff_comp_app_date_time")
             serializer = OrderWorkStaffAssignCompletionSerializers(osa, many=True)
-            return Response(serializer.data)
+            return Response(
+                {
+                    "data": serializer.data,
+                }
+            )
         else:
-            return Response()
+            return Response({"data": []})
 
 
 @api_view(["GET", "POST"])
 def order_status_admin(request):
     if request.method == "POST":
         data = request.data
-        keys = "order_id"
-        if (i in data for i in keys):
+        if "order_id" in data:
             # cust_id = data['cust_id']
             order_id = data["order_id"]
             order = fetchOrder(order_id)
@@ -1833,10 +1836,17 @@ def order_status_admin(request):
                 resp = SuccessContext(True, "Success", include_res)
                 return Response(resp)
             except Exception as e:
-                return Response({"status": False, "message": "Failed", "error": str(e)})
+                return Response(
+                    {"data": [], "status": False, "message": "Failed", "error": str(e)}
+                )
         else:
             return Response(
-                {"status": False, "message": "Failed", "error": "key missmatch"}
+                {
+                    "data": [],
+                    "status": False,
+                    "message": "Failed",
+                    "error": "key missmatch",
+                }
             )
     return Response({"GET": "Not Allowed"})
 
@@ -1852,13 +1862,26 @@ def order_status_from_order_assign_admin(request):
                 order_next_stage_assign=False,
             ).order_by("-work_staff_comp_app_date_time")
             serializer = OrderWorkStaffAssignCompletionSerializers(osa, many=True)
-            return Response(serializer.data)
+            return Response(
+                {"data": serializer.data, "status": True, "message": "Success"}
+            )
         else:
-            return Response()
+            return Response({"data": [], "status": False, "message": "Failed"})
 
 
 class AdminOrder(APIView):
     def get(self, request):
-        model = OrderWorkStaffAssign.objects.filter(assign_stage__isnull = False)
+        model = OrderWorkStaffAssign.objects.filter(assign_stage__isnull=False)
         serializer = OrderWorkStaffAssignSerializer(model, many=True)
+        return Response(serializer.data)
+
+
+class CustomerOrder(APIView):
+    def get(self, request, orderid, custid):
+        customer = Customer.objects.get(cust_id=custid)
+        orders = Order.objects.filter(order_id=orderid, customer=customer).values_list(
+            "order_id"
+        )
+        ord_as = OrderWorkStaffAssign.objects.filter(order_id__in=orders)
+        serializer = OrderWorkStaffAssignSerializer(ord_as, many=True)
         return Response(serializer.data)
