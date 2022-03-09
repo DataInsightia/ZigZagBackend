@@ -45,7 +45,7 @@ urlpatterns = [
     path("file_upload", views.upload_file),
     path("work_completed/", views.work_completed),
     path("material/", views.MaterialLocationView.as_view()),
-    path("get_wagetotal/", views.getWageTotal),
+    # path("get_wagetotal/", views.getWageTotal),
     path("createnew/", views.createnew),
     path("pending_wage/", views.pending_wage),
     path("order_status_oa/", views.order_status_from_order_assign),
