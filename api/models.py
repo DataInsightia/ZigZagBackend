@@ -131,7 +131,7 @@ class OrderMaterial(models.Model):
     amount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.order} {self.material}"
+        return f"{self.order_id} {self.material_id}"
 
 
 class Material(models.Model):
