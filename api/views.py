@@ -1877,7 +1877,7 @@ class AdminOrder(APIView):
 
 
 class CustomerOrder(APIView):
-    def get(self, request, orderid, custid):
+    def get(self, request, custid, orderid):
         customer = Customer.objects.get(cust_id=custid)
         orders = Order.objects.filter(order_id=orderid, customer=customer).values_list(
             "order_id"
@@ -1885,3 +1885,39 @@ class CustomerOrder(APIView):
         ord_as = OrderWorkStaffAssign.objects.filter(order_id__in=orders)
         serializer = OrderWorkStaffAssignSerializer(ord_as, many=True)
         return Response(serializer.data)
+
+
+class OrderInvoiceView(APIView):
+    def post(self, request):
+        keys = ("order_id", "cust_id")
+        data = request.data
+        if all(i in data for i in keys):
+            order_id = data["order_id"]
+            cust_id = data["cust_id"]
+
+            try:
+                # get (TOTAL,ADVANCE,BALACE) from Order
+                orders = Order.objects.filter(order_id=order_id, customer__id=cust_id)
+                serialized_order = OrderSerializer(orders, many=True)
+
+                # get (WORK_NAME,QUANTITY,PRICE,AMOUTN/ITEM)
+                order_work = OrderWork.objects.filter(order_id=order_id)
+                serialized_order_work = OrderWorkSerializer(order_work, many=True)
+
+                # get (MATERIAL_NAME,QUANTITY,PRICE,AMOUNT/ITEM)
+                order_material = OrderMaterial.objects.filter(order_id=order_id)
+                serialized_order_material = OrderMaterialSerializer(
+                    order_material, many=True
+                )
+                return Response(
+                    {
+                        "status": True,
+                        "order": serialized_order,
+                        "order_work": serialized_order_work,
+                        "order_materail": serialized_order_material,
+                    }
+                )
+
+            except Exception as e:
+                return Response({"status": False, "message": str(e)})
+        return Response({"status": False, "message": "key error"})

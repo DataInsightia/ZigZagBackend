@@ -55,5 +55,6 @@ urlpatterns = [
     path("order_status_oa/", views.order_status_from_order_assign),
     path("order_status_oa_admin/", views.order_status_from_order_assign_admin),
     path("admin_orders/", views.AdminOrder.as_view()),
-    path("customer_orders/<orderid>/<custid>/", views.CustomerOrder.as_view()),
+    path("customer_orders/<custid>/<orderid>/", views.CustomerOrder.as_view()),
+    path("order_invoice/", views.OrderInvoiceView.as_view()),
 ]

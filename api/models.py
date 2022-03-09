@@ -116,17 +116,19 @@ class GenCols(models.Model):
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default="")
     work_id = models.CharField(max_length=20, default="")
+    work_name = models.CharField(max_length=100,default="")
     order_work_item = models.CharField(max_length=20, default="")
     quantity = models.CharField(max_length=20, default="")
     amount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.order} {self.work}"
+        return f"{self.order_id} {self.work_id}"
 
 
 class OrderMaterial(models.Model):
     order_id = models.CharField(max_length=20, default="")
     material_id = models.CharField(max_length=20, default="")
+    material_name = models.CharField(max_length=100,default="")
     quantity = models.CharField(max_length=20, default="")
     amount = models.IntegerField(null=True, blank=True)
 
