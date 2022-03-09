@@ -209,7 +209,7 @@ def customer_login(request):
     return Response({"GET": "Not Allowed"})
 
 
-@api_view(["GET", "POST"])
+@api_view(['PUT','POST'])
 def customer_register(request):
     if request.method == "POST":
         data = request.data
@@ -242,9 +242,22 @@ def customer_register(request):
                 user.save()
                 return Response({"status": True, "message": "Success"})
             except Exception as e:
-                return Response({"status": False, "error": str(e)})
-        return Response({"status": False, "message": "key error"})
-    return Response({"GET": "Not Allowed"})
+                return Response({'status' : False, 'error' : str(e)})
+        return Response({'status' : False, 'message' : 'key error'})
+    if request.method == "PUT":
+        cust_id = request.data.get('cust_id')
+        try:
+            customer = Customer.objects.get(cust_id = cust_id)
+            customer.customer_name = request.data.get('customer_name')
+            customer.address = request.data.get('address')
+            customer.city = request.data.get('city')
+            customer.pincode = request.data.get('pincode')
+
+            customer.save()
+            return Response({'status' : True, 'message' : 'Success'})
+        except:
+            return Response({'status' : False, 'message' : 'Failure'})
+    return Response({'GET': 'Not Allowed'})
 
 
 @api_view(["GET", "POST"])
@@ -279,7 +292,8 @@ def tmp_work(request):
     return Response({"GET": "Not Allowed"})
 
 
-@api_view(["POST"])
+
+@api_view(['POST','PUT'])
 def staff_register(request):
     if request.method == "POST":
         data = json.loads(request.POST["data"])
@@ -334,8 +348,25 @@ def staff_register(request):
                 except Exception as e:
                     return Response({"status": False, "error": str(e)})
         else:
-            return Response({"status": False, "message": "key error"})
-    return Response({"GET": "Not Allowed"})
+            return Response({'status' : False, 'message' : 'key error'})
+
+    if request.method == "PUT":
+        staff_id = request.data.get('staff_id')
+        try:
+            staff = Staff.objects.get(staff_id = staff_id)
+            staff.photo = request.FILES.get('file')
+            staff.staff_name = request.data.get('staff_name')
+            staff.address = request.data.get('address')
+            staff.city = request.data.get('city')
+            staff.ifsc = request.data.get('ifsc')
+            staff.bank = request.data.get('bank')
+            staff.work_type = request.data.get('work_type')
+            staff.acc_no = request.data.get('acc_no')
+            staff.save()
+            return Response({'status' : True, 'message' : 'Success'})
+        except:
+            return Response({'status' : False, 'message' : 'Failure'})
+    return Response({'GET': 'Not Allowed'})
 
 
 @api_view(["GET", "POST"])
@@ -536,47 +567,29 @@ def add_order(request):
             except Exception as e:
                 return Response({"status": False, "message": "Failed", "error": str(e)})
         else:
-            return Response(
-                {"status": False, "message": "Failed", "error": "key missmatch"}
-            )
-    return Response({"GET": "Not Allowed"})
-
-
-@api_view(["POST"])
-def staff_login(request):
-    if request.method == "POST":
-        data = request.data
-        keys = ("staff_id", "password")
-        if (i in data for i in keys):
-            staff_id = data["staff_id"]
-            password = data["password"]
-            try:
-                if User.objects.filter(
-                    Q(login_id=staff_id, password=password)
-                    | Q(mobile=staff_id, password=password)
-                ).exists():
-                    try:
-                        user = User.objects.get(mobile=staff_id, password=password)
-                    except:
-                        user = User.objects.get(login_id=staff_id, password=password)
-                    return Response(
-                        {
-                            "status": True,
-                            "message": "Success",
-                            "details": {
-                                "login_id": user.login_id,
-                                "mobile": user.mobile,
-                                "role": user.role,
-                            },
-                        }
-                    )
-            except Exception as e:
-                return Response({"status": False, "message": "Failed", "error": str(e)})
-        else:
-            return Response(
-                {"status": False, "message": "Failed", "error": "key missmatch"}
-            )
-    return Response({"GET": "Not Allowed"})
+            return Response({'status': False, 'message': 'Failed', 'error': 'key missmatch'})
+    return Response({'GET': 'Not Allowed'})
+  
+# @api_view(['POST'])  
+# def staff_login(request):
+#     if request.method == 'POST':
+#         data = request.data
+#         keys = ('staff_id','password')
+#         if (i in data for i in keys):
+#             staff_id = data['staff_id']
+#             password = data['password']
+#             try:
+#                 if User.objects.filter(Q(login_id=staff_id,password=password) | Q(mobile=staff_id,password=password)).exists():
+#                     try:
+#                         user = User.objects.get(mobile=staff_id,password=password)
+#                     except:
+#                         user = User.objects.get(login_id=staff_id,password=password)
+#                     return Response({'status' : True, 'message': 'Success','details':{"login_id":user.login_id,"mobile":user.mobile,"role":user.role}})
+#             except Exception as e:
+#                 return Response({'status' : False,'message' : 'Failed','error' : str(e)})
+#         else:
+#             return Response({'status' : False,'message' : 'Failed','error' : 'key missmatch'})
+#     return Response({'GET' : 'Not Allowed'})
 
 
 @api_view(["GET", "POST"])
@@ -611,7 +624,6 @@ def order_status(request):
                         )
                     else:
                         pass
-
                     try:
                         for e in exclude_list:
                             include_res.append({"stage": e, "status": False})
@@ -1101,120 +1113,120 @@ def staff_work_assign_completion_app(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "POST"])
-def work_finalize(request):
-    if request.method == "POST":
-        data = request.data
-        keys = ("staff_id", "order_id", "work_id", "stage", "date")
-        if (i in data for i in keys):
-            try:
-                staff_id = data["staff_id"]
-                order_id = data["order_id"]
-                work_id = data["work_id"]
-                stage = data["stage"]
-                date = data["date"]
+# @api_view(["GET", "POST"])
+# def work_finalize(request):
+#     if request.method == "POST":
+#         data = request.data
+#         keys = ("staff_id", "order_id", "work_id", "stage", "date")
+#         if (i in data for i in keys):
+#             try:
+#                 staff_id = data["staff_id"]
+#                 order_id = data["order_id"]
+#                 work_id = data["work_id"]
+#                 stage = data["stage"]
+#                 date = data["date"]
 
-                order = fetchOrder(order_id)
-                work = fetchWork(work_id)
-                staff = fetchStaff(staff_id)
+#                 order = fetchOrder(order_id)
+#                 work = fetchWork(work_id)
+#                 staff = fetchStaff(staff_id)
 
-                if OrderWorkStaffStatusCompletion.objects.filter(
-                    staff=staff, order=order, work_staff_completion_approved=True
-                ).exists():
-                    ordc = OrderWorkStaffStatusCompletion.objects.filter(
-                        staff=staff, order=order, work_staff_completion_approved=True
-                    ).update(order_next_stage_assign=True)
-                    OrderWorkStaffAssign.objects.create(
-                        order=order, work=work, staff=None
-                    )
-                    resp = SuccessContext(True, "Success", "Work finished")
-                    return Response(resp)
-                else:
-                    resp = SuccessContext(True, "Failure", "not allowed")
-                    return Response(resp)
+#                 if OrderWorkStaffStatusCompletion.objects.filter(
+#                     staff=staff, order=order, work_staff_completion_approved=True
+#                 ).exists():
+#                     ordc = OrderWorkStaffStatusCompletion.objects.filter(
+#                         staff=staff, order=order, work_staff_completion_approved=True
+#                     ).update(order_next_stage_assign=True)
+#                     OrderWorkStaffAssign.objects.create(
+#                         order=order, work=work, staff=None
+#                     )
+#                     resp = SuccessContext(True, "Success", "Work finished")
+#                     return Response(resp)
+#                 else:
+#                     resp = SuccessContext(True, "Failure", "not allowed")
+#                     return Response(resp)
 
-            except Exception as e:
-                resp = KeyErrorContext(False, "Failed", str(e))
-                return Response(resp)
-        else:
-            resp = KeyErrorContext(False, "Failed", "key missmatch")
-            return Response(resp)
-    elif request.method == "GET":
-        if OrderWorkStaffStatusCompletion.objects.filter(
-            work_staff_completion_approved=True, order_next_stage_assign=False
-        ).exists():
-            ordc = OrderWorkStaffStatusCompletion.objects.filter(
-                work_staff_completion_approved=True, order_next_stage_assign=False
-            )
-            serializer = OrderWorkStaffAssignCompletionSerializers(ordc, many=True)
-            return Response(
-                {"data": serializer.data, "status": True, "message": "Success"},
-                status.HTTP_200_OK,
-            )
-        else:
-            return Response({"status": False, "message": "Success"}, status.HTTP_200_OK)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+#             except Exception as e:
+#                 resp = KeyErrorContext(False, "Failed", str(e))
+#                 return Response(resp)
+#         else:
+#             resp = KeyErrorContext(False, "Failed", "key missmatch")
+#             return Response(resp)
+#     elif request.method == "GET":
+#         if OrderWorkStaffStatusCompletion.objects.filter(
+#             work_staff_completion_approved=True, order_next_stage_assign=False
+#         ).exists():
+#             ordc = OrderWorkStaffStatusCompletion.objects.filter(
+#                 work_staff_completion_approved=True, order_next_stage_assign=False
+#             )
+#             serializer = OrderWorkStaffAssignCompletionSerializers(ordc, many=True)
+#             return Response(
+#                 {"data": serializer.data, "status": True, "message": "Success"},
+#                 status.HTTP_200_OK,
+#             )
+#         else:
+#             return Response({"status": False, "message": "Success"}, status.HTTP_200_OK)
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST"])
-def staff_work_assign_completion_approval(request):
-    if request.method == "POST":
-        data = request.data
-        keys = ("id", "order_id", "staff_id", "work_id")
-        if (i in data for i in keys):
-            try:
-                ids = int(data["id"])
+# @api_view(["POST"])
+# def staff_work_assign_completion_approval(request):
+#     if request.method == "POST":
+#         data = request.data
+#         keys = ("id", "order_id", "staff_id", "work_id")
+#         if (i in data for i in keys):
+#             try:
+#                 ids = int(data["id"])
 
-                approval = True
-                assignnextstage = True
-                staff_id = data["staff_id"]
-                order_id = data["order_id"]
+#                 approval = True
+#                 assignnextstage = True
+#                 staff_id = data["staff_id"]
+#                 order_id = data["order_id"]
 
-                staff = fetchStaff(staff_id)
-                order = fetchOrder(order_id)
+#                 staff = fetchStaff(staff_id)
+#                 order = fetchOrder(order_id)
 
-                if OrderWorkStaffStatusCompletion.objects.filter(
-                    id=ids, work_staff_completion_approved=True
-                ).exists():
-                    return Response(
-                        {
-                            "status": True,
-                            "message": "Success",
-                            "details": "Order already approved",
-                        }
-                    )
-                else:
-                    orderworkstaffstatuscompletion = (
-                        OrderWorkStaffStatusCompletion.objects.get(id=ids)
-                    )
-                    orderworkstaffstatuscompletion.work_staff_completion_approved = (
-                        approval
-                    )
-                    orderworkstaffstatuscompletion.order_next_stage_assign = (
-                        assignnextstage
-                    )
-                    orderworkstaffstatuscompletion.save()
+#                 if OrderWorkStaffStatusCompletion.objects.filter(
+#                     id=ids, work_staff_completion_approved=True
+#                 ).exists():
+#                     return Response(
+#                         {
+#                             "status": True,
+#                             "message": "Success",
+#                             "details": "Order already approved",
+#                         }
+#                     )
+#                 else:
+#                     orderworkstaffstatuscompletion = (
+#                         OrderWorkStaffStatusCompletion.objects.get(id=ids)
+#                     )
+#                     orderworkstaffstatuscompletion.work_staff_completion_approved = (
+#                         approval
+#                     )
+#                     orderworkstaffstatuscompletion.order_next_stage_assign = (
+#                         assignnextstage
+#                     )
+#                     orderworkstaffstatuscompletion.save()
 
-                    StaffWorkWage.objects.create(
-                        order=order,
-                        staff=staff,
-                        orderworkstatuscompletion=orderworkstaffstatuscompletion,
-                    )
+#                     StaffWorkWage.objects.create(
+#                         order=order,
+#                         staff=staff,
+#                         orderworkstatuscompletion=orderworkstaffstatuscompletion,
+#                     )
 
-                    return Response(
-                        {
-                            "status": True,
-                            "message": "Success",
-                            "details": "Order approved",
-                        }
-                    )
-            except Exception as e:
-                resp = KeyErrorContext(False, "Failed", str(e))
-                return Response(resp)
-        else:
-            resp = KeyErrorContext(False, "Failed", "key missmatch")
-            return Response(resp)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+#                     return Response(
+#                         {
+#                             "status": True,
+#                             "message": "Success",
+#                             "details": "Order approved",
+#                         }
+#                     )
+#             except Exception as e:
+#                 resp = KeyErrorContext(False, "Failed", str(e))
+#                 return Response(resp)
+#         else:
+#             resp = KeyErrorContext(False, "Failed", "key missmatch")
+#             return Response(resp)
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET", "POST"])
@@ -1284,10 +1296,42 @@ def staff_wage_calculation(request):
         else:
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
+
+    if request.method == "PUT":
+        data = request.data
+        keys = ('from_date','to_date','payment_date','staff_id','ids','w_total')
+        if (i in data for i in keys):
+            staff_id = json.loads(data['staff_id'])
+            ids = json.loads(data['ids'])
+            from_date = data['from_date']
+            payment_date = data['payment_date']
+            payment_ref = json.loads(data['payment_ref'])
+            to_date = data['to_date']
+            payment_ref_image = request.FILES.get('file')
+            w_total = json.loads(data['w_total'])
+
+            try:
+                
+                f_date = datetime.datetime.strptime(from_date[1:11], '%d/%m/%Y').strftime('%Y-%m-%d')
+                t_date = datetime.datetime.strptime(to_date[1:11], '%d/%m/%Y').strftime('%Y-%m-%d')
+                staff_id = fetchStaff(staff_id)
+                if StaffWageGivenStatus.objects.filter(staff = staff_id,order_ids = ids,wage_from_date = f_date,wage_to_date = t_date,total_wage_given = w_total).exists():
+                    return Response({"status":False,"message":"Failure"})
+                else:           
+                    StaffWageGivenStatus.objects.create(staff = staff_id,order_ids = ids,wage_from_date = f_date,wage_to_date = t_date,total_wage_given = w_total,wage_payment_reference_no = payment_ref,wage_payment_reference_image = payment_ref_image)
+                    for id in ids:
+                        StaffWorkWage.objects.filter(id = id).update(completion_date_time = datetime.datetime.now(),wage_given = True)
+       
+                    return Response({"status":True,"message":"Success"},status=status.HTTP_201_CREATED)
+            except Exception as e:
+                resp = KeyErrorContext(False, "Failed", str(e))
+                return Response(resp)
+        else:
+            resp = KeyErrorContext(False, "Failed", "key missmatch")
+            return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(["POST"])
+@api_view(['POST'])
 def pending_wage(request):
     if request.method == "POST":
         data = request.data
@@ -1296,12 +1340,12 @@ def pending_wage(request):
             staff_id = data["staff_id"]
             try:
                 staff = fetchStaff(staff_id)
-                staffwages = StaffWorkWage.objects.filter(staff=staff, wage_given=False)
-                serializer = StaffWorkWageSerializers(staffwages, many=True)
-                return Response(
-                    {"data": serializer.data, "status": True, "message": "Success"},
-                    status.HTTP_200_OK,
-                )
+                staffwages = StaffWorkWage.objects.filter(staff = staff,wage_given = False)
+                serializer = StaffWorkWageSerializers(staffwages,many=True)
+                if serializer.data:
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+                else:
+                    return Response({"data":[],"status":False,"message":"Success"},status.HTTP_200_OK) 
             except Exception as e:
                 resp = KeyErrorContext(False, "Failed", str(e))
                 return Response(resp)
@@ -1310,146 +1354,108 @@ def pending_wage(request):
             return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+# @api_view(['GET','POST'])
+# def staff_wage_manager(request):
+#     if request.method == "POST":
+#         data = request.data
+#         keys = ('staff_id')
+#         if (i in data for i in keys):
+#             staff_id = data['staff_id']
+#             try:
+#                 staff = fetchStaff(staff_id)
+#                 staffwages = StaffWorkWage.objects.filter(staff = staff)
+#                 serializer = StaffWorkWageSerializers(staffwages,many=True)
+#                 return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+#             except Exception as e:
+#                 resp = KeyErrorContext(False,'Failed',str(e))
+#                 return Response(resp)
+#         else:
+#             resp = KeyErrorContext(False,'Failed','key missmatch')
+#             return Response(resp)
 
-@api_view(["GET", "POST"])
-def staff_wage_manager(request):
-    if request.method == "POST":
-        data = request.data
-        keys = "staff_id"
-        if (i in data for i in keys):
-            staff_id = data["staff_id"]
-            try:
-                staff = fetchStaff(staff_id)
-                staffwages = StaffWorkWage.objects.filter(staff=staff)
-                serializer = StaffWorkWageSerializers(staffwages, many=True)
-                return Response(
-                    {"data": serializer.data, "status": True, "message": "Success"},
-                    status.HTTP_200_OK,
-                )
-            except Exception as e:
-                resp = KeyErrorContext(False, "Failed", str(e))
-                return Response(resp)
-        else:
-            resp = KeyErrorContext(False, "Failed", "key missmatch")
-            return Response(resp)
+#     elif request.method == 'GET':
+#         staffwages = StaffWorkWage.objects.all()
+#         serializer = StaffWorkWageSerializers(staffwages,many=True)
+#         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+#     return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "GET":
-        staffwages = StaffWorkWage.objects.all()
-        serializer = StaffWorkWageSerializers(staffwages, many=True)
-        return Response(
-            {"data": serializer.data, "status": True, "message": "Success"},
-            status.HTTP_200_OK,
-        )
-    return Response(serializers.data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(["GET", "POST"])
+@api_view(['POST'])
 def staff_payment_update(request):
     if request.method == "POST":
         data = request.data
-        keys = (
-            "staff_id",
-            "amount",
-        )
-        if (i in data for i in keys):
-            staff_id = data["staff_id"]
-            updated_amount = data["updated_amount"]
-            try:
-
-                staff = fetchStaff(staff_id)
-
-            except Exception as e:
-                resp = KeyErrorContext(False, "Failed", str(e))
-                return Response(resp)
+        keys = ('staff_id','id','dates')
+        if all(i in data for i in keys):
+            id = data['id']
+            staff_id = data['staff_id']
+            dates = data['dates']
+            
+            staff = fetchStaff(staff_id)
+            total = StaffWorkWage.objects.filter(staff = staff,wage_given = False,id__in = id).aggregate(Sum('wage'))
+            return Response({"data":total,"from_date":dates[0],"to_date":dates[-1],"status":True,"message":"Success"},status.HTTP_200_OK) 
         else:
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
-
-    elif request.method == "GET":
-        staffwages = StaffWorkWage.objects.all()
-        serializer = StaffWorkWageSerializers(staffwages, many=True)
-        return Response(
-            {"data": serializer.data, "status": True, "message": "Success"},
-            status.HTTP_200_OK,
-        )
+    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST"])
-def getWageTotal(request):
+@api_view(['GET','POST'])
+def staff_wage_paid_completion(request):
     if request.method == "POST":
         data = request.data
-        print(data)
-        keys = ("from_date", "to_date", "staff_id")
-        if all(i in data for i in keys):
-            staff_id = data["staff_id"]
-            from_date = data["from_date"]
-            to_date = data["to_date"]
+        if (i in data for i in keys):
+            staff_id = data['staff_id']
             try:
-
-                staff = fetchStaff(staff_id)
-                if staff.salary_type == "monthly":
-                    pass
-                elif staff.salary_type == "wage":
-                    if StaffWorkWage.objects.filter(
-                        staff=staff, wage_given=False
-                    ).exists():
-                        works = OrderWorkStaffStatusCompletion.objects.filter(
-                            staff=staff, work_staff_completion_approved=True
-                        )
-                        for work in works:
-                            if work.orderworkstaffassign.work.wage_type == "full":
-                                amount = work.orderworkstaffassign.work.amount
-                                print(amount)
-                                StaffWorkWage.objects.filter(
-                                    staff=staff,
-                                    wage_given=False,
-                                    orderworkstatuscompletion=work,
-                                ).update(wage=amount)
-                            elif work.orderworkstaffassign.work.wage_type == "half":
-                                amount = work.orderworkstaffassign.work.amount / 2
-                                StaffWorkWage.objects.filter(
-                                    staff=staff,
-                                    wage_given=False,
-                                    orderworkstatuscompletion=work,
-                                ).update(wage=amount)
-                            elif work.orderworkstaffassign.work.wage_type == "10half":
-                                amount = (
-                                    work.orderworkstaffassign.work.amount - 10
-                                ) / 2
-                                StaffWorkWage.objects.filter(
-                                    staff=staff,
-                                    wage_given=False,
-                                    orderworkstatuscompletion=work,
-                                ).update(wage=amount)
-                            else:
-                                pass
-                    else:
-                        pass
-
-                staffwages = StaffWorkWage.objects.filter(
-                    staff=staff,
-                    work_staff_approval_date_time__range=[from_date, to_date],
-                )
-                print(staffwages)
-                if staffwages:
-                    totalamount = 200
-                    return Response({"total": totalamount})
+                if StaffWageGivenStatus.objects.filter(
+                    staff = staff_id,
+                    order_ids = ids,
+                    wage_from_date = f_date,
+                    wage_to_date = t_date,
+                    total_wage_given = w_total
+                ).exists():
+                    return Response({"data":serializer.data,"status":True,"message":"Success"},status=status.HTTP_200_OK)
+                    
                 else:
-                    return Response({"total": 0})
+    
+                    return Response({"data":[],"status":False,"message":"Success"},status=status.HTTP_200_OK)
             except Exception as e:
                 resp = KeyErrorContext(False, "Failed", str(e))
                 return Response(resp)
         else:
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
+    else:
+        staffworkwage = StaffWorkWage.objects.filter(wage_given = True)
+        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        if serializer.data:
+            return Response({"data":serializer.data,"status":True,"message":"Success"},status=status.HTTP_200_OK)
+        else:
+            return Response({"data":[],"status":False,"message":"Success"},status=status.HTTP_200_OK)
+    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "GET":
-        staffwages = StaffWorkWage.objects.all()
-        serializer = StaffWorkWageSerializers(staffwages, many=True)
-        return Response(
-            {"data": serializer.data, "status": True, "message": "Success"},
-            status.HTTP_200_OK,
-        )
+@api_view(['POST'])
+def staff_wage_status(request,status):
+    if request.method == "POST" and status == "paid":
+        data = request.data
+        staff_id = data['staff_id']
+        staff_id = fetchStaff(staff_id)
+        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = True)
+        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        if serializer.data:
+            return Response({"data":serializer.data,"status":True,"message":"Success"})
+        else:
+            return Response({"data":[],"status":False,"message":"Success"})
+
+    elif request.method == "POST" and status == "notpaid":
+        data = request.data
+        staff_id = data['staff_id']
+        staff_id = fetchStaff(staff_id)
+        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = False)
+        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        if serializer.data:
+            return Response({"data":serializer.data,"status":True,"message":"Success"})
+        else:
+            return Response({"data":[],"status":False,"message":"Success"})
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderWorkStaffAssignView(APIView):
