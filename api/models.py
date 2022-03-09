@@ -40,16 +40,16 @@ class Staff(models.Model):
         ('photo','PHOTO')
     )
     staff_id = models.CharField(max_length=10,primary_key=True)
-    staff_name = models.CharField(max_length=50)
-    mobile = models.CharField(max_length=13)
-    address = models.TextField(max_length=250)
-    city = models.CharField(max_length=50)
-    salary_type = models.CharField(max_length=20,choices=salary_options)
+    staff_name = models.CharField(max_length=50,null = True)
+    mobile = models.CharField(max_length=13,null = True)
+    address = models.TextField(max_length=250,null = True)
+    city = models.CharField(max_length=50,null = True)
+    salary_type = models.CharField(max_length=20,choices=salary_options,null = True)
     salary = models.IntegerField(null=True,blank=True)
-    acc_no = models.CharField(max_length=16)
-    bank = models.CharField(max_length=300)
-    ifsc = models.CharField(max_length=20)
-    work_type = models.CharField(max_length=20,choices=work_options)
+    acc_no = models.CharField(max_length=16,null = True)
+    bank = models.CharField(max_length=300,null = True)
+    ifsc = models.CharField(max_length=20,null = True)
+    work_type = models.CharField(max_length=20,choices=work_options,null = True)
     photo = models.ImageField(default='',blank=True,null=True)
     
     def __str__(self):
@@ -77,9 +77,9 @@ class Order(models.Model):
         return f'{self.order_id} {self.customer}'
 
 class GenCols(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='')
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
     class Meta:
         abstract = True
 
@@ -187,14 +187,15 @@ class StaffWorkWage(GenCols):
         return f'{self.staff} {self.wage}'
 
 class StaffWageGivenStatus(GenCols):
+    order_ids = models.CharField(max_length = 200, null = True,blank = True)
     wage_from_date = models.DateField()
     wage_to_date = models.DateField()
-    wage_given_date = models.DateField()
+    wage_given_date = models.DateField(auto_now_add = True)
     total_wage_given = models.IntegerField()
     wage_payment_reference_no = models.CharField(max_length=50)
     wage_payment_reference_image = models.ImageField()
     def __str__(self):
-        return f'{self.order} {self.total_wage_given} {self.wage_payment_reference_no}'
+        return f'{self.id}'
 
 class OrderPickupCourier(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default='')
