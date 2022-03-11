@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import status
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from api import serializers
 from api.models import *
 from api.serializers import *
@@ -123,7 +123,7 @@ def customer_details(request):
                 if User.objects.filter(
                     Q(mobile=cust_id) | Q(login_id=cust_id)
                 ).exists():
-                    customer = Customer.objects.filter(mobile=cust_id)
+                    customer = Customer.objects.filter(Q(mobile=cust_id) | Q(cust_id=cust_id))
                     serializer = CustomerSerializer(customer, many=True)
                     return Response(serializer.data)
                 else:
@@ -481,15 +481,20 @@ def get_tmpwork(request):
 def add_order_work(request):
     if request.method == "POST":
         data = request.data
-        keys = ("order_id", "work_id", "qty", "work_amount")
+        keys = ("order_id", "work_id", "qty", "work_amount", "work_name")
         if all(i in data for i in keys):
             order_id = data["order_id"]
             work_id = data["work_id"]
             qty = data["qty"]
             amount = data["work_amount"]
+            work_name = data["work_name"]
             try:
                 ow = OrderWork.objects.create(
-                    order_id=order_id, work_id=work_id, quantity=qty, amount=amount
+                    order_id=order_id,
+                    work_id=work_id,
+                    quantity=qty,
+                    amount=amount,
+                    work_name=work_name,
                 )
                 ow.save()
                 return Response({"status": True, "message": "Success"})
@@ -506,18 +511,20 @@ def add_order_work(request):
 def add_order_material(request):
     if request.method == "POST":
         data = request.data
-        keys = ("order_id", "material_id", "qty", "material_amount")
+        keys = ("order_id", "material_id", "qty", "material_amount", "material_name")
         if all(i in data for i in keys):
             order_id = data["order_id"]
             material_id = data["material_id"]
             qty = data["qty"]
             amount = data["material_amount"]
+            material_name = data["material_name"]
             try:
                 ow = OrderMaterial.objects.create(
                     order_id=order_id,
                     material_id=material_id,
                     quantity=qty,
                     amount=amount,
+                    material_name=material_name,
                 )
                 ow.save()
                 return Response({"status": True, "message": "Success"})
@@ -542,6 +549,7 @@ def add_order(request):
             "total_amount",
             "advance_amount",
             "balance_amount",
+            "courier_amount",
         )
         if all(i in data for i in keys):
             order_id = data["order_id"]
@@ -551,6 +559,7 @@ def add_order(request):
             total_amount = data["total_amount"]
             advance_amount = data["advance_amount"]
             balance_amount = data["balance_amount"]
+            courier_amount = data["courier_amount"]
             try:
                 c_obj = Customer.objects.get(cust_id=cust_id)
                 oo = Order.objects.create(
@@ -561,6 +570,7 @@ def add_order(request):
                     total_amount=total_amount,
                     advance_amount=advance_amount,
                     balance_amount=balance_amount,
+                    courier_amount=courier_amount,
                 )
                 oo.save()
                 return Response({"status": True, "message": "Success"})
@@ -1883,13 +1893,12 @@ class AdminOrder(APIView):
 
 
 class CustomerOrder(APIView):
-    def get(self, request, custid, orderid):
+    def get(self, request, custid):
         customer = Customer.objects.get(cust_id=custid)
-        orders = Order.objects.filter(order_id=orderid, customer=customer).values_list(
-            "order_id"
-        )
-        ord_as = OrderWorkStaffAssign.objects.filter(order_id__in=orders)
-        serializer = OrderWorkStaffAssignSerializer(ord_as, many=True)
+        orders = Order.objects.filter(customer=customer).values_list("order_id")
+        ord_as = OrderWork.objects.filter(order_id__in=orders)
+        # print(ord_as.annotate(Count("order_id")))
+        serializer = OrderWorkSerializer(ord_as, many=True)
         return Response(serializer.data)
 
 
@@ -1903,7 +1912,9 @@ class OrderInvoiceView(APIView):
 
             try:
                 # get (TOTAL,ADVANCE,BALACE) from Order
-                orders = Order.objects.filter(order_id=order_id, customer__id=cust_id)
+                orders = Order.objects.filter(
+                    order_id=order_id, customer__cust_id=cust_id
+                )
                 serialized_order = OrderSerializer(orders, many=True)
 
                 # get (WORK_NAME,QUANTITY,PRICE,AMOUTN/ITEM)
@@ -1918,9 +1929,9 @@ class OrderInvoiceView(APIView):
                 return Response(
                     {
                         "status": True,
-                        "order": serialized_order,
-                        "order_work": serialized_order_work,
-                        "order_materail": serialized_order_material,
+                        "order": serialized_order.data,
+                        "order_work": serialized_order_work.data,
+                        "order_material": serialized_order_material.data,
                     }
                 )
 

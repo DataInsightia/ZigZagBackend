@@ -51,7 +51,6 @@ urlpatterns = [
     path("order_status_oa/", views.order_status_from_order_assign),
     path("order_status_oa_admin/", views.order_status_from_order_assign_admin),
     path("admin_orders/", views.AdminOrder.as_view()),
-    path("customer_orders/<orderid>/<custid>/", views.CustomerOrder.as_view()),
     path("work_completed/", views.work_completed),
     # path('staff_wage_paid/',views.staff_wage_paid),
     path("createnew/", views.createnew),
@@ -59,4 +58,6 @@ urlpatterns = [
     path("staff_payment_update/", views.staff_payment_update),
     path("staff_wage_paid_completion/", views.staff_wage_paid_completion),
     path("staff_wage_status/<str:status>", views.staff_wage_status),
+    path("customer_orders/<custid>/", views.CustomerOrder.as_view()),
+    path("order_invoice/", views.OrderInvoiceView.as_view()),
 ]
