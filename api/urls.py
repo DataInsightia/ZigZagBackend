@@ -60,4 +60,5 @@ urlpatterns = [
     path("staff_wage_status/<str:status>", views.staff_wage_status),
     path("customer_orders/<custid>/", views.CustomerOrder.as_view()),
     path("order_invoice/", views.OrderInvoiceView.as_view()),
+    path("order_status_admin/", views.order_status_admin),
 ]
