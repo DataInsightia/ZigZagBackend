@@ -17,6 +17,7 @@ admin.site.register(
         TmpMaterial,
         TmpWork,
         OrderWork,
+        Product,
     ]
 )
 

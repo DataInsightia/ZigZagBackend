@@ -1,4 +1,5 @@
 from operator import mod
+from statistics import mode
 from django.db import models
 from io import BytesIO
 import sys
@@ -40,19 +41,19 @@ class Staff(models.Model):
         ("embroidery", "EMBROIDERY"),
         ("photo", "PHOTO"),
     )
-    staff_id = models.CharField(max_length=10,primary_key=True)
-    staff_name = models.CharField(max_length=50,null = True)
-    mobile = models.CharField(max_length=13,null = True)
-    address = models.TextField(max_length=250,null = True)
-    city = models.CharField(max_length=50,null = True)
-    salary_type = models.CharField(max_length=20,choices=salary_options,null = True)
-    salary = models.IntegerField(null=True,blank=True)
-    acc_no = models.CharField(max_length=16,null = True)
-    bank = models.CharField(max_length=300,null = True)
-    ifsc = models.CharField(max_length=20,null = True)
-    work_type = models.CharField(max_length=20,choices=work_options,null = True)
-    photo = models.ImageField(default='',blank=True,null=True)
-    
+    staff_id = models.CharField(max_length=10, primary_key=True)
+    staff_name = models.CharField(max_length=50, null=True)
+    mobile = models.CharField(max_length=13, null=True)
+    address = models.TextField(max_length=250, null=True)
+    city = models.CharField(max_length=50, null=True)
+    salary_type = models.CharField(max_length=20, choices=salary_options, null=True)
+    salary = models.IntegerField(null=True, blank=True)
+    acc_no = models.CharField(max_length=16, null=True)
+    bank = models.CharField(max_length=300, null=True)
+    ifsc = models.CharField(max_length=20, null=True)
+    work_type = models.CharField(max_length=20, choices=work_options, null=True)
+    photo = models.ImageField(default="", blank=True, null=True)
+
     def __str__(self):
         return f"{self.staff_name}"
 
@@ -264,10 +265,10 @@ class StaffWorkWage(GenCols):
 
 
 class StaffWageGivenStatus(GenCols):
-    order_ids = models.CharField(max_length = 200, null = True,blank = True)
+    order_ids = models.CharField(max_length=200, null=True, blank=True)
     wage_from_date = models.DateField()
     wage_to_date = models.DateField()
-    wage_given_date = models.DateField(auto_now_add = True)
+    wage_given_date = models.DateField(auto_now_add=True)
     total_wage_given = models.IntegerField()
     wage_payment_reference_no = models.CharField(max_length=50)
     wage_payment_reference_image = models.ImageField()
@@ -412,6 +413,14 @@ class UploadFile(models.Model):
         )
 
         super(UploadFile, self).save(*args, **kwargs)
+
+
+class Product(models.Model):
+    product_id = models.CharField(max_length=10)
+    product_name = models.CharField(max_length=100)
+    picture = models.ImageField(upload_to="product")
+    new_arrival = models.BooleanField(default=False)
+    display = models.BooleanField(default=False)
 
 
 # class ModelName(models.Model):

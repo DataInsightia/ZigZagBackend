@@ -1,3 +1,4 @@
+from dis import dis
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -2003,3 +2004,77 @@ class OrderInvoiceView(APIView):
             except Exception as e:
                 return Response({"status": False, "message": str(e)})
         return Response({"status": False, "message": "key error"})
+
+
+class ProductView(APIView):
+    def get(self, request):
+        model = Product.objects.all()
+        serializer = ProductSerializer(model, many=True)
+        return Response({"status": True, "data": serializer.data})
+
+    def post(self, request):
+        data = json.loads(request.POST["data"])
+        if all(i in data for i in ("product_name", "display", "new_arrival")):
+            try:
+                product_id = "ZP"
+                product_name = data["product_name"]
+                display = True if data["display"] == "on" else False
+                new_arrival = True if data["new_arrival"] == "on" else False
+                picture = request.FILES.get("picture")
+                Product.objects.create(
+                    product_id=product_id,
+                    product_name=product_name,
+                    display=display,
+                    new_arrival=new_arrival,
+                    picture=picture,
+                )
+                print(display, new_arrival, picture)
+                return Response(
+                    {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+                )
+            except Exception as e:
+                return Response(
+                    {"status": False, "message": str(e)},
+                    status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        return Response(
+            {"status": False, "message": "Key error"},
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    def put(self, request):
+        data = json.loads(request.POST["data"])
+        if all(i in data for i in ("product_name", "display", "new_arrival")):
+            try:
+                product_id = "ZP"
+                product_name = data["product_name"]
+                display = True if data["display"] == "on" else False
+                new_arrival = True if data["new_arrival"] == "on" else False
+                picture = request.FILES.get("picture")
+                Product.objects.get(product_id=product_id).update(
+                    product_id=product_id,
+                    product_name=product_name,
+                    display=display,
+                    new_arrival=new_arrival,
+                    picture=picture,
+                )
+                print(display, new_arrival, picture)
+                return Response(
+                    {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+                )
+            except Exception as e:
+                return Response(
+                    {"status": False, "message": str(e)},
+                    status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        return Response(
+            {"status": False, "message": "Key error"},
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    def delete(self, request, productid):
+        try:
+            Product.objects.filter(product_id=productid).delete()
+            return Response({"status": True, "message": "Deleted"})
+        except Exception as e:
+            return Response({"status": False, "data": [], "message": str(e)})

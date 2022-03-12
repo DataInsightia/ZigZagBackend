@@ -58,4 +58,6 @@ urlpatterns = [
     path("staff_payment_update/", views.staff_payment_update),
     path("staff_wage_paid_completion/", views.staff_wage_paid_completion),
     path("staff_wage_status/<str:status>", views.staff_wage_status),
+    path("product/", views.ProductView.as_view()),
+    path("product/<productid>/", views.ProductView.as_view()),
 ]

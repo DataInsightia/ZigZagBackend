@@ -136,3 +136,9 @@ class OrderMaterialLocationSerializer(ModelSerializer):
     class Meta:
         model = OrderMaterialLocation
         fields = "__all__"
+
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = "__all__"
