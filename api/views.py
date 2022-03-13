@@ -40,13 +40,51 @@ def generate_orderid(request):
     except Exception as e:
         return Response({"status": True, "error": str(e)})
 
+class works(APIView):
 
-@api_view(["GET"])
-def works(request):
-    work = Work.objects.all()
-    serializer = WorkSerializer(work, many=True)
-    return Response(serializer.data)
 
+    def get(self, request):
+        work = Work.objects.all()
+        serializer = WorkSerializer(work, many=True)
+        if serializer.data:
+            return Response(serializer.data)
+        else:
+            return Response([],status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        data=request.data
+        if data['work_name'] and data['amount'] and data['wage_type']:
+            work_id = generate_ID("ZW",Work)
+            Work.objects.create(
+                work_name = data['work_name'],
+                amount = data['amount'],
+                wage_type = data['wage_type'],
+                work_id = work_id
+            )
+            resp = SuccessContext(True,"Success","Work added")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False,"Failure","Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        data = request.data
+        if request.method == "PUT":
+            work = Work.objects.get(work_id = data['work_id'])
+            work.work_name = data['work_name']
+            work.amount = data['amount']
+            work.wage_type = data['wage_type']
+            work.save()
+            resp = SuccessContext(True,"Success","Work updated")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+@api_view(["POST","DELETE"])
+def deleteworks(request):
+    work = Work.objects.filter(work_id = request.data['work_id'])
+    work.delete()
+    return Response("deleted work")
 
 @api_view(["GET"])
 def orders(request):
@@ -1229,7 +1267,7 @@ def staff_work_assign_completion_app(request):
 #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST","PUT"])
 def staff_wage_calculation(request):
     if request.method == "POST":
         data = request.data
@@ -1722,33 +1760,6 @@ def work_completed(request):
             return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-from django.shortcuts import HttpResponse
-
-
-def createnew(request):
-    if (
-        User.objects.filter(login_id="ZC001").exists()
-        or User.objects.filter(login_id="ZS001").exists
-        or User.objects.filter(login_id="ZA001").exists()
-    ):
-        User.objects.create(login_id="ZC001", password="1234")
-        User.objects.create(login_id="ZS001", password="1234")
-        User.objects.create(login_id="ZA001", password="admin")
-        Staff.objects.create(
-            staff_id="ZS001",
-            staff_name="staff",
-            mobile="9998887778",
-            salary_type="monthly",
-            salary=8000,
-            worktype="aari",
-        )
-        Customer.objects.create(cust_id="ZC001")
-        return HttpResponse("data created")
-    else:
-        return HttpResponse("data exists")
-
-
 class MaterialLocationView(APIView):
     def get(self, request):
         model = Material.objects.all()
@@ -1891,3 +1902,13 @@ class CustomerOrder(APIView):
         ord_as = OrderWorkStaffAssign.objects.filter(order_id__in=orders)
         serializer = OrderWorkStaffAssignSerializer(ord_as, many=True)
         return Response(serializer.data)
+
+
+@api_view(["GET"])
+def customers(request):
+    customer = Customer.objects.all()
+    serializer = CustomerSerializer(customer, many=True)
+    if serializer.data:
+        return Response(serializer.data)
+    else:
+        return Response([],status=status.HTTP_404_NOT_FOUND)

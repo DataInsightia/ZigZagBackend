@@ -103,3 +103,26 @@ def NotfoundContext(error):
         "Error": error,
     }
     return data
+
+
+def generate_ID(code,db):
+    try:
+        start_order_number = 786
+
+        if db.objects.all().last() != None:
+            order = db.objects.all().last()
+            last_order_id = order.work_id
+            start_order_number = 786
+            if int(last_order_id[2:]) % 1000 == 0:
+                next_letter = chr(ord(last_order_id[1]) + 1)
+                o_id = "Z" + next_letter + str(start_order_number)
+                return o_id
+            else:
+                next_letter = chr(ord(last_order_id[1]) + 0)
+                o_id = "Z" + next_letter + str(int(last_order_id[2:]) + 1)
+                return o_id
+        else:
+            o_id = code + str(start_order_number)
+            return o_id
+    except Exception as e:
+        return Response({"status": True, "error": str(e)})
