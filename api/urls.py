@@ -60,4 +60,5 @@ urlpatterns = [
     path("staff_wage_status/<str:status>", views.staff_wage_status),
     path("product/", views.ProductView.as_view()),
     path("product/<productid>/", views.ProductView.as_view()),
+    path("get_product/", views.get_product),
 ]

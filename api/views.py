@@ -1,4 +1,5 @@
 from dis import dis
+from math import prod
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -2016,7 +2017,7 @@ class ProductView(APIView):
         data = json.loads(request.POST["data"])
         if all(i in data for i in ("product_name", "display", "new_arrival")):
             try:
-                product_id = "ZP"
+                product_id = "ZP" + str(randint(9999, 100000))
                 product_name = data["product_name"]
                 display = True if data["display"] == "on" else False
                 new_arrival = True if data["new_arrival"] == "on" else False
@@ -2042,22 +2043,21 @@ class ProductView(APIView):
             status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
-    def put(self, request):
+    def put(self, request, productid):
         data = json.loads(request.POST["data"])
         if all(i in data for i in ("product_name", "display", "new_arrival")):
             try:
-                product_id = "ZP"
                 product_name = data["product_name"]
                 display = True if data["display"] == "on" else False
                 new_arrival = True if data["new_arrival"] == "on" else False
                 picture = request.FILES.get("picture")
-                Product.objects.get(product_id=product_id).update(
-                    product_id=product_id,
-                    product_name=product_name,
-                    display=display,
-                    new_arrival=new_arrival,
-                    picture=picture,
-                )
+                product = Product.objects.get(product_id=productid)
+
+                product.product_name = product_name
+                product.display = display
+                product.new_arrival = new_arrival
+                product.picture = picture
+
                 print(display, new_arrival, picture)
                 return Response(
                     {"status": True, "message": "Success"}, status.HTTP_201_CREATED
@@ -2078,3 +2078,13 @@ class ProductView(APIView):
             return Response({"status": True, "message": "Deleted"})
         except Exception as e:
             return Response({"status": False, "data": [], "message": str(e)})
+
+
+@api_view(["GET"])
+def get_product(request):
+    try:
+        model = Product.objects.get(product_id=request.GET.get("pid"))
+        serializer = ProductSerializer(model)
+        return Response({"status": True, "data": serializer.data})
+    except Exception as e:
+        return Response({"status": True, "data": [], "message": str(e)})
