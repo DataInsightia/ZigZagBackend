@@ -10,7 +10,7 @@ from random import randint
 from api.utils import *
 import json
 import datetime
-
+from dateutil.relativedelta import *
 
 @api_view(["GET", "POST"])
 def test(request):
@@ -49,7 +49,7 @@ class works(APIView):
         if serializer.data:
             return Response(serializer.data)
         else:
-            return Response([],status=status.HTTP_404_NOT_FOUND)
+            return Response([],status=status.HTTP_201_CREATED)
 
     def post(self, request):
         data=request.data
@@ -78,13 +78,72 @@ class works(APIView):
             return Response(resp, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request,work_id):
+        try:
+            work_id = Work.objects.get(work_id = work_id)
+        except:
+            resp = ErrorContext(False,"Failure","work id not found")
+            return Response(resp, status=status.HTTP_404_NOT_FOUND)
+        if work_id:
+            Work.objects.filter(work_id = work_id.work_id).delete()
+            resp = SuccessContext(True,"Success","Work deleted")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False,"Failure","Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
     
 
-@api_view(["POST","DELETE"])
-def deleteworks(request):
-    work = Work.objects.filter(work_id = request.data['work_id'])
-    work.delete()
-    return Response("deleted work")
+
+class MaterialView(APIView):
+
+    def get(self, request):
+        material = Material.objects.all()
+        serializer = MaterialSerializer(material, many=True)
+        if serializer.data:
+            return Response(serializer.data)
+        else:
+            return Response([],status=status.HTTP_201_CREATED)
+
+    def post(self, request):
+        data=request.data
+        print(data)
+        if data['material_name'] and data['measurement'] and data['amount']:
+            material_id = generate_ID("ZM",Material)
+            Material.objects.create(
+                material_id = material_id,
+                amount = data['amount'],
+                material_name = data['material_name'],
+                measurement = data['measurement']
+            )
+            resp = SuccessContext(True,"Success","Material added")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False,"Failure","Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        data = request.data
+        if request.method == "PUT":
+            material = Material.objects.get(material_id = data['material_id'])
+            material.material_name = data['material_name']
+            material.amount = data['amount']
+            material.measurement = data['measurement']
+            material.save()
+            resp = SuccessContext(True,"Success","Material updated")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request,mat_id):
+        try:
+            material_id = Material.objects.get(material_id = mat_id)
+        except:
+            resp = ErrorContext(False,"Failure","Material id not found")
+            return Response(resp, status=status.HTTP_404_NOT_FOUND)
+        if mat_id:
+            Material.objects.filter(material_id = material_id.material_id).delete()
+            resp = SuccessContext(True,"Success","Material deleted")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False,"Failure","Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["GET"])
 def orders(request):
@@ -1912,3 +1971,147 @@ def customers(request):
         return Response(serializer.data)
     else:
         return Response([],status=status.HTTP_404_NOT_FOUND)
+
+# CUSTOMER PENDING ORDERS 
+@api_view(['POST'])
+def customer_pending_orders(request):
+    data = request.data
+    print(data)
+    if "login_id" in data:
+        login_id = data['login_id']
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer = customer).values_list('order_id')
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in = order_id).exclude(assign_stage = 'complete_final_stage').count()
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# CUSTOMER COMPLETED ORDERS 
+@api_view(['POST'])
+def customer_completed_orders(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer = customer).values_list('order_id')
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in = order_id).filter(assign_stage = 'complete_final_stage').count()
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# CUSTOMER TOTAL ORDERS 
+@api_view(['POST'])
+def customer_total_orders(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer = customer).values_list('order_id')
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in = order_id).count()
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+#CUSTOMER  DELIVERY READY
+@api_view(['POST'])
+def customer_delivery_ready(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer = customer).values_list('order_id')
+        delivery_ready = Delivery.objects.filter(delivery_date_time__isnull = True,order_id__in = order_id).count()
+        return Response(delivery_ready)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF TOTAL WORKS
+@api_view(['POST'])
+def staff_total_works(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff = staff).values_list('id')
+        totalworks = OrderWorkStaffTaken.objects.filter(id__in = works).count()
+        return Response(totalworks)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF ASSIGNED WORKS
+@api_view(['POST'])
+def staff_not_taken_works(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff = staff).values_list('id')
+        assigned_works = OrderWorkStaffTaken.objects.filter(id__in = works,taken_date_time__isnull = True).count()
+        print(assigned_works)
+        return Response(assigned_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF ON GOING WORKS
+@api_view(['POST'])
+def staff_taken_works(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff = staff).values_list('id')
+        taken_works = OrderWorkStaffTaken.objects.filter(id__in = works,taken_date_time__isnull = False).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF TODAY DUE WORKS
+@api_view(['POST'])
+def staff_today_due_works(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        staff = fetchStaff(login_id)
+        today_due_orders = Order.objects.filter(due_date = datetime.date.today()).values_list('order_id')
+        order_work_id = OrderWorkStaffAssign.objects.filter(staff = staff,order_id__in = today_due_orders).values_list('id')
+        taken_works = OrderWorkStaffTaken.objects.filter(orderworkstaffassign_id__in = order_work_id).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF WEEK DUE WORKS
+@api_view(['POST'])
+def staff_week_due_works(request):
+    data = request.data
+    if data['login_id']:
+        login_id = data['login_id']
+        staff = fetchStaff(login_id)
+        from_date = datetime.date.today() - relativedelta(days=7)
+        to_date = datetime.date.today()
+        today_due_orders = Order.objects.filter(due_date__range = [from_date,to_date]).values_list('order_id')
+        order_work_id = OrderWorkStaffAssign.objects.filter(staff = staff,order_id__in = today_due_orders).values_list('id')
+        taken_works = OrderWorkStaffTaken.objects.filter(orderworkstaffassign_id__in = order_work_id,taken_date_time__isnull = False).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# SUPERVISOR UNASSINGED WORKS
+@api_view(['GET'])
+def unassigned_works(request):
+    unassigned_works = OrderWorkStaffAssign.objects.filter(staff__isnull = True).count()
+    return Response(unassigned_works)
+
+# SUPERVISOR NOT TAKEN
+@api_view(['GET'])
+def not_taken_works(request):
+    not_taken_works = OrderWorkStaffTaken.objects.filter(taken_date_time__isnull = True).count()
+    return Response(not_taken_works)
+
+# SUPERVISOR TODAY COURIER ORDERS 
+@api_view(['GET'])
+def today_due_delivery(request):
+    today_due_orders = Order.objects.filter(due_date = datetime.date.today()).values_list('order_id')
+    today_delivery = Delivery.objects.filter(order_id__in = today_due_orders).count()
+    return Response(today_delivery)
+
+# SUPERVISOR TODAY COURIER ORDERS 
+@api_view(['GET'])
+def week_due_delivery(request):
+    from_date = datetime.date.today() - relativedelta(days=7)
+    to_date = datetime.date.today()
+    today_due_orders = Order.objects.filter(due_date__range = [from_date,to_date]).values_list('order_id')
+    today_delivery = Delivery.objects.filter(order_id__in = today_due_orders).count()
+    return Response(today_delivery)

@@ -135,7 +135,7 @@ class OrderMaterial(models.Model):
 
 class Material(models.Model):
     measurement_options = (("number", "NUMBER"), ("inch", "INCH"), ("meter", "METER"))
-    material_id = models.CharField(max_length=10, primary_key=True)
+    material_id = models.CharField(max_length=10, primary_key=True,blank = True)
     material_name = models.CharField(max_length=100)
     measurement = models.CharField(max_length=20, choices=measurement_options)
     amount = models.IntegerField(null=True, blank=True)

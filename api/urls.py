@@ -7,7 +7,7 @@ urlpatterns = [
     path('customer_login/',views.customer_login),
     path('customer_details/',views.customer_details),
     path('works/',views.works.as_view()),
-    path('deleteworks/',views.deleteworks),
+    path('works/<work_id>',views.works.as_view()),
     path('orders/',views.orders),
     path('materials/',views.materials),
     path('generate_orderid/',views.generate_orderid),
@@ -54,4 +54,26 @@ urlpatterns = [
     path("admin_orders/", views.AdminOrder.as_view()),
     path("customer_orders/<orderid>/<custid>/", views.CustomerOrder.as_view()),
     path('customers/',views.customers),
+    path('mat/',views.MaterialView.as_view()),
+    path('mat/<mat_id>',views.MaterialView.as_view()),
+
+    # customer order counts
+    path('customer_total_orders/',views.customer_total_orders),
+    path('customer_pending_orders/',views.customer_pending_orders),
+    path('customer_completed_orders/',views.customer_completed_orders),
+    path('customer_delivery_ready/',views.customer_delivery_ready),
+
+    #staff order counts 
+    path('staff_total_works/',views.staff_total_works),
+    path('staff_not_taken_works/',views.staff_not_taken_works),
+    path('staff_taken_works/',views.staff_taken_works),
+    path('staff_today_due_works/',views.staff_today_due_works),
+    path('staff_week_due_works/',views.staff_week_due_works),
+
+    #SUPERVISOR
+    path('unassigned_works/',views.unassigned_works),
+    path('not_taken_works/',views.not_taken_works),
+    path('today_due_works/',views.today_due_delivery),
+    path('week_due_works/',views.week_due_delivery),
+
 ]
