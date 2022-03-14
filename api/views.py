@@ -2015,62 +2015,64 @@ class ProductView(APIView):
 
     def post(self, request):
         data = json.loads(request.POST["data"])
-        if all(i in data for i in ("product_name", "display", "new_arrival")):
-            try:
-                product_id = "ZP" + str(randint(9999, 100000))
+        try:
+            product_name, display, new_arrival, picture = "", False, False, ""
+
+            product_id = "ZP" + str(randint(9999, 100000))
+            if "product_name" in data:
                 product_name = data["product_name"]
+            if "display" in data:
                 display = True if data["display"] == "on" else False
+            if "new_arrival" in data:
                 new_arrival = True if data["new_arrival"] == "on" else False
+            if "picture" in data:
                 picture = request.FILES.get("picture")
-                Product.objects.create(
-                    product_id=product_id,
-                    product_name=product_name,
-                    display=display,
-                    new_arrival=new_arrival,
-                    picture=picture,
-                )
-                print(display, new_arrival, picture)
-                return Response(
-                    {"status": True, "message": "Success"}, status.HTTP_201_CREATED
-                )
-            except Exception as e:
-                return Response(
-                    {"status": False, "message": str(e)},
-                    status.HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-        return Response(
-            {"status": False, "message": "Key error"},
-            status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+            Product.objects.create(
+                product_id=product_id,
+                product_name=product_name,
+                display=display,
+                new_arrival=new_arrival,
+                picture=picture,
+            )
+            print(display, new_arrival, picture)
+            return Response(
+                {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"status": False, "message": str(e)},
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def put(self, request, productid):
         data = json.loads(request.POST["data"])
-        if all(i in data for i in ("product_name", "display", "new_arrival")):
-            try:
-                product_name = data["product_name"]
-                display = True if data["display"] == "on" else False
-                new_arrival = True if data["new_arrival"] == "on" else False
-                picture = request.FILES.get("picture")
-                product = Product.objects.get(product_id=productid)
+        try:
+            product = Product.objects.get(product_id=productid)
 
+            if "product_name" in data:
+                product_name = data["product_name"]
                 product.product_name = product_name
+            if "display" in data:
+                display = True if data["display"] == "on" else False
                 product.display = display
+            if "new_arrival" in data:
+                new_arrival = True if data["new_arrival"] == "on" else False
                 product.new_arrival = new_arrival
+            if "picture" in data:
+                picture = request.FILES.get("picture")
                 product.picture = picture
 
-                print(display, new_arrival, picture)
-                return Response(
-                    {"status": True, "message": "Success"}, status.HTTP_201_CREATED
-                )
-            except Exception as e:
-                return Response(
-                    {"status": False, "message": str(e)},
-                    status.HTTP_500_INTERNAL_SERVER_ERROR,
-                )
-        return Response(
-            {"status": False, "message": "Key error"},
-            status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+            product.save()
+
+            print(display, new_arrival, picture)
+            return Response(
+                {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"status": False, "message": str(e)},
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def delete(self, request, productid):
         try:
