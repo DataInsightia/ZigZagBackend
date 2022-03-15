@@ -48,7 +48,7 @@ urlpatterns = [
     path("material/", views.MaterialLocationView.as_view()),
     path("material/<orderid>/", views.MaterialLocationView.as_view()),
     # path("get_wagetotal/", views.getWageTotal),
-    path("createnew/", views.createnew),
+    # path("createnew/", views.createnew),
     path("pending_wage/", views.pending_wage),
     path("order_status_oa/", views.order_status_from_order_assign),
     path("order_status_oa_admin/", views.order_status_from_order_assign_admin),
