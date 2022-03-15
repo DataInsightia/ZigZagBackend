@@ -1,11 +1,14 @@
+from distutils.command.upload import upload
 from operator import mod
 from statistics import mode
+from tokenize import blank_re
 from django.db import models
 from io import BytesIO
 import sys
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import math
+import datetime
 
 
 class Customer(models.Model):
@@ -383,7 +386,7 @@ class TmpMaterial(models.Model):
 
 class UploadFile(models.Model):
     name = models.CharField(max_length=100)
-    file = models.FileField()
+    file = models.FileField(upload_to="files")
 
     def save(self, *args, **kwargs):
         # Opening the uploaded image
@@ -418,9 +421,42 @@ class UploadFile(models.Model):
 class Product(models.Model):
     product_id = models.CharField(max_length=10)
     product_name = models.CharField(max_length=100)
-    picture = models.ImageField(upload_to="product")
+    picture = models.ImageField(null=True, blank=True, upload_to="product")
     new_arrival = models.BooleanField(default=False)
     display = models.BooleanField(default=False)
+    created_at = models.DateTimeField(blank=True, null=True, auto_now=True)
+
+    def save(self, *args, **kwargs):
+        try:
+            # Opening the uploaded image
+            im = Image.open(self.picture)
+
+            output = BytesIO()
+
+            x, y = im.size
+            x2, y2 = math.floor(x - 50), math.floor(y - 20)
+            im = im.resize((x2, y2), Image.ANTIALIAS)
+
+            # Resize/modify the image
+            # im = im.resize((300, 300), Image.ANTIALIAS)
+
+            # after modifications, save it to the output
+            im.save(output, format="JPEG", quality=30)
+            output.seek(0)
+
+            # change the imagefield value to be the newley modifed image value
+            self.picture = InMemoryUploadedFile(
+                output,
+                "ImageField",
+                "%s.jpg" % self.picture.name.split(".")[0],
+                "image/jpeg",
+                sys.getsizeof(output),
+                None,
+            )
+
+            super(Product, self).save(*args, **kwargs)
+        except Exception as e:
+            pass
 
 
 # class ModelName(models.Model):

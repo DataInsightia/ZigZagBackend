@@ -289,7 +289,10 @@ def tmp_work(request):
                     total=total,
                 )
                 tw.save()
-                return Response({"status": True, "message": "Success"})
+                return Response(
+                    {"status": True, "message": "Success"},
+                    status=status.HTTP_201_CREATED,
+                )
             except Exception as e:
                 return Response({"status": False, "error": str(e)})
         return Response({"status": False, "message": "key error"})
@@ -2016,7 +2019,12 @@ class ProductView(APIView):
     def post(self, request):
         data = json.loads(request.POST["data"])
         try:
-            product_name, display, new_arrival, picture = "", False, False, ""
+            product_name, display, new_arrival, picture = (
+                "",
+                False,
+                False,
+                request.FILES.get("picture"),
+            )
 
             product_id = "ZP" + str(randint(9999, 100000))
             if "product_name" in data:
@@ -2027,17 +2035,22 @@ class ProductView(APIView):
                 new_arrival = True if data["new_arrival"] == "on" else False
             if "picture" in data:
                 picture = request.FILES.get("picture")
+
             Product.objects.create(
                 product_id=product_id,
                 product_name=product_name,
                 display=display,
                 new_arrival=new_arrival,
                 picture=picture,
-            )
-            print(display, new_arrival, picture)
+            ).save()
+
             return Response(
                 {"status": True, "message": "Success"}, status.HTTP_201_CREATED
             )
+            # return Response(
+            #     {"status": False, "message": "Image Requried"},
+            #     status.HTTP_204_NO_CONTENT,
+            # )
         except Exception as e:
             return Response(
                 {"status": False, "message": str(e)},
@@ -2048,23 +2061,29 @@ class ProductView(APIView):
         data = json.loads(request.POST["data"])
         try:
             product = Product.objects.get(product_id=productid)
-
+            product_name, display, new_arrival = (
+                "",
+                False,
+                False,
+            )
             if "product_name" in data:
                 product_name = data["product_name"]
                 product.product_name = product_name
             if "display" in data:
-                display = True if data["display"] == "on" else False
+                display = data["display"]
                 product.display = display
             if "new_arrival" in data:
-                new_arrival = True if data["new_arrival"] == "on" else False
+                new_arrival = data["new_arrival"]
                 product.new_arrival = new_arrival
             if "picture" in data:
                 picture = request.FILES.get("picture")
-                product.picture = picture
-
+                if picture is not None:
+                    product.picture = picture
+            print(
+                data["display"], data["new_arrival"], display, new_arrival, picture
+            )
             product.save()
 
-            print(display, new_arrival, picture)
             return Response(
                 {"status": True, "message": "Success"}, status.HTTP_201_CREATED
             )
@@ -2090,3 +2109,30 @@ def get_product(request):
         return Response({"status": True, "data": serializer.data})
     except Exception as e:
         return Response({"status": True, "data": [], "message": str(e)})
+
+
+@api_view(["GET"])
+def new_arrivals(request):
+    if request.method == "GET":
+        model = Product.objects.filter(new_arrival=True)[:3]
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def product_to_display(request):
+    if request.method == "GET":
+        model = Product.objects.filter(display=True)[:6]
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def get_products(request):
+    if request.method == "GET":
+        model = Product.objects.all()
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
