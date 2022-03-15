@@ -105,10 +105,9 @@ class Order(models.Model):
 
 
 class GenCols(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, default="")
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, default="")
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default="", null=True)
-
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default='',null = True,blank = True,db_constraint = False)
     class Meta:
         abstract = True
 
@@ -136,7 +135,7 @@ class OrderMaterial(models.Model):
 
 class Material(models.Model):
     measurement_options = (("number", "NUMBER"), ("inch", "INCH"), ("meter", "METER"))
-    material_id = models.CharField(max_length=10, primary_key=True)
+    material_id = models.CharField(max_length=10, primary_key=True,blank = True)
     material_name = models.CharField(max_length=100)
     measurement = models.CharField(max_length=20, choices=measurement_options)
     amount = models.IntegerField(null=True, blank=True)
@@ -270,8 +269,7 @@ class StaffWageGivenStatus(GenCols):
     wage_payment_reference_image = models.ImageField()
 
     def __str__(self):
-        return f"{self.order} {self.total_wage_given} {self.wage_payment_reference_no}"
-
+        return f'{self.id}'
 
 class OrderPickupCourier(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default="")
