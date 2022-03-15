@@ -1,3 +1,6 @@
+from ast import Del
+from dis import dis
+from math import prod
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -10,6 +13,7 @@ from random import randint
 from api.utils import *
 import json
 import datetime
+from dateutil.relativedelta import *
 
 
 @api_view(["GET", "POST"])
@@ -41,11 +45,105 @@ def generate_orderid(request):
         return Response({"status": True, "error": str(e)})
 
 
-@api_view(["GET"])
-def works(request):
-    work = Work.objects.all()
-    serializer = WorkSerializer(work, many=True)
-    return Response(serializer.data)
+class works(APIView):
+    def get(self, request):
+        work = Work.objects.all()
+        serializer = WorkSerializer(work, many=True)
+        if serializer.data:
+            return Response(serializer.data)
+        else:
+            return Response([], status=status.HTTP_201_CREATED)
+
+    def post(self, request):
+        data = request.data
+        if data["work_name"] and data["amount"] and data["wage_type"]:
+            work_id = generate_ID("ZW", Work)
+            Work.objects.create(
+                work_name=data["work_name"],
+                amount=data["amount"],
+                wage_type=data["wage_type"],
+                work_id=work_id,
+            )
+            resp = SuccessContext(True, "Success", "Work added")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False, "Failure", "Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        data = request.data
+        if request.method == "PUT":
+            work = Work.objects.get(work_id=data["work_id"])
+            work.work_name = data["work_name"]
+            work.amount = data["amount"]
+            work.wage_type = data["wage_type"]
+            work.save()
+            resp = SuccessContext(True, "Success", "Work updated")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, work_id):
+        try:
+            work_id = Work.objects.get(work_id=work_id)
+        except:
+            resp = ErrorContext(False, "Failure", "work id not found")
+            return Response(resp, status=status.HTTP_404_NOT_FOUND)
+        if work_id:
+            Work.objects.filter(work_id=work_id.work_id).delete()
+            resp = SuccessContext(True, "Success", "Work deleted")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False, "Failure", "Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MaterialView(APIView):
+    def get(self, request):
+        material = Material.objects.all()
+        serializer = MaterialSerializer(material, many=True)
+        if serializer.data:
+            return Response(serializer.data)
+        else:
+            return Response([], status=status.HTTP_201_CREATED)
+
+    def post(self, request):
+        data = request.data
+        print(data)
+        if data["material_name"] and data["measurement"] and data["amount"]:
+            material_id = generate_ID("ZM", Material)
+            Material.objects.create(
+                material_id=material_id,
+                amount=data["amount"],
+                material_name=data["material_name"],
+                measurement=data["measurement"],
+            )
+            resp = SuccessContext(True, "Success", "Material added")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False, "Failure", "Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        data = request.data
+        if request.method == "PUT":
+            material = Material.objects.get(material_id=data["material_id"])
+            material.material_name = data["material_name"]
+            material.amount = data["amount"]
+            material.measurement = data["measurement"]
+            material.save()
+            resp = SuccessContext(True, "Success", "Material updated")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, mat_id):
+        try:
+            material_id = Material.objects.get(material_id=mat_id)
+        except:
+            resp = ErrorContext(False, "Failure", "Material id not found")
+            return Response(resp, status=status.HTTP_404_NOT_FOUND)
+        if mat_id:
+            Material.objects.filter(material_id=material_id.material_id).delete()
+            resp = SuccessContext(True, "Success", "Material deleted")
+            return Response(resp, status=status.HTTP_201_CREATED)
+        resp = ErrorContext(False, "Failure", "Please enter valid data")
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
@@ -123,7 +221,9 @@ def customer_details(request):
                 if User.objects.filter(
                     Q(mobile=cust_id) | Q(login_id=cust_id)
                 ).exists():
-                    customer = Customer.objects.filter(Q(mobile=cust_id) | Q(cust_id=cust_id))
+                    customer = Customer.objects.filter(
+                        Q(mobile=cust_id) | Q(cust_id=cust_id)
+                    )
                     serializer = CustomerSerializer(customer, many=True)
                     return Response(serializer.data)
                 else:
@@ -209,7 +309,7 @@ def customer_login(request):
     return Response({"GET": "Not Allowed"})
 
 
-@api_view(['PUT','POST'])
+@api_view(["PUT", "POST"])
 def customer_register(request):
     if request.method == "POST":
         data = request.data
@@ -242,22 +342,22 @@ def customer_register(request):
                 user.save()
                 return Response({"status": True, "message": "Success"})
             except Exception as e:
-                return Response({'status' : False, 'error' : str(e)})
-        return Response({'status' : False, 'message' : 'key error'})
+                return Response({"status": False, "error": str(e)})
+        return Response({"status": False, "message": "key error"})
     if request.method == "PUT":
-        cust_id = request.data.get('cust_id')
+        cust_id = request.data.get("cust_id")
         try:
-            customer = Customer.objects.get(cust_id = cust_id)
-            customer.customer_name = request.data.get('customer_name')
-            customer.address = request.data.get('address')
-            customer.city = request.data.get('city')
-            customer.pincode = request.data.get('pincode')
+            customer = Customer.objects.get(cust_id=cust_id)
+            customer.cust_name = request.data.get("customer_name")
+            customer.address = request.data.get("address")
+            customer.city = request.data.get("city")
+            customer.pincode = request.data.get("pincode")
 
             customer.save()
-            return Response({'status' : True, 'message' : 'Success'})
+            return Response({"status": True, "message": "Success"})
         except:
-            return Response({'status' : False, 'message' : 'Failure'})
-    return Response({'GET': 'Not Allowed'})
+            return Response({"status": False, "message": "Failure"})
+    return Response({"GET": "Not Allowed"})
 
 
 @api_view(["GET", "POST"])
@@ -285,15 +385,17 @@ def tmp_work(request):
                     total=total,
                 )
                 tw.save()
-                return Response({"status": True, "message": "Success"})
+                return Response(
+                    {"status": True, "message": "Success"},
+                    status=status.HTTP_201_CREATED,
+                )
             except Exception as e:
                 return Response({"status": False, "error": str(e)})
         return Response({"status": False, "message": "key error"})
     return Response({"GET": "Not Allowed"})
 
 
-
-@api_view(['POST','PUT'])
+@api_view(["POST", "PUT"])
 def staff_register(request):
     if request.method == "POST":
         data = json.loads(request.POST["data"])
@@ -348,25 +450,25 @@ def staff_register(request):
                 except Exception as e:
                     return Response({"status": False, "error": str(e)})
         else:
-            return Response({'status' : False, 'message' : 'key error'})
+            return Response({"status": False, "message": "key error"})
 
     if request.method == "PUT":
-        staff_id = request.data.get('staff_id')
+        staff_id = request.data.get("staff_id")
         try:
-            staff = Staff.objects.get(staff_id = staff_id)
-            staff.photo = request.FILES.get('file')
-            staff.staff_name = request.data.get('staff_name')
-            staff.address = request.data.get('address')
-            staff.city = request.data.get('city')
-            staff.ifsc = request.data.get('ifsc')
-            staff.bank = request.data.get('bank')
-            staff.work_type = request.data.get('work_type')
-            staff.acc_no = request.data.get('acc_no')
+            staff = Staff.objects.get(staff_id=staff_id)
+            staff.photo = request.FILES.get("file")
+            staff.staff_name = request.data.get("staff_name")
+            staff.address = request.data.get("address")
+            staff.city = request.data.get("city")
+            staff.ifsc = request.data.get("ifsc")
+            staff.bank = request.data.get("bank")
+            staff.work_type = request.data.get("work_type")
+            staff.acc_no = request.data.get("acc_no")
             staff.save()
-            return Response({'status' : True, 'message' : 'Success'})
+            return Response({"status": True, "message": "Success"})
         except:
-            return Response({'status' : False, 'message' : 'Failure'})
-    return Response({'GET': 'Not Allowed'})
+            return Response({"status": False, "message": "Failure"})
+    return Response({"GET": "Not Allowed"})
 
 
 @api_view(["GET", "POST"])
@@ -550,6 +652,7 @@ def add_order(request):
             "advance_amount",
             "balance_amount",
             "courier_amount",
+            "courier_address",
         )
         if all(i in data for i in keys):
             order_id = data["order_id"]
@@ -560,6 +663,8 @@ def add_order(request):
             advance_amount = data["advance_amount"]
             balance_amount = data["balance_amount"]
             courier_amount = data["courier_amount"]
+            courier_address = data["courier_address"]
+
             try:
                 c_obj = Customer.objects.get(cust_id=cust_id)
                 oo = Order.objects.create(
@@ -571,16 +676,20 @@ def add_order(request):
                     advance_amount=advance_amount,
                     balance_amount=balance_amount,
                     courier_amount=courier_amount,
+                    courier_address=courier_address,
                 )
                 oo.save()
                 return Response({"status": True, "message": "Success"})
             except Exception as e:
                 return Response({"status": False, "message": "Failed", "error": str(e)})
         else:
-            return Response({'status': False, 'message': 'Failed', 'error': 'key missmatch'})
-    return Response({'GET': 'Not Allowed'})
-  
-# @api_view(['POST'])  
+            return Response(
+                {"status": False, "message": "Failed", "error": "key missmatch"}
+            )
+    return Response({"GET": "Not Allowed"})
+
+
+# @api_view(['POST'])
 # def staff_login(request):
 #     if request.method == 'POST':
 #         data = request.data
@@ -1239,7 +1348,7 @@ def staff_work_assign_completion_app(request):
 #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST", "PUT"])
 def staff_wage_calculation(request):
     if request.method == "POST":
         data = request.data
@@ -1309,30 +1418,54 @@ def staff_wage_calculation(request):
 
     if request.method == "PUT":
         data = request.data
-        keys = ('from_date','to_date','payment_date','staff_id','ids','w_total')
+        keys = ("from_date", "to_date", "payment_date", "staff_id", "ids", "w_total")
         if (i in data for i in keys):
-            staff_id = json.loads(data['staff_id'])
-            ids = json.loads(data['ids'])
-            from_date = data['from_date']
-            payment_date = data['payment_date']
-            payment_ref = json.loads(data['payment_ref'])
-            to_date = data['to_date']
-            payment_ref_image = request.FILES.get('file')
-            w_total = json.loads(data['w_total'])
+            staff_id = json.loads(data["staff_id"])
+            ids = json.loads(data["ids"])
+            from_date = data["from_date"]
+            payment_date = data["payment_date"]
+            payment_ref = json.loads(data["payment_ref"])
+            to_date = data["to_date"]
+            payment_ref_image = request.FILES.get("file")
+            w_total = json.loads(data["w_total"])
 
             try:
-                
-                f_date = datetime.datetime.strptime(from_date[1:11], '%d/%m/%Y').strftime('%Y-%m-%d')
-                t_date = datetime.datetime.strptime(to_date[1:11], '%d/%m/%Y').strftime('%Y-%m-%d')
+
+                f_date = datetime.datetime.strptime(
+                    from_date[1:11], "%d/%m/%Y"
+                ).strftime("%Y-%m-%d")
+                t_date = datetime.datetime.strptime(to_date[1:11], "%d/%m/%Y").strftime(
+                    "%Y-%m-%d"
+                )
                 staff_id = fetchStaff(staff_id)
-                if StaffWageGivenStatus.objects.filter(staff = staff_id,order_ids = ids,wage_from_date = f_date,wage_to_date = t_date,total_wage_given = w_total).exists():
-                    return Response({"status":False,"message":"Failure"})
-                else:           
-                    StaffWageGivenStatus.objects.create(staff = staff_id,order_ids = ids,wage_from_date = f_date,wage_to_date = t_date,total_wage_given = w_total,wage_payment_reference_no = payment_ref,wage_payment_reference_image = payment_ref_image)
+                if StaffWageGivenStatus.objects.filter(
+                    staff=staff_id,
+                    order_ids=ids,
+                    wage_from_date=f_date,
+                    wage_to_date=t_date,
+                    total_wage_given=w_total,
+                ).exists():
+                    return Response({"status": False, "message": "Failure"})
+                else:
+                    StaffWageGivenStatus.objects.create(
+                        staff=staff_id,
+                        order_ids=ids,
+                        wage_from_date=f_date,
+                        wage_to_date=t_date,
+                        total_wage_given=w_total,
+                        wage_payment_reference_no=payment_ref,
+                        wage_payment_reference_image=payment_ref_image,
+                    )
                     for id in ids:
-                        StaffWorkWage.objects.filter(id = id).update(completion_date_time = datetime.datetime.now(),wage_given = True)
-       
-                    return Response({"status":True,"message":"Success"},status=status.HTTP_201_CREATED)
+                        StaffWorkWage.objects.filter(id=id).update(
+                            completion_date_time=datetime.datetime.now(),
+                            wage_given=True,
+                        )
+
+                    return Response(
+                        {"status": True, "message": "Success"},
+                        status=status.HTTP_201_CREATED,
+                    )
             except Exception as e:
                 resp = KeyErrorContext(False, "Failed", str(e))
                 return Response(resp)
@@ -1341,7 +1474,8 @@ def staff_wage_calculation(request):
             return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def pending_wage(request):
     if request.method == "POST":
         data = request.data
@@ -1350,12 +1484,18 @@ def pending_wage(request):
             staff_id = data["staff_id"]
             try:
                 staff = fetchStaff(staff_id)
-                staffwages = StaffWorkWage.objects.filter(staff = staff,wage_given = False)
-                serializer = StaffWorkWageSerializers(staffwages,many=True)
+                staffwages = StaffWorkWage.objects.filter(staff=staff, wage_given=False)
+                serializer = StaffWorkWageSerializers(staffwages, many=True)
                 if serializer.data:
-                    return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+                    return Response(
+                        {"data": serializer.data, "status": True, "message": "Success"},
+                        status.HTTP_200_OK,
+                    )
                 else:
-                    return Response({"data":[],"status":False,"message":"Success"},status.HTTP_200_OK) 
+                    return Response(
+                        {"data": [], "status": False, "message": "Success"},
+                        status.HTTP_200_OK,
+                    )
             except Exception as e:
                 resp = KeyErrorContext(False, "Failed", str(e))
                 return Response(resp)
@@ -1363,6 +1503,7 @@ def pending_wage(request):
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 # @api_view(['GET','POST'])
 # def staff_wage_manager(request):
@@ -1375,7 +1516,7 @@ def pending_wage(request):
 #                 staff = fetchStaff(staff_id)
 #                 staffwages = StaffWorkWage.objects.filter(staff = staff)
 #                 serializer = StaffWorkWageSerializers(staffwages,many=True)
-#                 return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+#                 return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK)
 #             except Exception as e:
 #                 resp = KeyErrorContext(False,'Failed',str(e))
 #                 return Response(resp)
@@ -1386,47 +1527,65 @@ def pending_wage(request):
 #     elif request.method == 'GET':
 #         staffwages = StaffWorkWage.objects.all()
 #         serializer = StaffWorkWageSerializers(staffwages,many=True)
-#         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK) 
+#         return Response({"data":serializer.data,"status":True,"message":"Success"},status.HTTP_200_OK)
 #     return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def staff_payment_update(request):
     if request.method == "POST":
         data = request.data
-        keys = ('staff_id','id','dates')
+        keys = ("staff_id", "id", "dates")
         if all(i in data for i in keys):
-            id = data['id']
-            staff_id = data['staff_id']
-            dates = data['dates']
-            
+            id = data["id"]
+            staff_id = data["staff_id"]
+            dates = data["dates"]
+
             staff = fetchStaff(staff_id)
-            total = StaffWorkWage.objects.filter(staff = staff,wage_given = False,id__in = id).aggregate(Sum('wage'))
-            return Response({"data":total,"from_date":dates[0],"to_date":dates[-1],"status":True,"message":"Success"},status.HTTP_200_OK) 
+            total = StaffWorkWage.objects.filter(
+                staff=staff, wage_given=False, id__in=id
+            ).aggregate(Sum("wage"))
+            return Response(
+                {
+                    "data": total,
+                    "from_date": dates[0],
+                    "to_date": dates[-1],
+                    "status": True,
+                    "message": "Success",
+                },
+                status.HTTP_200_OK,
+            )
         else:
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializers.data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET','POST'])
+@api_view(["GET", "POST"])
 def staff_wage_paid_completion(request):
     if request.method == "POST":
         data = request.data
         if (i in data for i in keys):
-            staff_id = data['staff_id']
+            staff_id = data["staff_id"]
             try:
                 if StaffWageGivenStatus.objects.filter(
-                    staff = staff_id,
-                    order_ids = ids,
-                    wage_from_date = f_date,
-                    wage_to_date = t_date,
-                    total_wage_given = w_total
+                    staff=staff_id,
+                    order_ids=ids,
+                    wage_from_date=f_date,
+                    wage_to_date=t_date,
+                    total_wage_given=w_total,
                 ).exists():
-                    return Response({"data":serializer.data,"status":True,"message":"Success"},status=status.HTTP_200_OK)
-                    
+                    return Response(
+                        {"data": serializer.data, "status": True, "message": "Success"},
+                        status=status.HTTP_200_OK,
+                    )
+
                 else:
-    
-                    return Response({"data":[],"status":False,"message":"Success"},status=status.HTTP_200_OK)
+
+                    return Response(
+                        {"data": [], "status": False, "message": "Success"},
+                        status=status.HTTP_200_OK,
+                    )
             except Exception as e:
                 resp = KeyErrorContext(False, "Failed", str(e))
                 return Response(resp)
@@ -1434,37 +1593,48 @@ def staff_wage_paid_completion(request):
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
     else:
-        staffworkwage = StaffWorkWage.objects.filter(wage_given = True)
-        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        staffworkwage = StaffWorkWage.objects.filter(wage_given=True)
+        serializer = StaffWorkWageSerializers(staffworkwage, many=True)
         if serializer.data:
-            return Response({"data":serializer.data,"status":True,"message":"Success"},status=status.HTTP_200_OK)
+            return Response(
+                {"data": serializer.data, "status": True, "message": "Success"},
+                status=status.HTTP_200_OK,
+            )
         else:
-            return Response({"data":[],"status":False,"message":"Success"},status=status.HTTP_200_OK)
-    return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"data": [], "status": False, "message": "Success"},
+                status=status.HTTP_200_OK,
+            )
+    return Response(serializers.data, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def staff_wage_status(request,status):
+
+@api_view(["POST"])
+def staff_wage_status(request, status):
     if request.method == "POST" and status == "paid":
         data = request.data
-        staff_id = data['staff_id']
+        staff_id = data["staff_id"]
         staff_id = fetchStaff(staff_id)
-        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = True)
-        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        staffworkwage = StaffWorkWage.objects.filter(staff=staff_id, wage_given=True)
+        serializer = StaffWorkWageSerializers(staffworkwage, many=True)
         if serializer.data:
-            return Response({"data":serializer.data,"status":True,"message":"Success"})
+            return Response(
+                {"data": serializer.data, "status": True, "message": "Success"}
+            )
         else:
-            return Response({"data":[],"status":False,"message":"Success"})
+            return Response({"data": [], "status": False, "message": "Success"})
 
     elif request.method == "POST" and status == "notpaid":
         data = request.data
-        staff_id = data['staff_id']
+        staff_id = data["staff_id"]
         staff_id = fetchStaff(staff_id)
-        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = False)
-        serializer = StaffWorkWageSerializers(staffworkwage,many = True)
+        staffworkwage = StaffWorkWage.objects.filter(staff=staff_id, wage_given=False)
+        serializer = StaffWorkWageSerializers(staffworkwage, many=True)
         if serializer.data:
-            return Response({"data":serializer.data,"status":True,"message":"Success"})
+            return Response(
+                {"data": serializer.data, "status": True, "message": "Success"}
+            )
         else:
-            return Response({"data":[],"status":False,"message":"Success"})
+            return Response({"data": [], "status": False, "message": "Success"})
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -1733,36 +1903,10 @@ def work_completed(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-from django.shortcuts import HttpResponse
-
-
-def createnew(request):
-    if (
-        User.objects.filter(login_id="ZC001").exists()
-        or User.objects.filter(login_id="ZS001").exists
-        or User.objects.filter(login_id="ZA001").exists()
-    ):
-        User.objects.create(login_id="ZC001", password="1234")
-        User.objects.create(login_id="ZS001", password="1234")
-        User.objects.create(login_id="ZA001", password="admin")
-        Staff.objects.create(
-            staff_id="ZS001",
-            staff_name="staff",
-            mobile="9998887778",
-            salary_type="monthly",
-            salary=8000,
-            worktype="aari",
-        )
-        Customer.objects.create(cust_id="ZC001")
-        return HttpResponse("data created")
-    else:
-        return HttpResponse("data exists")
-
-
 class MaterialLocationView(APIView):
-    def get(self, request):
-        model = Material.objects.all()
-        serializer = MaterialSerializer(model, many=True)
+    def get(self, request, orderid):
+        model = OrderMaterialLocation.objects.filter(order__order_id=orderid)
+        serializer = OrderMaterialLocationSerializer(model, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -1938,3 +2082,337 @@ class OrderInvoiceView(APIView):
             except Exception as e:
                 return Response({"status": False, "message": str(e)})
         return Response({"status": False, "message": "key error"})
+
+
+class ProductView(APIView):
+    def get(self, request):
+        model = Product.objects.all()
+        serializer = ProductSerializer(model, many=True)
+        return Response({"status": True, "data": serializer.data})
+
+    def post(self, request):
+        data = json.loads(request.POST["data"])
+        try:
+            product_name, display, new_arrival, picture = (
+                "",
+                False,
+                False,
+                request.FILES.get("picture"),
+            )
+
+            product_id = "ZP" + str(randint(9999, 100000))
+            if "product_name" in data:
+                product_name = data["product_name"]
+            if "display" in data:
+                display = data["display"]
+            if "new_arrival" in data:
+                new_arrival = data["new_arrival"]
+            if "picture" in data:
+                picture = request.FILES.get("picture")
+
+            Product.objects.create(
+                product_id=product_id,
+                product_name=product_name,
+                display=display,
+                new_arrival=new_arrival,
+                picture=picture,
+            ).save()
+
+            print(data["display"], data["new_arrival"], display, new_arrival, picture)
+
+            return Response(
+                {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+            )
+            # return Response(
+            #     {"status": False, "message": "Image Requried"},
+            #     status.HTTP_204_NO_CONTENT,
+            # )
+        except Exception as e:
+            return Response(
+                {"status": False, "message": str(e)},
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def put(self, request, productid):
+        data = json.loads(request.POST["data"])
+        try:
+            product = Product.objects.get(product_id=productid)
+            product_name, display, new_arrival = (
+                "",
+                False,
+                False,
+            )
+            if "product_name" in data:
+                product_name = data["product_name"]
+                product.product_name = product_name
+            if "display" in data:
+                display = data["display"]
+                product.display = display
+            if "new_arrival" in data:
+                new_arrival = data["new_arrival"]
+                product.new_arrival = new_arrival
+            if "picture" in data:
+                picture = request.FILES.get("picture")
+                if picture is not None:
+                    product.picture = picture
+            print(data["display"], data["new_arrival"], display, new_arrival, picture)
+            product.save()
+
+            return Response(
+                {"status": True, "message": "Success"}, status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"status": False, "message": str(e)},
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def delete(self, request, productid):
+        try:
+            Product.objects.filter(product_id=productid).delete()
+            return Response({"status": True, "message": "Deleted"})
+        except Exception as e:
+            return Response({"status": False, "data": [], "message": str(e)})
+
+
+@api_view(["GET"])
+def get_product(request):
+    try:
+        model = Product.objects.get(product_id=request.GET.get("pid"))
+        serializer = ProductSerializer(model)
+        return Response({"status": True, "data": serializer.data})
+    except Exception as e:
+        return Response({"status": True, "data": [], "message": str(e)})
+
+
+@api_view(["GET"])
+def new_arrivals(request):
+    if request.method == "GET":
+        model = Product.objects.filter(new_arrival=True)[:3]
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def product_to_display(request):
+    if request.method == "GET":
+        model = Product.objects.filter(display=True)[:6]
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def get_products(request):
+    if request.method == "GET":
+        model = Product.objects.all()
+        serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def ready_to_delivery(request):
+    if request.method == "GET":
+        model = Delivery.objects.filter(staff=None)
+        serializer = DeliverySerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def customers(request):
+    customer = Customer.objects.all()
+    serializer = CustomerSerializer(customer, many=True)
+    if serializer.data:
+        return Response(serializer.data)
+    else:
+        return Response([], status=status.HTTP_404_NOT_FOUND)
+
+
+# CUSTOMER PENDING ORDERS
+@api_view(["POST"])
+def customer_pending_orders(request):
+    data = request.data
+    print(data)
+    if "login_id" in data:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        orders = (
+            OrderWorkStaffAssign.objects.filter(order_id__in=order_id)
+            .exclude(assign_stage="complete_final_stage")
+            .count()
+        )
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# CUSTOMER COMPLETED ORDERS
+@api_view(["POST"])
+def customer_completed_orders(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        orders = (
+            OrderWorkStaffAssign.objects.filter(order_id__in=order_id)
+            .filter(assign_stage="complete_final_stage")
+            .count()
+        )
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# CUSTOMER TOTAL ORDERS
+@api_view(["POST"])
+def customer_total_orders(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in=order_id).count()
+        return Response(orders)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# CUSTOMER  DELIVERY READY
+@api_view(["POST"])
+def customer_delivery_ready(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        delivery_ready = Delivery.objects.filter(
+            delivery_date_time__isnull=True, order_id__in=order_id
+        ).count()
+        return Response(delivery_ready)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF TOTAL WORKS
+@api_view(["POST"])
+def staff_total_works(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        totalworks = OrderWorkStaffTaken.objects.filter(id__in=works).count()
+        return Response(totalworks)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF ASSIGNED WORKS
+@api_view(["POST"])
+def staff_not_taken_works(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        assigned_works = OrderWorkStaffTaken.objects.filter(
+            id__in=works, taken_date_time__isnull=True
+        ).count()
+        print(assigned_works)
+        return Response(assigned_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF ON GOING WORKS
+@api_view(["POST"])
+def staff_taken_works(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            id__in=works, taken_date_time__isnull=False
+        ).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF TODAY DUE WORKS
+@api_view(["POST"])
+def staff_today_due_works(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        today_due_orders = Order.objects.filter(
+            due_date=datetime.date.today()
+        ).values_list("order_id")
+        order_work_id = OrderWorkStaffAssign.objects.filter(
+            staff=staff, order_id__in=today_due_orders
+        ).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            orderworkstaffassign_id__in=order_work_id
+        ).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# STAFF WEEK DUE WORKS
+@api_view(["POST"])
+def staff_week_due_works(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        from_date = datetime.date.today() - relativedelta(days=7)
+        to_date = datetime.date.today()
+        today_due_orders = Order.objects.filter(
+            due_date__range=[from_date, to_date]
+        ).values_list("order_id")
+        order_work_id = OrderWorkStaffAssign.objects.filter(
+            staff=staff, order_id__in=today_due_orders
+        ).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            orderworkstaffassign_id__in=order_work_id, taken_date_time__isnull=False
+        ).count()
+        return Response(taken_works)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# SUPERVISOR UNASSINGED WORKS
+@api_view(["GET"])
+def unassigned_works(request):
+    unassigned_works = OrderWorkStaffAssign.objects.filter(staff__isnull=True).count()
+    return Response(unassigned_works)
+
+
+# SUPERVISOR NOT TAKEN
+@api_view(["GET"])
+def not_taken_works(request):
+    not_taken_works = OrderWorkStaffTaken.objects.filter(
+        taken_date_time__isnull=True
+    ).count()
+    return Response(not_taken_works)
+
+
+# SUPERVISOR TODAY COURIER ORDERS
+@api_view(["GET"])
+def today_due_delivery(request):
+    today_due_orders = Order.objects.filter(due_date=datetime.date.today()).values_list(
+        "order_id"
+    )
+    today_delivery = Delivery.objects.filter(order_id__in=today_due_orders).count()
+    return Response(today_delivery)
+
+
+# SUPERVISOR TODAY COURIER ORDERS
+@api_view(["GET"])
+def week_due_delivery(request):
+    from_date = datetime.date.today() - relativedelta(days=7)
+    to_date = datetime.date.today()
+    today_due_orders = Order.objects.filter(
+        due_date__range=[from_date, to_date]
+    ).values_list("order_id")
+    today_delivery = Delivery.objects.filter(order_id__in=today_due_orders).count()
+    return Response(today_delivery)
