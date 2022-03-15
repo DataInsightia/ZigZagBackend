@@ -1,3 +1,4 @@
+from ast import Del
 from dis import dis
 from math import prod
 from rest_framework.response import Response
@@ -556,6 +557,7 @@ def add_order(request):
             "advance_amount",
             "balance_amount",
             "courier_amount",
+            "courier_address",
         )
         if all(i in data for i in keys):
             order_id = data["order_id"]
@@ -566,6 +568,8 @@ def add_order(request):
             advance_amount = data["advance_amount"]
             balance_amount = data["balance_amount"]
             courier_amount = data["courier_amount"]
+            courier_address = data["courier_address"]
+
             try:
                 c_obj = Customer.objects.get(cust_id=cust_id)
                 oo = Order.objects.create(
@@ -577,6 +581,7 @@ def add_order(request):
                     advance_amount=advance_amount,
                     balance_amount=balance_amount,
                     courier_amount=courier_amount,
+                    courier_address=courier_address,
                 )
                 oo.save()
                 return Response({"status": True, "message": "Success"})
@@ -2030,9 +2035,9 @@ class ProductView(APIView):
             if "product_name" in data:
                 product_name = data["product_name"]
             if "display" in data:
-                display = True if data["display"] == "on" else False
+                display = data["display"]
             if "new_arrival" in data:
-                new_arrival = True if data["new_arrival"] == "on" else False
+                new_arrival = data["new_arrival"]
             if "picture" in data:
                 picture = request.FILES.get("picture")
 
@@ -2043,6 +2048,8 @@ class ProductView(APIView):
                 new_arrival=new_arrival,
                 picture=picture,
             ).save()
+
+            print(data["display"], data["new_arrival"], display, new_arrival, picture)
 
             return Response(
                 {"status": True, "message": "Success"}, status.HTTP_201_CREATED
@@ -2079,9 +2086,7 @@ class ProductView(APIView):
                 picture = request.FILES.get("picture")
                 if picture is not None:
                     product.picture = picture
-            print(
-                data["display"], data["new_arrival"], display, new_arrival, picture
-            )
+            print(data["display"], data["new_arrival"], display, new_arrival, picture)
             product.save()
 
             return Response(
@@ -2134,5 +2139,14 @@ def get_products(request):
     if request.method == "GET":
         model = Product.objects.all()
         serializer = ProductSerializer(model, many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors)
+
+
+@api_view(["GET"])
+def ready_to_delivery(request):
+    if request.method == "GET":
+        model = Delivery.objects.filter(staff=None)
+        serializer = DeliverySerializer(model, many=True)
         return Response(serializer.data)
     return Response(serializer.errors)

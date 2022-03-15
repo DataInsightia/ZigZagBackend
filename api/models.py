@@ -103,6 +103,7 @@ class Order(models.Model):
     total_amount = models.IntegerField(null=True, blank=True)
     advance_amount = models.IntegerField(null=True, blank=True)
     courier_amount = models.IntegerField(null=True, blank=True)
+    courier_address = models.TextField(null=True, blank=True)
     balance_amount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -425,6 +426,9 @@ class Product(models.Model):
     new_arrival = models.BooleanField(default=False)
     display = models.BooleanField(default=False)
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True)
+
+    def __str__(self):
+        return f"{self.product_name}"
 
     def save(self, *args, **kwargs):
         try:

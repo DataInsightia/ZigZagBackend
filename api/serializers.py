@@ -142,3 +142,8 @@ class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+class DeliverySerializer(ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = "__all__"
