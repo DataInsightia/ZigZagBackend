@@ -1,6 +1,6 @@
 from ast import Mod
 from dataclasses import field
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from api.models import *
 
 
@@ -43,6 +43,18 @@ class OrderSerializers(ModelSerializer):
 
 
 class StaffSerializers(ModelSerializer):
+    takenOrders = SerializerMethodField("gettakenOrders")
+    nottakenOrders = SerializerMethodField("getnottakenOrders")
+
+    def gettakenOrders(self, obj):
+        works = OrderWorkStaffAssign.objects.filter(staff = obj).values_list('id')
+        taken_work = OrderWorkStaffTaken.objects.filter(id__in = works,taken_date_time__isnull = False).count()
+        return taken_work
+
+    def getnottakenOrders(self, obj):
+        works = OrderWorkStaffAssign.objects.filter(staff = obj).values_list('id')
+        not_taken_work = OrderWorkStaffTaken.objects.filter(id__in = works,taken_date_time__isnull = True).count()
+        return not_taken_work
     class Meta:
         model = Staff
         fields = "__all__"
