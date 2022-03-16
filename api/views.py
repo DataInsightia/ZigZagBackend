@@ -2101,6 +2101,7 @@ class ProductView(APIView):
             )
 
             product_id = "ZP" + str(randint(9999, 100000))
+            print(product_id)
             if "product_name" in data:
                 product_name = data["product_name"]
             if "display" in data:

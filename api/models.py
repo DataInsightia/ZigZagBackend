@@ -418,7 +418,7 @@ class UploadFile(models.Model):
 
 
 class Product(models.Model):
-    product_id = models.CharField(max_length=10)
+    product_id = models.CharField(max_length=10,primary_key=True)
     product_name = models.CharField(max_length=100)
     picture = models.ImageField(null=True, blank=True, upload_to="product")
     new_arrival = models.BooleanField(default=False)
