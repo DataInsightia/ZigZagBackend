@@ -76,4 +76,8 @@ urlpatterns = [
     path('today_due_works/',views.today_due_delivery),
     path('week_due_works/',views.week_due_delivery),
 
+    #WORK DETAIL
+    path('work/<work_id>/',views.workdetail),
+    # MATERIAL DETAIL
+    path('material/<material_id>/',views.materialdetail),
 ]

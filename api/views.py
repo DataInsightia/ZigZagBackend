@@ -51,6 +51,7 @@ class works(APIView):
         else:
             return Response([],status=status.HTTP_201_CREATED)
 
+
     def post(self, request):
         data=request.data
         if data['work_name'] and data['amount'] and data['wage_type']:
@@ -91,8 +92,18 @@ class works(APIView):
         resp = ErrorContext(False,"Failure","Please enter valid data")
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
-    
+@api_view(["GET"])
+def workdetail(request,work_id):
+    work = Work.objects.get(work_id = work_id)
+    serializer = WorkSerializer(work)
+    return Response(serializer.data)
 
+@api_view(["GET"])
+def materialdetail(request,material_id):
+    material = Material.objects.get(material_id = material_id)
+    serializer = MaterialSerializer(material)
+    return Response(serializer.data)
+ 
 
 class MaterialView(APIView):
 
