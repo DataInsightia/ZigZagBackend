@@ -759,7 +759,20 @@ def order_status(request):
             )
     return Response({"GET": "Not Allowed"})
 
-
+@api_view(["GET","POST"])
+def staff_work_assign_by_order(request):
+    if request.method == 'POST':
+        order_id = request.data['order_id']
+        li = []
+        for i in OrderWorkStaffAssign.objects.filter(order__order_id = order_id,staff__isnull=True):
+            order = OrderWorkStaffAssignSerializers(i)
+            nextstage = getNextStage(i.order.order_id, i.order_work_label)
+            data = {"nextstage": nextstage, "data": order.data}
+            li.append(data)
+        return Response(
+            {"data": li, "status": True, "message": "Success"}, status.HTTP_200_OK
+        )
+    
 @api_view(["GET", "POST"])
 def staff_work_assign(request):
     if request.method == "POST":
@@ -2189,7 +2202,7 @@ def get_product(request):
 @api_view(["GET"])
 def new_arrivals(request):
     if request.method == "GET":
-        model = Product.objects.filter(new_arrival=True)[:3]
+        model = Product.objects.filter(new_arrival=True).order_by('created_at')[:3]
         serializer = ProductSerializer(model, many=True)
         return Response(serializer.data)
     return Response(serializer.errors)
@@ -2198,7 +2211,7 @@ def new_arrivals(request):
 @api_view(["GET"])
 def product_to_display(request):
     if request.method == "GET":
-        model = Product.objects.filter(display=True)[:6]
+        model = Product.objects.filter(display=True).order_by('created_at')[:6]
         serializer = ProductSerializer(model, many=True)
         return Response(serializer.data)
     return Response(serializer.errors)
