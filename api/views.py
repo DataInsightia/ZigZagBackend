@@ -361,7 +361,7 @@ def customer_register(request):
         cust_id = request.data.get("cust_id")
         try:
             customer = Customer.objects.get(cust_id=cust_id)
-            customer.cust_name = request.data.get("customer_name")
+            customer.cust_name = request.data.get("username")
             customer.address = request.data.get("address")
             customer.city = request.data.get("city")
             customer.pincode = request.data.get("pincode")
