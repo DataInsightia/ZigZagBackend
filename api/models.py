@@ -165,7 +165,7 @@ class OrderWorkStaffAssign(models.Model):
         Order, on_delete=models.CASCADE, default="", db_constraint=False
     )
     work = models.ForeignKey(
-        Work, on_delete=models.CASCADE, default="", db_constraint=False
+        Work, on_delete=models.CASCADE, null= True, db_constraint=False
     )
     order_work_label = models.CharField(
         max_length=15, default="", null=True, blank=True
@@ -184,7 +184,7 @@ class OrderWorkStaffAssign(models.Model):
     assign_date_time = models.DateTimeField(auto_now=False, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.order} {self.work}"
+        return f"{self.id}"
 
 
 class OrderMaterialLocation(models.Model):
