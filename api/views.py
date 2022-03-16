@@ -394,7 +394,6 @@ def tmp_work(request):
 def staff_register(request):
     if request.method == "POST":
         data = json.loads(request.POST["data"])
-        print(request.FILES.get("file"))
         staff_id = "ZS" + str(randint(9999, 100000))
         keys = (
             "staff_name",
@@ -451,8 +450,8 @@ def staff_register(request):
         staff_id = request.data.get('staff_id')
         try:
             staff = Staff.objects.get(staff_id = staff_id)
-            staff.photo = request.FILES.get('file')
-            staff.staff_name = request.data.get('staff_name')
+            # staff.photo = request.FILES.get('file')
+            staff.staff_name = request.data.get('username')
             staff.address = request.data.get('address')
             staff.city = request.data.get('city')
             staff.ifsc = request.data.get('ifsc')
@@ -460,6 +459,7 @@ def staff_register(request):
             staff.work_type = request.data.get('work_type')
             staff.acc_no = request.data.get('acc_no')
             staff.save()
+            Staff.objects.filter(staff_id = staff_id).update(photo = request.FILES.get('file'))
             return Response({'status' : True, 'message' : 'Success'})
         except:
             return Response({'status' : False, 'message' : 'Failure'})
@@ -811,7 +811,7 @@ def staff_work_assign(request):
     elif request.method == "GET":
         if True:
             li = []
-            for i in OrderWorkStaffAssign.objects.filter(staff__isnull=True):
+            for i in OrderWorkStaffAssign.objects.filter(work__isnull = False,staff__isnull=True):
                 order = OrderWorkStaffAssignSerializers(i)
                 nextstage = getNextStage(i.order.order_id, i.order_work_label)
                 data = {"nextstage": nextstage, "data": order.data}
@@ -843,7 +843,10 @@ def staff_work_assigned(request):
                         staff=staff, assign_date_time__isnull=False
                     ).exists()
                 ):
-                    ordertaken = OrderWorkStaffTaken.objects.filter(
+                    orderwsa = OrderWorkStaffAssign.objects.filter(
+                        staff=staff, assign_date_time__isnull=False
+                    ).values_list('id')
+                    ordertaken = OrderWorkStaffTaken.objects.filter(orderworkstaffassign_id__in = orderwsa,
                         taken_date_time__isnull=True
                     )
                     serializer = OrderWorkStaffTakenSerializers(ordertaken, many=True)
@@ -890,7 +893,7 @@ def staff_work_taken(request):
                     ordertaken = OrderWorkStaffTaken.objects.exclude(
                         orderworkstaffassign__staff_id=staff.staff_id,
                         taken_date_time__isnull=True,
-                    )
+                    ).filter(staff = staff)
                     serializer = OrderWorkStaffTakenSerializers(ordertaken, many=True)
 
                     return Response(
@@ -1094,7 +1097,7 @@ def staff_stage_completion(request):
                 staff = fetchStaff(staff_id)
 
                 orderwa = OrderWorkStaffAssign.objects.get(
-                    order_work_label=order_work_label
+                    order_work_label=order_work_label,assign_stage = stage
                 )
 
                 if OrderWorkStaffStatusCompletion.objects.filter(
@@ -1122,73 +1125,77 @@ def staff_work_assign_completion_app(request):
         data = request.data
         keys = ("staff_id", "order_id", "work_id", "stage", "state", "order_work_label")
         if (i in data for i in keys):
-            try:
-                staff_id = data["staff_id"]
-                order_id = data["order_id"]
-                work_id = data["work_id"]
-                stage = data["stage"]
-                state = data["state"]
-                order_work_label = data["order_work_label"]
+        
+            staff_id = data["staff_id"]
+            order_id = data["order_id"]
+            work_id = data["work_id"]
+            stage = data["stage"]
+            state = data["state"]
 
-                order = fetchOrder(order_id)
-                work = fetchWork(work_id)
-                staff = fetchStaff(staff_id)
+            order_work_label = data["order_work_label"]
 
-                orderwa = OrderWorkStaffAssign.objects.get(
-                    order_work_label=order_work_label
-                )
+            order = fetchOrder(order_id)
+            work = fetchWork(work_id)
+            print(work)
+            staff = fetchStaff(staff_id)
 
-                if state == "approve":
-                    if OrderWorkStaffStatusCompletion.objects.filter(
+            orderwa = OrderWorkStaffAssign.objects.get(
+                order_work_label=order_work_label,
+                assign_stage = stage,
+                staff=staff,
+            )
+
+            if state == "approve":
+                if OrderWorkStaffStatusCompletion.objects.filter(
+                    staff=staff, order=order, orderworkstaffassign=orderwa
+                ).exists():
+                    ordc = OrderWorkStaffStatusCompletion.objects.filter(
                         staff=staff, order=order, orderworkstaffassign=orderwa
-                    ).exists():
-                        ordc = OrderWorkStaffStatusCompletion.objects.filter(
-                            staff=staff, order=order, orderworkstaffassign=orderwa
-                        ).update(
-                            work_staff_comp_app_date_time=datetime.datetime.now(),
-                            work_staff_completion_approved=True,
-                        )
-                        OrderWorkStaffAssign.objects.create(
-                            order=order,
-                            work=work,
-                            order_work_label=orderwa.order_work_label,
-                            staff=None,
-                        )
-                        resp = SuccessContext(True, "Success", "Updated")
-                        return Response(resp)
-                    else:
-                        resp = SuccessContext(True, "Success", "Already Updated")
-                        return Response(resp)
-                elif state == "reassign":
-                    OrderWorkStaffStatusCompletion.objects.filter(
-                        staff=staff, order=order
-                    ).delete()
-                    orderworkstaffassign = OrderWorkStaffAssign.objects.get(
-                        order=order,
-                        work=work,
-                        assign_stage=stage,
-                        order_work_label=orderwa.order_work_label,
+                    ).update(
+                        work_staff_comp_app_date_time=datetime.datetime.now(),
+                        work_staff_completion_approved=True,
                     )
-                    OrderWorkStaffTaken.objects.filter(
-                        orderworkstaffassign=orderworkstaffassign, taken_stage=stage
-                    ).delete()
-                    OrderWorkStaffAssign.objects.filter(
+                    OrderWorkStaffAssign.objects.create(
                         order=order,
                         work=work,
                         order_work_label=orderwa.order_work_label,
-                    ).update(staff=None, assign_stage=None, assign_date_time=None)
-                    OrderWorkStaffAssign.objects.filter(
-                        order=order,
-                        work=work,
-                        assign_stage=stage,
-                        order_work_label=orderwa.order_work_label,
-                    ).update(staff=None, assign_stage=None, assign_date_time=None)
-                    resp = SuccessContext(True, "Success", "deleted")
+                        staff=None,
+                    )
+                    resp = SuccessContext(True, "Success", "Updated")
                     return Response(resp)
-
-            except Exception as e:
-                resp = KeyErrorContext(False, "Failed", str(e))
+                else:
+                    resp = SuccessContext(True, "Success", "Already Updated")
+                    return Response(resp)
+            elif state == "reassign":
+                OrderWorkStaffStatusCompletion.objects.filter(
+                    staff=staff, order=order
+                ).delete()
+                orderworkstaffassign = OrderWorkStaffAssign.objects.get(
+                    order=order,
+                    work=work,
+                    assign_stage=stage,
+                    order_work_label=orderwa.order_work_label,
+                )
+                OrderWorkStaffTaken.objects.filter(
+                    orderworkstaffassign=orderworkstaffassign, taken_stage=stage
+                ).delete()
+                OrderWorkStaffAssign.objects.filter(
+                    order=order,
+                    work=work,
+                    order_work_label=orderwa.order_work_label,
+                ).update(staff=None, assign_stage=None, assign_date_time=None)
+                OrderWorkStaffAssign.objects.filter(
+                    order=order,
+                    work=work,
+                    assign_stage=stage,
+                    order_work_label=orderwa.order_work_label,
+                ).update(staff=None, assign_stage=None, assign_date_time=None)
+                resp = SuccessContext(True, "Success", "deleted")
                 return Response(resp)
+
+            # except Exception as e:
+            #     resp = KeyErrorContext(False, "Failed", str(e))
+            #     return Response(resp)
         else:
             resp = KeyErrorContext(False, "Failed", "key missmatch")
             return Response(resp)
@@ -1535,7 +1542,7 @@ def staff_wage_status(request,status):
         data = request.data
         staff_id = data['staff_id']
         staff_id = fetchStaff(staff_id)
-        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = True)
+        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given__isnull = False)
         serializer = StaffWorkWageSerializers(staffworkwage,many = True)
         if serializer.data:
             return Response({"data":serializer.data,"status":True,"message":"Success"})
@@ -1546,7 +1553,7 @@ def staff_wage_status(request,status):
         data = request.data
         staff_id = data['staff_id']
         staff_id = fetchStaff(staff_id)
-        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given = False)
+        staffworkwage = StaffWorkWage.objects.filter(staff = staff_id,wage_given__isnull = True)
         serializer = StaffWorkWageSerializers(staffworkwage,many = True)
         if serializer.data:
             return Response({"data":serializer.data,"status":True,"message":"Success"})
