@@ -1,10 +1,14 @@
+from distutils.command.upload import upload
 from operator import mod
+from statistics import mode
+from tokenize import blank_re
 from django.db import models
 from io import BytesIO
 import sys
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import math
+import datetime
 
 
 class Customer(models.Model):
@@ -40,19 +44,19 @@ class Staff(models.Model):
         ("embroidery", "EMBROIDERY"),
         ("photo", "PHOTO"),
     )
-    staff_id = models.CharField(max_length=10,primary_key=True)
-    staff_name = models.CharField(max_length=50,null = True)
-    mobile = models.CharField(max_length=13,null = True)
-    address = models.TextField(max_length=250,null = True)
-    city = models.CharField(max_length=50,null = True)
-    salary_type = models.CharField(max_length=20,choices=salary_options,null = True)
-    salary = models.IntegerField(null=True,blank=True)
-    acc_no = models.CharField(max_length=16,null = True)
-    bank = models.CharField(max_length=300,null = True)
-    ifsc = models.CharField(max_length=20,null = True)
-    work_type = models.CharField(max_length=20,choices=work_options,null = True)
-    photo = models.ImageField(default='',blank=True,null=True)
-    
+    staff_id = models.CharField(max_length=10, primary_key=True)
+    staff_name = models.CharField(max_length=50, null=True)
+    mobile = models.CharField(max_length=13, null=True)
+    address = models.TextField(max_length=250, null=True)
+    city = models.CharField(max_length=50, null=True)
+    salary_type = models.CharField(max_length=20, choices=salary_options, null=True)
+    salary = models.IntegerField(null=True, blank=True)
+    acc_no = models.CharField(max_length=16, null=True)
+    bank = models.CharField(max_length=300, null=True)
+    ifsc = models.CharField(max_length=20, null=True)
+    work_type = models.CharField(max_length=20, choices=work_options, null=True)
+    photo = models.ImageField(default="", blank=True, null=True)
+
     def __str__(self):
         return f"{self.staff_name}"
 
@@ -98,6 +102,8 @@ class Order(models.Model):
     pickup_type = models.CharField(max_length=20, choices=pickup_options)
     total_amount = models.IntegerField(null=True, blank=True)
     advance_amount = models.IntegerField(null=True, blank=True)
+    courier_amount = models.IntegerField(null=True, blank=True)
+    courier_address = models.TextField(null=True, blank=True)
     balance_amount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -115,17 +121,19 @@ class GenCols(models.Model):
 class OrderWork(models.Model):
     order_id = models.CharField(max_length=20, default="")
     work_id = models.CharField(max_length=20, default="")
+    work_name = models.CharField(max_length=100, default="")
     order_work_item = models.CharField(max_length=20, default="")
     quantity = models.CharField(max_length=20, default="")
     amount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.order} {self.work}"
+        return f"{self.order_id} {self.work_id}"
 
 
 class OrderMaterial(models.Model):
     order_id = models.CharField(max_length=20, default="")
     material_id = models.CharField(max_length=20, default="")
+    material_name = models.CharField(max_length=100, default="")
     quantity = models.CharField(max_length=20, default="")
     amount = models.IntegerField(null=True, blank=True)
 
@@ -260,10 +268,10 @@ class StaffWorkWage(GenCols):
 
 
 class StaffWageGivenStatus(GenCols):
-    order_ids = models.CharField(max_length = 200, null = True,blank = True)
+    order_ids = models.CharField(max_length=200, null=True, blank=True)
     wage_from_date = models.DateField()
     wage_to_date = models.DateField()
-    wage_given_date = models.DateField(auto_now_add = True)
+    wage_given_date = models.DateField(auto_now_add=True)
     total_wage_given = models.IntegerField()
     wage_payment_reference_no = models.CharField(max_length=50)
     wage_payment_reference_image = models.ImageField()
@@ -377,7 +385,7 @@ class TmpMaterial(models.Model):
 
 class UploadFile(models.Model):
     name = models.CharField(max_length=100)
-    file = models.FileField()
+    file = models.FileField(upload_to="files")
 
     def save(self, *args, **kwargs):
         # Opening the uploaded image
@@ -407,6 +415,50 @@ class UploadFile(models.Model):
         )
 
         super(UploadFile, self).save(*args, **kwargs)
+
+
+class Product(models.Model):
+    product_id = models.CharField(max_length=10,primary_key=True)
+    product_name = models.CharField(max_length=100)
+    picture = models.ImageField(null=True, blank=True, upload_to="product")
+    new_arrival = models.BooleanField(default=False)
+    display = models.BooleanField(default=False)
+    created_at = models.DateTimeField(blank=True, null=True, auto_now=True)
+
+    def __str__(self):
+        return f"{self.product_name}"
+
+    def save(self, *args, **kwargs):
+        try:
+            # Opening the uploaded image
+            im = Image.open(self.picture)
+
+            output = BytesIO()
+
+            x, y = im.size
+            x2, y2 = math.floor(x - 50), math.floor(y - 20)
+            im = im.resize((x2, y2), Image.ANTIALIAS)
+
+            # Resize/modify the image
+            # im = im.resize((300, 300), Image.ANTIALIAS)
+
+            # after modifications, save it to the output
+            im.save(output, format="JPEG", quality=30)
+            output.seek(0)
+
+            # change the imagefield value to be the newley modifed image value
+            self.picture = InMemoryUploadedFile(
+                output,
+                "ImageField",
+                "%s.jpg" % self.picture.name.split(".")[0],
+                "image/jpeg",
+                sys.getsizeof(output),
+                None,
+            )
+
+            super(Product, self).save(*args, **kwargs)
+        except Exception as e:
+            pass
 
 
 # class ModelName(models.Model):
