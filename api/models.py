@@ -60,34 +60,34 @@ class Staff(models.Model):
     def __str__(self):
         return f"{self.staff_name}"
 
-    def save(self, *args, **kwargs):
-        # Opening the uploaded image
-        im = Image.open(self.photo)
+    # def save(self, *args, **kwargs):
+    #     # Opening the uploaded image
+    #     im = Image.open(self.photo)
 
-        output = BytesIO()
+    #     output = BytesIO()
 
-        x, y = im.size
-        x2, y2 = math.floor(x - 50), math.floor(y - 20)
-        im = im.resize((x2, y2), Image.ANTIALIAS)
+    #     x, y = im.size
+    #     x2, y2 = math.floor(x - 50), math.floor(y - 20)
+    #     im = im.resize((x2, y2), Image.ANTIALIAS)
 
-        # Resize/modify the image
-        # im = im.resize((300, 300), Image.ANTIALIAS)
+    #     # Resize/modify the image
+    #     # im = im.resize((300, 300), Image.ANTIALIAS)
 
-        # after modifications, save it to the output
-        im.save(output, format="JPEG", quality=30)
-        output.seek(0)
+    #     # after modifications, save it to the output
+    #     im.save(output, format="JPEG", quality=30)
+    #     output.seek(0)
 
-        # change the imagefield value to be the newley modifed image value
-        self.photo = InMemoryUploadedFile(
-            output,
-            "ImageField",
-            "%s.jpg" % self.photo.name.split(".")[0],
-            "image/jpeg",
-            sys.getsizeof(output),
-            None,
-        )
+    #     # change the imagefield value to be the newley modifed image value
+    #     self.photo = InMemoryUploadedFile(
+    #         output,
+    #         "ImageField",
+    #         "%s.jpg" % self.photo.name.split(".")[0],
+    #         "image/jpeg",
+    #         sys.getsizeof(output),
+    #         None,
+    #     )
 
-        super(Staff, self).save(*args, **kwargs)
+    #     super(Staff, self).save(*args, **kwargs)
 
 
 class Order(models.Model):
@@ -181,6 +181,7 @@ class OrderWorkStaffAssign(models.Model):
     assign_stage = models.CharField(
         max_length=50, choices=stage_options, blank=True, null=True
     )
+    material_location = models.CharField(max_length=50,null=True,blank=True)
     assign_date_time = models.DateTimeField(auto_now=False, blank=True, null=True)
 
     def __str__(self):

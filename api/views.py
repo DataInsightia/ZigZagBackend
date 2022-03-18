@@ -444,7 +444,7 @@ def staff_register(request):
                         salary_type=data["salary_type"],
                         salary=data["salary"],
                         acc_no=data["acc_no"],
-                        bank=ifscdata["BANK"],
+                        bank="", #ifscdata["BANK"],
                         ifsc=ifscdata["IFSC"],
                         work_type=data["worktype"],
                         photo=request.FILES.get("file"),
@@ -790,16 +790,16 @@ def staff_work_assign_by_order(request):
 def staff_work_assign(request):
     if request.method == "POST":
         data = request.data
-        keys = ("staff_id", "order_id", "work_id", "assign_stage", "id")
-        if (i in data for i in keys):
+        keys = ("staff_id", "order_id", "work_id", "assign_stage", "id","material_location")
+        if all(i in data for i in keys):
             staff_id = data["staff_id"]
             order_id = data["order_id"]
             work_id = data["work_id"]
             assign_stage = data["assign_stage"]
             id = data["id"]
+            material_location = data["material_location"]
             order_work_label = data["order_work_label"]
             try:
-
                 order = fetchOrder(order_id)
                 work = fetchWork(work_id)
                 staff = fetchStaff(staff_id)
@@ -813,6 +813,7 @@ def staff_work_assign(request):
                         staff=staff,
                         assign_stage=assign_stage,
                         assign_date_time=datetime.datetime.now(),
+                        material_location=material_location,
                     )
                     orderworkstaffassign = OrderWorkStaffAssign.objects.get(
                         id=id, order=order, work=work, order_work_label=order_work_label
