@@ -1,6 +1,8 @@
 from ast import Del
 from dis import dis
+from email import message
 from math import prod
+from multiprocessing import managers
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -2285,6 +2287,20 @@ def customer_pending_orders(request):
         return Response(orders)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+# CUSTOMER PENDING ORDERS DATA
+@api_view(["POST"])
+def customer_pending_orders_data(request):
+    data = request.data
+    print(data)
+    if "login_id" in data:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in=order_id).exclude(assign_stage="complete_final_stage")
+        serializer = OrderWorkStaffAssignSerializer(orders,many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
 
 # CUSTOMER COMPLETED ORDERS
 @api_view(["POST"])
@@ -2302,6 +2318,19 @@ def customer_completed_orders(request):
         return Response(orders)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+# CUSTOMER TOTAL ORDERS DATA
+@api_view(["POST"])
+def customer_total_orders_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        orders = OrderWorkStaffAssign.objects.filter(order_id__in=order_id)
+        serializer = OrderWorkStaffAssignSerializer(orders,many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 # CUSTOMER TOTAL ORDERS
 @api_view(["POST"])
@@ -2331,6 +2360,21 @@ def customer_delivery_ready(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# CUSTOMER  DELIVERY READY DATA
+@api_view(["POST"])
+def customer_delivery_ready(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        customer = fetchCustomer(login_id)
+        order_id = Order.objects.filter(customer=customer).values_list("order_id")
+        delivery_ready = Delivery.objects.filter(
+            delivery_date_time__isnull=True, order_id__in=order_id
+        )
+        serializer = DeliverySerializer(delivery_ready,many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
 # STAFF TOTAL WORKS
 @api_view(["POST"])
 def staff_total_works(request):
@@ -2343,6 +2387,18 @@ def staff_total_works(request):
         return Response(totalworks)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+# STAFF TOTAL WORKS DATA
+@api_view(["POST"])
+def staff_total_works_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        totalworks = OrderWorkStaffTaken.objects.filter(id__in=works)
+        serializer = OrderWorkStaffTakenSerializers(totalworks,many=True)
+        return Response(serializer.dadta)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 # STAFF ASSIGNED WORKS
 @api_view(["POST"])
@@ -2360,6 +2416,23 @@ def staff_not_taken_works(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# STAFF ASSIGNED WORKS DATA
+@api_view(["POST"])
+def staff_not_taken_works_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        assigned_works = OrderWorkStaffTaken.objects.filter(
+            id__in=works, taken_date_time__isnull=True
+        )
+        serializer = OrderWorkStaffTakenSerializers(assigned_works,many=True)
+        print(assigned_works)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
 # STAFF ON GOING WORKS
 @api_view(["POST"])
 def staff_taken_works(request):
@@ -2373,6 +2446,21 @@ def staff_taken_works(request):
         ).count()
         return Response(taken_works)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF ON GOING WORKS DATA
+@api_view(["POST"])
+def staff_taken_works_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        works = OrderWorkStaffAssign.objects.filter(staff=staff).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            id__in=works, taken_date_time__isnull=False
+        )
+        serializer = OrderWorkStaffTakenSerializers(taken_works,many=True) 
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 # STAFF TODAY DUE WORKS
@@ -2395,6 +2483,27 @@ def staff_today_due_works(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# STAFF TODAY DUE WORKS DATA
+@api_view(["POST"])
+def staff_today_due_works_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        today_due_orders = Order.objects.filter(
+            due_date=datetime.date.today()
+        ).values_list("order_id")
+        order_work_id = OrderWorkStaffAssign.objects.filter(
+            staff=staff, order_id__in=today_due_orders
+        ).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            orderworkstaffassign_id__in=order_work_id
+        )
+        serializer = OrderWorkStaffTakenSerializers(taken_works,many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
 # STAFF WEEK DUE WORKS
 @api_view(["POST"])
 def staff_week_due_works(request):
@@ -2415,6 +2524,28 @@ def staff_week_due_works(request):
         ).count()
         return Response(taken_works)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# STAFF WEEK DUE WORKS DATA
+@api_view(["POST"])
+def staff_week_due_works_data(request):
+    data = request.data
+    if data["login_id"]:
+        login_id = data["login_id"]
+        staff = fetchStaff(login_id)
+        from_date = datetime.date.today() - relativedelta(days=7)
+        to_date = datetime.date.today()
+        today_due_orders = Order.objects.filter(
+            due_date__range=[from_date, to_date]
+        ).values_list("order_id")
+        order_work_id = OrderWorkStaffAssign.objects.filter(
+            staff=staff, order_id__in=today_due_orders
+        ).values_list("id")
+        taken_works = OrderWorkStaffTaken.objects.filter(
+            orderworkstaffassign_id__in=order_work_id, taken_date_time__isnull=False
+        )
+        serializer = OrderWorkStaffTakenSerializers(taken_works,many=True)
+        return Response(serializer.data)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 # SUPERVISOR UNASSINGED WORKS
@@ -2453,3 +2584,31 @@ def week_due_delivery(request):
     ).values_list("order_id")
     today_delivery = Delivery.objects.filter(order_id__in=today_due_orders).count()
     return Response(today_delivery)
+
+@api_view(["POST"])
+def is_order_completed(request):
+    if request.method == "POST":
+        data = request.data
+        if "order_id" in data:
+            order_id = data['order_id']
+            if OrderWorkStaffAssign.objects.filter(order_id = order_id,assign_stage='complete_final_stage').exists():
+                return Response({"status": True,"message":"Order Completed!"})
+            else:
+                return Response({"status" : False,"message": "Order Not Found"})
+        else:
+            return Response({"status" : False,"message": "Key error"})
+
+@api_view(["POST"])
+def delivery(request):
+    if request.method == "POST":
+        data = request.data
+        if "order_id" in data:
+            order_id = data['order_id']
+            if OrderWorkStaffAssign.objects.filter(order_id=order_id,assign_stage="complete_final_stage").exists():
+                orderworkstaffassign = OrderWorkStaffAssign.objects.filter(order_id=order_id,assign_stage="complete_final_stage")
+                owsa_serilizer = OrderWorkStaffAssignSerializer(orderworkstaffassign,many=True)
+                order = Order.objects.get(order_id=order_id)
+                order_serializer = OrderSerializer(order,many=True)
+                return Response({"status" : True,"order_work_staff_assign" : owsa_serilizer.data,"order" : order_serializer.data },status.HTTP_201_CREATED)
+            return Response({"status" : False},status.HTTP_404_NOT_FOUND)
+        return Response({"status" : False},status.HTTP_204_NO_CONTENT)

@@ -97,6 +97,13 @@ urlpatterns = [
     path('staff_today_due_works/',views.staff_today_due_works),
     path('staff_week_due_works/',views.staff_week_due_works),
 
+    # staff order data 
+    path('staff_total_works/',views.staff_total_works_data),
+    path('staff_not_taken_works/',views.staff_not_taken_works_data),
+    path('staff_taken_works/',views.staff_taken_works_data),
+    path('staff_today_due_works/',views.staff_today_due_works_data),
+    path('staff_week_due_works/',views.staff_week_due_works_data),
+
     #SUPERVISOR
     path('unassigned_works/',views.unassigned_works),
     path('not_taken_works/',views.not_taken_works),
@@ -107,4 +114,8 @@ urlpatterns = [
     path('work/<work_id>/',views.workdetail),
     # MATERIAL DETAIL
     path('material/<material_id>/',views.materialdetail),
+
+    # DELIVERY
+    path("is_order_completed/",views.is_order_completed),
+    path("delivery/",views.delivery),
 ]
