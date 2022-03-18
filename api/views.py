@@ -411,6 +411,7 @@ def tmp_work(request):
 @api_view(["POST", "PUT"])
 def staff_register(request):
     if request.method == "POST":
+        print(request.POST)
         data = json.loads(request.POST["data"])
         staff_id = "ZS" + str(randint(9999, 100000))
         keys = (
@@ -1145,7 +1146,7 @@ def staff_stage_completion(request):
                 order = fetchOrder(order_id)
                 staff = fetchStaff(staff_id)
 
-                orderwa = OrderWorkStaffAssign.objects.get(
+                orderwa = OrderWorkStaffAssign.objects.get(order = order,staff = staff,
                     order_work_label=order_work_label,assign_stage = stage
                 )
 
@@ -1185,13 +1186,14 @@ def staff_work_assign_completion_app(request):
 
             order = fetchOrder(order_id)
             work = fetchWork(work_id)
-            print(work)
             staff = fetchStaff(staff_id)
 
             orderwa = OrderWorkStaffAssign.objects.get(
                 order_work_label=order_work_label,
                 assign_stage = stage,
                 staff=staff,
+                order = order,
+                work = work
             )
 
             if state == "approve":
