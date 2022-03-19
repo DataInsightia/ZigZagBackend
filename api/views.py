@@ -816,7 +816,6 @@ def staff_work_assign(request):
                         staff=staff,
                         assign_stage=assign_stage,
                         assign_date_time=datetime.datetime.now(),
-                        material_location=material_location,
                     )
                     orderworkstaffassign = OrderWorkStaffAssign.objects.get(
                         id=id, order=order, work=work, order_work_label=order_work_label
@@ -840,11 +839,17 @@ def staff_work_assign(request):
                             order=order,
                             work_staff_approval_date_time=s.work_staff_comp_app_date_time,
                         )
+                        
                         return Response(resp)
                     else:
                         OrderWorkStaffTaken.objects.create(
                             orderworkstaffassign=orderworkstaffassign,
                             taken_stage=assign_stage,
+                        )
+                        OrderMaterialLocation.objects.create(
+                            material_location=material_location,
+                            order=order,
+                            staff=staff
                         )
                         resp = SuccessContext(
                             True, "Success", "Order assigned to staff"
@@ -2608,7 +2613,32 @@ def delivery(request):
                 orderworkstaffassign = OrderWorkStaffAssign.objects.filter(order_id=order_id,assign_stage="complete_final_stage")
                 owsa_serilizer = OrderWorkStaffAssignSerializer(orderworkstaffassign,many=True)
                 order = Order.objects.get(order_id=order_id)
-                order_serializer = OrderSerializer(order,many=True)
+                order_serializer = OrderSerializer(order)
                 return Response({"status" : True,"order_work_staff_assign" : owsa_serilizer.data,"order" : order_serializer.data },status.HTTP_201_CREATED)
             return Response({"status" : False},status.HTTP_404_NOT_FOUND)
         return Response({"status" : False},status.HTTP_204_NO_CONTENT)
+
+@api_view(["POST"])
+def proceed_delivery(request):
+    if request.method == "POST":
+        data = request.data
+        if all(i in data for i in ("order_id", "amount_to_pay","staff_id")):
+            order_id = data['order_id']
+            amount_to_pay = data['amount_to_pay']
+            staff_id = data['staff_id']
+            try:
+                Delivery.objects.create(
+                order_id = order_id,
+                staff_id = staff_id,
+                amount_paid = int(amount_to_pay),
+                )
+                if Order.objects.filter(order_id=order_id).exists:
+                    order = Order.objects.get(order_id=order_id)
+                    order.balance_amount -= int(amount_to_pay)
+                    order.save()
+                return Response({"status" : True,"message" : ""},status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"status" : False,"error" : str(e)},status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"status" : False},status.HTTP_204_NO_CONTENT)
+

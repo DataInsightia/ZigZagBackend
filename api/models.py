@@ -181,7 +181,6 @@ class OrderWorkStaffAssign(models.Model):
     assign_stage = models.CharField(
         max_length=50, choices=stage_options, blank=True, null=True
     )
-    material_location = models.CharField(max_length=50,null=True,blank=True)
     assign_date_time = models.DateTimeField(auto_now=False, blank=True, null=True)
 
     def __str__(self):
@@ -323,7 +322,7 @@ class Delivery(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, default="")
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, default="")
     amount_paid = models.IntegerField()
-    delivery_date_time = models.DateTimeField()
+    delivery_date_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.order} {self.amount_paid}"

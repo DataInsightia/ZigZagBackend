@@ -118,4 +118,5 @@ urlpatterns = [
     # DELIVERY
     path("is_order_completed/",views.is_order_completed),
     path("delivery/",views.delivery),
+    path("proceed_delivery/",views.proceed_delivery),
 ]
