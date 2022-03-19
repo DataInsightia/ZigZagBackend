@@ -106,5 +106,5 @@ urlpatterns = [
     #WORK DETAIL
     path('work/<work_id>/',views.workdetail),
     # MATERIAL DETAIL
-    path('material/<material_id>/',views.materialdetail),
+    path('mate/<mate_id>/',views.mateid),
 ]

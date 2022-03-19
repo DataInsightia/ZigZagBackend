@@ -102,8 +102,8 @@ def workdetail(request,work_id):
     return Response(serializer.data)
 
 @api_view(["GET"])
-def materialdetail(request,material_id):
-    material = Material.objects.get(material_id = material_id)
+def mateid(request,mate_id):
+    material = Material.objects.get(material_id = mate_id)
     serializer = MaterialSerializer(material)
     return Response(serializer.data)
  
@@ -337,23 +337,26 @@ def customer_register(request):
             password = data["password"]
             cust_id = "ZC" + str(randint(9999, 100000))
             try:
-                cust = Customer.objects.create(
-                    cust_id=cust_id,
-                    cust_name=name,
-                    mobile=mobile,
-                    email=email,
-                    address=address,
-                    password=password,
-                    city=city,
-                    pincode=pincode,
-                )
+                if Customer.objects.filter(Q(mobile=mobile) | Q(email=email)).exists():
+                    return Response({"status": True, "message": "Email ID or Mobile number Already exists"})
+                else:
+                    cust = Customer.objects.create(
+                        cust_id=cust_id,
+                        cust_name=name,
+                        mobile=mobile,
+                        email=email,
+                        address=address,
+                        password=password,
+                        city=city,
+                        pincode=pincode,
+                    )
 
-                user = User.objects.create(
-                    login_id=cust_id, password=password, mobile=mobile, role="customer"
-                )
-                cust.save()
-                user.save()
-                return Response({"status": True, "message": "Success"})
+                    user = User.objects.create(
+                        login_id=cust_id, password=password, mobile=mobile, role="customer"
+                    )
+                    cust.save()
+                    user.save()
+                    return Response({"status": True, "message": "Success"})
             except Exception as e:
                 return Response({"status": False, "error": str(e)})
         return Response({"status": False, "message": "key error"})
@@ -411,7 +414,6 @@ def tmp_work(request):
 @api_view(["POST", "PUT"])
 def staff_register(request):
     if request.method == "POST":
-        print(request.POST)
         data = json.loads(request.POST["data"])
         staff_id = "ZS" + str(randint(9999, 100000))
         keys = (
@@ -429,9 +431,9 @@ def staff_register(request):
         if (i in data for i in keys):
             ifscdata = get_ifsc(data["ifsc"])
 
-            if User.objects.filter(mobile=data["mobile"]).exists():
+            if User.objects.filter(mobile=request.POST.get("mobile")).exists():
                 return Response(
-                    {"status": False, "message": "mobile number already exists"}
+                    {"status": False, "message": "Mobile number already exists"}
                 )
             else:
                 try:
@@ -439,21 +441,21 @@ def staff_register(request):
                     staff = Staff.objects.create(
                         staff_id=staff_id,
                         staff_name=data["staff_name"],
-                        mobile=data["mobile"],
+                        mobile=request.POST.get("mobile"),
                         address=data["address"],
                         city=data["city"],
-                        salary_type=data["salary_type"],
+                        salary_type=request.POST.get("salary_type"),
                         salary=data["salary"],
                         acc_no=data["acc_no"],
                         bank=ifscdata["BANK"],
                         ifsc=ifscdata["IFSC"],
-                        work_type=data["worktype"],
+                        work_type=request.POST.get("worktype"),
                         photo=request.FILES.get("file"),
                     )
                     user = User.objects.create(
                         login_id=staff_id,
                         password=data["password"],
-                        mobile=data["mobile"],
+                        mobile=request.POST.get("mobile"),
                         role="staff",
                     )
                     staff.save()
@@ -469,7 +471,7 @@ def staff_register(request):
         staff_id = request.data.get("staff_id")
         try:
             staff = Staff.objects.get(staff_id = staff_id)
-            # staff.photo = request.FILES.get('file')
+            staff.photo = request.FILES.get('file')
             staff.staff_name = request.data.get('username')
             staff.address = request.data.get('address')
             staff.city = request.data.get('city')
