@@ -466,3 +466,9 @@ class Product(models.Model):
 #     pass
 #     def __str__(self):
 #         return f'{0}'
+
+# custid
+# orderid
+# mobile
+# picktype
+# pickup person 
