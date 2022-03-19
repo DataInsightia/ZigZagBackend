@@ -2636,7 +2636,7 @@ def proceed_delivery(request):
                     order = Order.objects.get(order_id=order_id)
                     order.balance_amount -= int(amount_to_pay)
                     order.save()
-                return Response({"status" : True,"message" : ""},status.HTTP_201_CREATED)
+                return Response({"status" : True,"message" : "Order Delivered"},status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"status" : False,"error" : str(e)},status.HTTP_204_NO_CONTENT)
         else:
