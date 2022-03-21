@@ -45,6 +45,7 @@ class OrderSerializers(ModelSerializer):
 class StaffSerializers(ModelSerializer):
     takenOrders = SerializerMethodField("gettakenOrders")
     nottakenOrders = SerializerMethodField("getnottakenOrders")
+    password = SerializerMethodField('getpassword')
 
     def gettakenOrders(self, obj):
         works = OrderWorkStaffAssign.objects.filter(staff = obj).values_list('id')
@@ -55,6 +56,11 @@ class StaffSerializers(ModelSerializer):
         works = OrderWorkStaffAssign.objects.filter(staff = obj).values_list('id')
         not_taken_work = OrderWorkStaffTaken.objects.filter(id__in = works,taken_date_time__isnull = True).count()
         return not_taken_work
+
+    def getpassword(self,obj):
+        password = User.objects.get(login_id = obj.staff_id)
+        return password.password
+
     class Meta:
         model = Staff
         fields = "__all__"
@@ -158,4 +164,10 @@ class ProductSerializer(ModelSerializer):
 class DeliverySerializer(ModelSerializer):
     class Meta:
         model = Delivery
+        fields = "__all__"
+
+
+class CustomerListSerializer(ModelSerializer):
+    class Meta:
+        model = Customer
         fields = "__all__"

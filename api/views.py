@@ -2262,7 +2262,7 @@ def ready_to_delivery(request):
 @api_view(["GET"])
 def customers(request):
     customer = Customer.objects.all()
-    serializer = CustomerSerializer(customer, many=True)
+    serializer = CustomerListSerializer(customer, many=True)
     if serializer.data:
         return Response(serializer.data)
     else:
