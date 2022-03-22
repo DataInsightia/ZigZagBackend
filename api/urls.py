@@ -107,4 +107,6 @@ urlpatterns = [
     path('work/<work_id>/',views.workdetail),
     # MATERIAL DETAIL
     path('mate/<mate_id>/',views.mateid),
+
+    path('order_admin_status/',views.order_admin_status),
 ]

@@ -171,3 +171,35 @@ class CustomerListSerializer(ModelSerializer):
     class Meta:
         model = Customer
         fields = "__all__"
+
+    
+class OrderAssignAdminSerializers(ModelSerializer):
+    ordertaken = SerializerMethodField('orderTaken')
+    ordercompletion = SerializerMethodField('orderCompletion')
+
+
+    def orderTaken(self,obj):
+        orderTaken = OrderWorkStaffTaken.objects.filter(orderworkstaffassign = obj).values('taken_date_time')
+        
+        if orderTaken:
+            return orderTaken[0]
+        else:
+            data = {
+                "taken_date_time":'null'
+            }
+            return data
+    
+    def orderCompletion(self,obj):
+        orderComplete = OrderWorkStaffStatusCompletion.objects.filter(orderworkstaffassign = obj).values('work_completed_date_time')
+        if orderComplete:
+            return orderComplete[0]
+        else:
+            data = {
+                "work_completed_date_time":'null'
+            }
+            return data
+   
+
+    class Meta:
+        model = OrderWorkStaffAssign
+        fields = "__all__"

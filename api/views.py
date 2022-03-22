@@ -2454,3 +2454,14 @@ def week_due_delivery(request):
     ).values_list("order_id")
     today_delivery = Delivery.objects.filter(order_id__in=today_due_orders).count()
     return Response(today_delivery)
+
+
+@api_view(["POST"])
+def order_admin_status(request):
+    if request.method == "POST":
+        data = request.data
+        order_id = data['order_id'].upper()
+        order = fetchOrder(order_id)
+        orderassign = OrderWorkStaffAssign.objects.filter(order = order)
+        serializer = OrderAssignAdminSerializers(orderassign,many = True)
+        return Response(serializer.data)
