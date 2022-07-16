@@ -1,0 +1,1253 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1646110071253,
+    "data": [
+        {
+            "type": "folder",
+            "name": ".idea"
+        },
+        {
+            "type": "folder",
+            "name": "ZigZagBackend"
+        },
+        {
+            "type": "folder",
+            "name": "api"
+        },
+        {
+            "type": "file",
+            "name": "bank.json",
+            "size": 68922,
+            "hash": "20e80c05dd233e8ff544c03de3a64d6d58dbddcd10daeb0bec1267464f5e0582"
+        },
+        {
+            "type": "file",
+            "name": "deploy.sh",
+            "size": 245,
+            "hash": "b9b660dc87691918ab6d251829ee01213c9deb50275eb90462adfbafbead4ef5"
+        },
+        {
+            "type": "file",
+            "name": "dumpdata.json",
+            "size": 30316,
+            "hash": "37f9ba14f64798659f811e9d9203ab4a4011f1e43901685693c08a6f4b27d759"
+        },
+        {
+            "type": "file",
+            "name": "ifsc.json",
+            "size": 1398240,
+            "hash": "3bbba198d072dba6a70924130d66ce54e35372218ed93df36fa3ee0f59f51ad6"
+        },
+        {
+            "type": "file",
+            "name": "manage.py",
+            "size": 669,
+            "hash": "b977e82432d4d113bce6c35a59c20d11f5ffb6420ec403cf38f5e4213159a31d"
+        },
+        {
+            "type": "file",
+            "name": "passenger_wsgi.py",
+            "size": 42,
+            "hash": "20398e0b2aa2f3b64ecc6e1d1d90a8e7da42fad40a552a274931c8b5a53fcb0e"
+        },
+        {
+            "type": "file",
+            "name": "readme.md",
+            "size": 32,
+            "hash": "24623e16b0dccc64587de9b46e42ff4fd46c7cb030d7ea00ae2eceeb4f0b7e5e"
+        },
+        {
+            "type": "file",
+            "name": "requirements.txt",
+            "size": 229,
+            "hash": "b9f95abf9f4d73ab028d4d9f95ada4f9f85feecb017e529e116d7f86d18f90c9"
+        },
+        {
+            "type": "folder",
+            "name": "static"
+        },
+        {
+            "type": "file",
+            "name": "ZigZagBackend/__init__.py",
+            "size": 0,
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+            "type": "file",
+            "name": "ZigZagBackend/asgi.py",
+            "size": 403,
+            "hash": "4a1aca9a726a663116cb548f0174639780481c6188c487bf81cd7d1d538db312"
+        },
+        {
+            "type": "file",
+            "name": "ZigZagBackend/settings.py",
+            "size": 4060,
+            "hash": "53a13c76c5e23a35739ea3f79e7f9fa1ea719f7e0109f7e7f3848ad9c38748dc"
+        },
+        {
+            "type": "file",
+            "name": "ZigZagBackend/urls.py",
+            "size": 397,
+            "hash": "f4f4a6b80378e6c2508b88b211882816a2f92d217c42187fb8b2e41ebc1e3cd3"
+        },
+        {
+            "type": "file",
+            "name": "ZigZagBackend/wsgi.py",
+            "size": 403,
+            "hash": "a76f3775fa48304728c2cf9d3d95c8efedd40351e2ca34cb34fa06b0fe9ff09b"
+        },
+        {
+            "type": "file",
+            "name": "api/__init__.py",
+            "size": 0,
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+            "type": "file",
+            "name": "api/admin.py",
+            "size": 1731,
+            "hash": "1b05bbf75d1eb062a98881fcd7d59d817cd6a022166fe1593bcb8b71c8a65715"
+        },
+        {
+            "type": "file",
+            "name": "api/apps.py",
+            "size": 138,
+            "hash": "b4db90de55cd6dbcaa174df55724a73e2ff33f64760b0f3f12e3f5903944e314"
+        },
+        {
+            "type": "folder",
+            "name": "api/migrations"
+        },
+        {
+            "type": "file",
+            "name": "api/models.py",
+            "size": 11866,
+            "hash": "4378cbf180a7bd809367885c52564a5f9250e610fd38cdf198ff5ba914db48a2"
+        },
+        {
+            "type": "file",
+            "name": "api/serializers.py",
+            "size": 2207,
+            "hash": "4c3301efa1f8878832ed313ee46cefeb90b394b398e59b772d018737b41e36eb"
+        },
+        {
+            "type": "file",
+            "name": "api/tests.py",
+            "size": 62,
+            "hash": "3d9cb9b56be7c4a69d8178be4fed96efcedf23b3ebae849d91a61147b2f2ac67"
+        },
+        {
+            "type": "file",
+            "name": "api/urls.py",
+            "size": 1900,
+            "hash": "a00f18a2d5eddf47ab5ac190b1a4fa5a0438c7e2416700ee01d9f26915c497c2"
+        },
+        {
+            "type": "file",
+            "name": "api/utils.py",
+            "size": 2942,
+            "hash": "8d7f051183cbc32b7a465d1c57a7790934cb5c06bad2728a95a395362c9575d3"
+        },
+        {
+            "type": "file",
+            "name": "api/views.py",
+            "size": 43460,
+            "hash": "adb85a6be7fc89cf70785aeb0cade2a38ad93fe3dd11fddc56896356ea96145f"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/0001_initial.py",
+            "size": 16076,
+            "hash": "e74f458c4ba2d15cab636ddf14867f54774e5fc489317ba52775ac5dc36bd193"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/0002_alter_staff_salary.py",
+            "size": 381,
+            "hash": "5b20a4ba3b692503b039897ca0dfe5a706b4219465b1df3b308fcbb07fd8b459"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/0003_alter_orderworkstaffassign_order_and_more.py",
+            "size": 1021,
+            "hash": "81d8f51a4ee49076c07ee0c0b7093e1b67af8986f9c922b787dd64b789c4fbfa"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/0004_orderworkstafftaken_taken_stage_and_more.py",
+            "size": 826,
+            "hash": "97c1fffeef170a27e5cad627ea14c57c72f2c74a7646fac39b1693429665ef95"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/0005_remove_orderworkstafftaken_order_and_more.py",
+            "size": 587,
+            "hash": "0ab8e480600fd497be27f5424bb7cc6e2f7e5caf2c3c27be0b3fdc3287155d04"
+        },
+        {
+            "type": "file",
+            "name": "api/migrations/__init__.py",
+            "size": 0,
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/css"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/fonts"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/img"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/css"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/docs"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/fonts"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/img"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/js"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/autocomplete.css",
+            "size": 9114,
+            "hash": "ebe7dc41da8296919ff04a47d4dc604bc60bf9d8865dcf0216add2c3623d2bc9"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/base.css",
+            "size": 19513,
+            "hash": "b88aaaacc7154bc7144b06b39fe4951cac33ad9b01de4f87870e0c38c06cef87"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/changelists.css",
+            "size": 6932,
+            "hash": "38221b74114645a29d8a0346c2f7e906a0bacef48c3b8dba15af027d4315c2e4"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/dashboard.css",
+            "size": 380,
+            "hash": "8b639c0d36b547f6cee9a05367aebe6919535e5d25e2c8de1df6ac52b7f38ddd"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/fonts.css",
+            "size": 423,
+            "hash": "4a7065dca8de519a91999c3717488d9b5629a85863acd0bf7cd3741f64e4b987"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/forms.css",
+            "size": 8878,
+            "hash": "933e04bdc2901f282285b2bc6436474a93051e52704fab259c9b88d4f09c072c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/login.css",
+            "size": 954,
+            "hash": "7ebbdf069532748f40d21a1efd81f4e2c567eeae9678d00015560ee589475c44"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/nav_sidebar.css",
+            "size": 2616,
+            "hash": "47329285c251e9203a32d8032544bde7419c6f0162b415cba184204f0c8b066f"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/responsive.css",
+            "size": 18575,
+            "hash": "1184297cd4ddf175d94bbf91c664f45429737008322fce3ea2c3d1e873512d8b"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/responsive_rtl.css",
+            "size": 1741,
+            "hash": "88cf0521f5cbb9782eae360ad09c1ba15ba2954835867699c3bc1ade1c7c688d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/rtl.css",
+            "size": 3234,
+            "hash": "d6898e1f960ff9b96f2ee14ac357c5b4f88c68a942ed40e64f64f626f33b0f8a"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/css/vendor"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/widgets.css",
+            "size": 11097,
+            "hash": "45856771cb53820a59d5e068f1009abf2a47e2e83caf24a4f0ccd078262eafc5"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/fonts/LICENSE.txt",
+            "size": 11560,
+            "hash": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/fonts/README.txt",
+            "size": 214,
+            "hash": "138aef97d63d72f2b1db0a64ae04198e168a7d1844506f2934b0a866806afab1"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/fonts/Roboto-Bold-webfont.woff",
+            "size": 86184,
+            "hash": "b1767a0c3e5dfb3a5009efee4445ff15d6362e9285461e17bded186f1e9456f0"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/fonts/Roboto-Light-webfont.woff",
+            "size": 85692,
+            "hash": "18827349c7febd4b8d01aa907c67ea9b8011242078326b24703978454fdf351a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/fonts/Roboto-Regular-webfont.woff",
+            "size": 85876,
+            "hash": "9ae9d6545d7d7d823f8a94010db77c1a0ff71e371e8bb158df1cb98395162507"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/LICENSE",
+            "size": 1081,
+            "hash": "d114faff3488c16c319b3235dc41f90239d3d63d9853733033d8f7535f5c0004"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/README.txt",
+            "size": 319,
+            "hash": "5ea3793254f54888bab1d9d89ca26b3a227a87d95321e8d3ee72d263e63be299"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/calendar-icons.svg",
+            "size": 1094,
+            "hash": "81b32edba9dfc59a6196a285715397a5cbf9ce1bf9c7f426fcfe1b6b465ef382"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/img/gis"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-addlink.svg",
+            "size": 331,
+            "hash": "901b4f249dea7903d678d7edbe9ad9891e75358699da7fd9c096ad63df99c754"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-alert.svg",
+            "size": 504,
+            "hash": "697b5df4f03aead71c96cf9325fc84090ae6756ae3f11396282d2d24a6bbb700"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-calendar.svg",
+            "size": 1086,
+            "hash": "fdb705edafd1f7852939f2dff91d29955a1b35479e4eda3d50c89420705c4876"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-changelink.svg",
+            "size": 380,
+            "hash": "7253367b0f786f055adb143a6ef7cac7cc4bb64d22faee40c9b365c8ff24f943"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-clock.svg",
+            "size": 677,
+            "hash": "939e58bfa47af93c92f2194bdcac9ed0830d8a180e4458e82631d8db5beda440"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-deletelink.svg",
+            "size": 392,
+            "hash": "d3a5ce1e8e72e7d51f341b4ef233011d0aa65edf149a886548c96852e67a7740"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-no.svg",
+            "size": 560,
+            "hash": "42a05a4ebae9dca8582712d807913ed1c9ffb3803f63c3c89987568df41233e7"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-unknown-alt.svg",
+            "size": 655,
+            "hash": "2f22fda09b51d14e3d9061d828cc669a6d6f030deab1f5d1eeecd91fbeac67f8"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-unknown.svg",
+            "size": 655,
+            "hash": "78f7179728bb7286ff21c24ea59ebaba2ca6c8580c3c797ca7d8849ff784ddf7"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-viewlink.svg",
+            "size": 581,
+            "hash": "34bedf732ee640e43dd6c473c685512dfcd6cd7051539f5c14034eac63b058cd"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/icon-yes.svg",
+            "size": 436,
+            "hash": "fc7e09a8bcb027e371a0f2ea4aa93d68625cc44759c2d485b9ad53b88f6421c3"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/inline-delete.svg",
+            "size": 560,
+            "hash": "362d73f1e0d804ebde543aada1a1b210c586e4c767b7d7678a2b81593967af96"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/search.svg",
+            "size": 458,
+            "hash": "1e0bcb3cd4fb15f818be66edd40975ca15e09b3607ccc83c06e0cb9d4f6aa4c5"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/selector-icons.svg",
+            "size": 3291,
+            "hash": "d11272aee949fd447d6983fb59bbece6361ac815612e85d1dbacdac0d319d094"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/sorting-icons.svg",
+            "size": 1097,
+            "hash": "702bdca788b7300afe9a8f0b13f87c651bb72c3ecc6bd06da4afa9db83b79550"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/tooltag-add.svg",
+            "size": 331,
+            "hash": "7d3642a2e18c242e90ab6c65ab0fe1f5f168755b4b98332ba6665a7065496194"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/tooltag-arrowright.svg",
+            "size": 280,
+            "hash": "18802acbfe0ea2bf5c0cc342d9f49a10687ede0a9272fa9111a50b9e2c77c077"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/SelectBox.js",
+            "size": 4360,
+            "hash": "14b14216268ee0ace2c2e78bf37527fd6091d3e2dfeba3e156aa6f9db6ade74b"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/SelectFilter2.js",
+            "size": 12350,
+            "hash": "3648328a76aff4804722425ff3309f03002b0d99d8d896e38b6f38ed20725285"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/actions.js",
+            "size": 7872,
+            "hash": "f749ceea8efbe786b6c3c6cd64ead2ec4a04a21fcc6449c8389cc98e2d734e5f"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/admin"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/autocomplete.js",
+            "size": 1121,
+            "hash": "b7331ffb322975c895a748d134fd24bf529c395318c9eab076a0942d51e2489f"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/calendar.js",
+            "size": 8466,
+            "hash": "bec62343836fe8b3e9a8c54c864a3c9a7b2fe94e445e493984e1e19a40b99bb8"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/cancel.js",
+            "size": 884,
+            "hash": "50465dbef5aee6ce191f5ea515fc5af143e05972778bc56c78ae4b730d8aade8"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/change_form.js",
+            "size": 606,
+            "hash": "cce4de3910aad62f575d5fec6920410ce5dba2ee54b59bf1605a553eac50d364"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/collapse.js",
+            "size": 1803,
+            "hash": "50e34152e787c2c9b948c946d147e9e2696a760bbb5068a653aa6c2b3a716ee1"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/core.js",
+            "size": 5698,
+            "hash": "0152c2aea6093a70ae2c92e8d23a9ed29c842b103fe2dcc9feb31c0d0135b33c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/inlines.js",
+            "size": 14969,
+            "hash": "b0f21d6fbd79cfe35889786347baba3e6c94d1a28db6fa450b203cf07131ac06"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/jquery.init.js",
+            "size": 347,
+            "hash": "b8cfca7fb10e04c8a97029ae4076f2b9b424c9c95e4960c24bcf9cdd67af156d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/nav_sidebar.js",
+            "size": 3401,
+            "hash": "59241075fb38934b296cefbede0ca7b2a3bf5db67ab50efa15bc2aaabab4a6ee"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/popup_response.js",
+            "size": 551,
+            "hash": "1f8a691b5e237ebc41d57179c59a79492f0f6a962e628bb91fbbb06231ddede2"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/prepopulate.js",
+            "size": 1531,
+            "hash": "518916ac734ad7e396a756b921665d834b9d7e8fdd711fa32929f9025c71aa05"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/prepopulate_init.js",
+            "size": 492,
+            "hash": "25d85840b9a1789536c0adf101e9720cde5555eb035d3f5753fc704672a194a0"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/urlify.js",
+            "size": 7902,
+            "hash": "92cbb870377d26916c37970b4fc0693ad83426492b225591d72af79cb9565db2"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/vendor"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/bootstrap-theme.min.css",
+            "size": 23411,
+            "hash": "bda1336adb53efe4377382f688ba108f7f70c700c860a579a2ea4f37aa570d09"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/bootstrap-tweaks.css",
+            "size": 3385,
+            "hash": "c17b408ef0078c071f260ffa1a2fca81c5807b972e335febefd9eb9bd3fc3e05"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/bootstrap.min.css",
+            "size": 121457,
+            "hash": "1f429f4e2829515fb4ff9b67d875c2d023f08610e15a049ac0976715dd02182a"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/default.css",
+            "size": 1152,
+            "hash": "116577e6db2d0f99b419ecc61b453915af0eff8206b0bf3f9e87897719c1b37b"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/font-awesome-4.0.3.css",
+            "size": 21658,
+            "hash": "3083e8d3b21ddc3f0e6d65ec3580aa6edfaadca5d9737d9caa27e6a233e1ccf3"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/css/prettify.css",
+            "size": 817,
+            "hash": "f9932af1e67a6e5105b71715b9d335873bf8805c01c2a9603e31e96cc4a95819"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/docs/css"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/docs/img"
+        },
+        {
+            "type": "folder",
+            "name": "static/rest_framework/docs/js"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/fontawesome-webfont.eot",
+            "size": 38205,
+            "hash": "39e237c07403e62f00bd6ddf0b59d3349c7bd3869250aaadc389419db6aa40ef"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/fontawesome-webfont.svg",
+            "size": 202148,
+            "hash": "9bf1cf619b8ecb6314009081a848c37a69fbd07b4a2a7cde339f6342b8eba26e"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/fontawesome-webfont.ttf",
+            "size": 80652,
+            "hash": "6b49348ad53886d09ce4c32fa146e899c820de3f85a8dd3704a0624eb3bf7fa1"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/fontawesome-webfont.woff",
+            "size": 44432,
+            "hash": "0fd28fece9ebd606b8b071460ebd3fc2ed7bc7a66ef91c8834f11dfacab4a849"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/glyphicons-halflings-regular.eot",
+            "size": 20127,
+            "hash": "13634da87d9e23f8c3ed9108ce1724d183a39ad072e73e1b3d8cbf646d2d0407"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/glyphicons-halflings-regular.svg",
+            "size": 108738,
+            "hash": "0688333129cbe4acc8baea3b35f8015287078f3035b9f56768389dd9cf8a0d91"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/glyphicons-halflings-regular.ttf",
+            "size": 45404,
+            "hash": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/glyphicons-halflings-regular.woff",
+            "size": 23424,
+            "hash": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/fonts/glyphicons-halflings-regular.woff2",
+            "size": 18028,
+            "hash": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/img/glyphicons-halflings-white.png",
+            "size": 8777,
+            "hash": "f0e0d95a9c8abcdfabf46348e2d4285829bb0491f5f6af0e05af52bffb6324c4"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/img/glyphicons-halflings.png",
+            "size": 12762,
+            "hash": "1bd51b53278447c1db33f00c4773e711db21e557ecdd26d9b9ae96ca993f05e2"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/img/grid.png",
+            "size": 1458,
+            "hash": "6e2a58503494a708105ac646d3af5c08c8c890325bb781a257d10f91ff968a9c"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/ajax-form.js",
+            "size": 3597,
+            "hash": "a45fecd840a653ea3a894eaf298caedd5333aa7d1eb110e00e947bb5a48c5076"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/bootstrap.min.js",
+            "size": 39680,
+            "hash": "9ee2fcff6709e4d0d24b09ca0fc56aade12b4961ed9c43fd13b03248bfb57afe"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/coreapi-0.1.1.js",
+            "size": 157600,
+            "hash": "fe0cf23e7fb6731d1681f8ef8ffb655213dfe2568a9f361b82472bfee3465ba1"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/csrf.js",
+            "size": 1719,
+            "hash": "792d1b4b87cc4512e05d062a826b1a0cbb3a476624963e4f9192c8502936bdd8"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/default.js",
+            "size": 1268,
+            "hash": "98938fdc9303c909d1497eb45ff4f85a0b58cce04d0d8a6a7356613940bce623"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/jquery-3.5.1.min.js",
+            "size": 89476,
+            "hash": "f7f6a5894f1d19ddad6fa392b2ece2c5e578cbf7da4ea805b6885eb6985b6e3d"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/js/prettify-min.js",
+            "size": 13632,
+            "hash": "e2e576e3bc607cd179ff511947010f645d3441a35313aec0dbd06c4437f83b77"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/css/vendor/select2"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/gis/move_vertex_off.svg",
+            "size": 1129,
+            "hash": "a2efa9a54372cb941908a15895caf3181c041224c35f99a626f33cae9c02e433"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/img/gis/move_vertex_on.svg",
+            "size": 1129,
+            "hash": "0e099c7b35839acff756182a8185069fe446147c927013f431e5fc3f01f2fe71"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/admin/DateTimeShortcuts.js",
+            "size": 19634,
+            "hash": "eed708ac978bd02f16b541c2a218af6ffda7f62d579db522d7eddae07ff90cd7"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/admin/RelatedObjectLookups.js",
+            "size": 5984,
+            "hash": "a596a6086b017389a9d7815bcf26aae1a81d3a192d49bcb707d7995c3b1ae3de"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/vendor/jquery"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/vendor/select2"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/vendor/xregexp"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/css/base.css",
+            "size": 6156,
+            "hash": "7d9f4eb388801770c1ab7030c3ca9b6d1ca9c7a7e4195ffe3e3c50f18aacb0ce"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/css/highlight.css",
+            "size": 1682,
+            "hash": "87ee1de1b0c5b4e21de0f90be3105797e5ed45f6afe3b07c70f501a185a57373"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/css/jquery.json-view.min.css",
+            "size": 1307,
+            "hash": "c38fe1128cf5f4a93f7c2eee2dcb751733c4de0108bcdba52b276fef93c5c9ec"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/img/favicon.ico",
+            "size": 5430,
+            "hash": "5b0d9b363197c84db2f4578eeac5bb624b2a176090f3da5d4eb92c8856cfe27e"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/img/grid.png",
+            "size": 1458,
+            "hash": "6e2a58503494a708105ac646d3af5c08c8c890325bb781a257d10f91ff968a9c"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/js/api.js",
+            "size": 10539,
+            "hash": "6294e73f3aec2b874319599c454a4cac5e2d1360e4db69df03ad0337685d065a"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/js/highlight.pack.js",
+            "size": 300764,
+            "hash": "4e956cd7a60fc91c634ecd76da622c6e84d53a9a1351bd409b39419ce1e35380"
+        },
+        {
+            "type": "file",
+            "name": "static/rest_framework/docs/js/jquery.json-view.min.js",
+            "size": 2700,
+            "hash": "c5463ba4931e3c3b503e1f0aad658ff06730169355267e4084b6d7ada556bd96"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/vendor/select2/LICENSE-SELECT2.md",
+            "size": 1124,
+            "hash": "4ee0cbc51370afde358652a0f977972053729ed578b6a42f5e2a037d114f0b39"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/vendor/select2/select2.css",
+            "size": 17358,
+            "hash": "91a960439e4f7f2f580644fee3261877937c2286defa259e06eccfecb8d53b4a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/css/vendor/select2/select2.min.css",
+            "size": 14966,
+            "hash": "15d6ad4dfdb43d0affad683e70029f97a8f8fc8637a28845009ee0542dccdf81"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/jquery/LICENSE.txt",
+            "size": 1097,
+            "hash": "d4db9ebe6f29f5168eac45ad713f055623ac5d0dcd5ba92da23d650ae012020d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/jquery/jquery.js",
+            "size": 288580,
+            "hash": "1fe2bb5390a75e5d61e72c107cab528fc3c29a837d69aab7d200e1dbb5dcd239"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/jquery/jquery.min.js",
+            "size": 89501,
+            "hash": "ff1523fb7389539c84c65aba19260648793bb4f5e29329d2ee8804bc37a3fe6e"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/LICENSE.md",
+            "size": 1124,
+            "hash": "4ee0cbc51370afde358652a0f977972053729ed578b6a42f5e2a037d114f0b39"
+        },
+        {
+            "type": "folder",
+            "name": "static/admin/js/vendor/select2/i18n"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/select2.full.js",
+            "size": 173566,
+            "hash": "ba0664111e4e0041b30b0c1bff832f841284e46be67344b9f4c2a7f9da2865a2"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/select2.full.min.js",
+            "size": 79212,
+            "hash": "5c6fdab80cb86a279695dccc226a1fac50e2c922bea70242edaa28f52b7bad2d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/xregexp/LICENSE.txt",
+            "size": 1103,
+            "hash": "c6760b87818be101b84b51bf256c05fc0475f2b63d2a6af00f7931abb3d364dc"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/xregexp/xregexp.js",
+            "size": 232381,
+            "hash": "aedbdc5597b1e7351b410a410c4c0f5deb42dbc9c0124b2701b970d8596df6d0"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/xregexp/xregexp.min.js",
+            "size": 125266,
+            "hash": "7b68837c6e95d6c7c6501f768b9c8da906a6b0c09cf009f4485ce8a37bdbca58"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/af.js",
+            "size": 866,
+            "hash": "229237ba8d7d7e8efb8ccb4de51de97a83f43ab88dfa741f3d8d89e1fb9f77c8"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ar.js",
+            "size": 905,
+            "hash": "cf1437a5e4a76d521fac7d4d763c780eb1c3b266e9aaeea67deca555614ce666"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/az.js",
+            "size": 721,
+            "hash": "37f294edfb688dfd8782f2519693fc2aa1ba84a21baa28183772b4607fdcb6e4"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/bg.js",
+            "size": 968,
+            "hash": "e59e889479ae93fe8875974056f7628179e58fb20e68a5ed723b88d27d059984"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/bn.js",
+            "size": 1291,
+            "hash": "c1d41b81ac59e3b4f21a5c2fb28ec63a3a664d750a696cef554affa0245e9841"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/bs.js",
+            "size": 965,
+            "hash": "839ea4592bbd471ca1feb6ab2d20daffc9eb76a2f9d49a996a2e10431db48f04"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ca.js",
+            "size": 900,
+            "hash": "0d2cb2017254234c13a7f4db1612cd1ab82f811b0659e57721a7f16141818203"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/cs.js",
+            "size": 1292,
+            "hash": "b7ff0e5958ba632dbd29a6eab3f975b0cd924ab8d4020653c1b4d7fe6d0c08bf"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/da.js",
+            "size": 828,
+            "hash": "b45da6bf315849660e537624b65dc6f77a4291ff95f60a270b193b85c039275a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/de.js",
+            "size": 866,
+            "hash": "e5bb297dc8a1329f325c3c1f72abc2fe75774136ed06e403991ddced43d0b45c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/dsb.js",
+            "size": 1017,
+            "hash": "2ad3f6c4da0fef9a169e86d4ad2ec4a7f04e14fcdc30d0edd30c8f9e46c817f4"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/el.js",
+            "size": 1182,
+            "hash": "21dbc3f1e63f2a95fd7dd1ef95ddce32f41f62c9daa098c37959206c87a67e7f"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/en.js",
+            "size": 844,
+            "hash": "0bae803be28e5cdb97116c21c1f8d80456b7806708cec3c51d0019f6a4a1dc6a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/es.js",
+            "size": 922,
+            "hash": "22165a232f2e7d376e3b6faf06b8afb303028e53e4eefae4e0ff35a43e81d123"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/et.js",
+            "size": 801,
+            "hash": "2e02e074e90a8dceb7b2fc4fd546bb034cded4be96aefd17ea7a7ef22443e73c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/eu.js",
+            "size": 868,
+            "hash": "acb9ad3fb6c0fdab643488fcd65feb89333b7e2e425f156b1411c5c9d74ef87c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/fa.js",
+            "size": 1023,
+            "hash": "7ea66413d7bcb6ddab67b3ab0c63e23ac4cd763dd2dabd028db75d55404378c0"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/fi.js",
+            "size": 803,
+            "hash": "2951a2ae118635e7bf888a4c18b5f91331ff52435ef8538f0bfd38f381be410d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/fr.js",
+            "size": 924,
+            "hash": "6a3d2adab749378ec144173d2eabec83192e3ce71601b66c5055256e0bb0758d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/gl.js",
+            "size": 924,
+            "hash": "1d225a7c8f39c8aa785b38c53d3e7fdde67ff9740360fcf37f80569aeeae5c79"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/he.js",
+            "size": 984,
+            "hash": "0c83d1287c343640ee52d2cd19d4e76197280a2377bacb4763e50c9b0df857fb"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/hi.js",
+            "size": 1175,
+            "hash": "9ba66a88a67f8f3c33545802f2f9188b0cb8947e5f244315f8b4cf54ed96bb8d"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/hr.js",
+            "size": 852,
+            "hash": "35c9539434e23455f5cb45b52e58f5d3e648a1751877bbc35eac9e509eefdc1e"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/hsb.js",
+            "size": 1018,
+            "hash": "1532eccdcac669e9535bae96579d2efeb4ba1d5d1267143a561a62dad9e00ba3"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/hu.js",
+            "size": 831,
+            "hash": "dcf7549344a91d8f87fa1eb6c289b0e00cb244cba394673afe8c56f8bd56c8eb"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/hy.js",
+            "size": 1028,
+            "hash": "04b8747e7b6bc2dc0dc254288b02e4750395c8d5c77664692f6f29f96e45b038"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/id.js",
+            "size": 768,
+            "hash": "7c627ef80c3bd0fa739371202e317557f42fa83daafee7d78e740823266a6207"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/is.js",
+            "size": 807,
+            "hash": "827d1d748a939c95f8c24fad582e6014e449b357648081fd30ec0b96306e40ad"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/it.js",
+            "size": 897,
+            "hash": "906c6d6a9c214458f7bbf22163fef359984a811e42ad99a66ac4f9c3e6a85d13"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ja.js",
+            "size": 862,
+            "hash": "b59e2ca9dc7f4847096e25b9f9ca070d5f0556612525103767cdb61051e48cb3"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ka.js",
+            "size": 1195,
+            "hash": "0c7e95ae755d47c497ea4b28dadcea9c9aacdf6b82a41372bcff4ac6cdecb232"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/km.js",
+            "size": 1088,
+            "hash": "c7d8728de9e77358b4a1e62b1541d09d81da917a6fed60fb31217e73d01a4e38"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ko.js",
+            "size": 855,
+            "hash": "226981f6fee0d9928498f15441e5eb2fbdb75448db8845b761e9717aa1c48077"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/lt.js",
+            "size": 944,
+            "hash": "653fb8e626d5c1d5a74f2a3e4eab2a5b6363229f73c38c6ce52a3bf0a31bfecf"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/lv.js",
+            "size": 900,
+            "hash": "847a442b87984a8263fdfbc0db097c412b8996e37187e4efa7a5199be65869e1"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/mk.js",
+            "size": 1038,
+            "hash": "3d2a71ae70692f8492b3d4dbd2a7560fbba6508c88a11d95d5fa6a450bc25dc0"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ms.js",
+            "size": 811,
+            "hash": "342cf8467b642597fc6030c2d53141bcafa7927f83f9c18dcbbc2886aa9a403e"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/nb.js",
+            "size": 778,
+            "hash": "79db8a086efa2778883eb51e9020c2abbe35ae71b8c43ed353713b2e26fbb0f1"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ne.js",
+            "size": 1357,
+            "hash": "4108c33d013a1832974b9731ab62518e4dcc183be38372337b1ef5661a276e3f"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/nl.js",
+            "size": 904,
+            "hash": "25cb4b7d3a4b4395055edc809a06c2bd23d4b56d1fcb5984ee835870c23dd1b2"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/pl.js",
+            "size": 947,
+            "hash": "ea012e2989c975ff1c6cf111b30fa6b5d720741c9426e2dfd50507d1a49a8cca"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ps.js",
+            "size": 1049,
+            "hash": "e09e2c66d49abf1af5bd97719a7b9bd89d07d2aaf54bc5a736c4de85f75fab83"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/pt-BR.js",
+            "size": 876,
+            "hash": "d0315ed47bbd7c40d25e0a633ce42b03a12ad2b19bd793516ec1a1d54e2f12bd"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/pt.js",
+            "size": 878,
+            "hash": "2f98eacfccdce4117cba4ae1a48dafbc6acd477e17ef8f3675c917f8852e5290"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ro.js",
+            "size": 938,
+            "hash": "01a75be8b574bb62f69823a0c97d9c619eb1239b034fd388dd5ec7c2eb9e8af3"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/ru.js",
+            "size": 1171,
+            "hash": "6d5e9e995084f656342f36d537ced628000014b513de42aa1339fae35a49dbda"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sk.js",
+            "size": 1306,
+            "hash": "3276d470fea9227b81cd35bf2ffc265d8f203cb18239c2b2cd01ed845908999a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sl.js",
+            "size": 925,
+            "hash": "2cf20ac29f60a7f59c51ce14695b7f7324a534be7f9667d996dd1b82dc279059"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sq.js",
+            "size": 903,
+            "hash": "a08c492d82ed2b4bc6da0dece63b062e7e251ee0e04a877160058bd01c87447a"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sr-Cyrl.js",
+            "size": 1109,
+            "hash": "0684f629d89c7991a0c61112473dd6d89ffb08562a5b2672a2fd9892d528ff6c"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sr.js",
+            "size": 980,
+            "hash": "ec410b617c1bd2d212b2ebcbe9ea2bc734ef88c2bea1e752bd9bc4642325a065"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/sv.js",
+            "size": 786,
+            "hash": "73a9ea5268ad2ace3fe809580ef8827ba1ea2f2387aa8b7622bbc94468e3d491"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/th.js",
+            "size": 1074,
+            "hash": "b1a0cf2e4fb676ae5fb4a0af5b5c1d76424e83e99703e194a0f3d53a5499ac86"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/tk.js",
+            "size": 771,
+            "hash": "99410695bfbd9d01efcdc4d823ed648ec07b26c3d11a92f159b8eb27c511b615"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/tr.js",
+            "size": 775,
+            "hash": "743cfc892a74eef6f1f6072222acf9eb099cd932c78f9bfca3a7acef9bf39995"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/uk.js",
+            "size": 1156,
+            "hash": "322c61143bdd45d6bec23f938eb374d7cb3b47b137e1a421463cf86dac6b74ac"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/vi.js",
+            "size": 796,
+            "hash": "9b04dec92b14020aaefc803a86f17333285c488335cc684d60aabc1bb5ffb693"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/zh-CN.js",
+            "size": 768,
+            "hash": "a2501dbcf439aac37d219bb100a80355033e6e57b15275930d35d4b62a2bca02"
+        },
+        {
+            "type": "file",
+            "name": "static/admin/js/vendor/select2/i18n/zh-TW.js",
+            "size": 707,
+            "hash": "0e70c11bdcb004e7f155bd955e0ef5c4147fb4408f031c3b40b859397889e1fa"
+        }
+    ]
+}

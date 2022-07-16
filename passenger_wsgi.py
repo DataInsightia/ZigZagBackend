@@ -1,0 +1,1 @@
+from ZigZagBackend.wsgi import application
